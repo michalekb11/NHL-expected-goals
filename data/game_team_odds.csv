@@ -1,21 +1,57 @@
 date_recorded,time_recorded,date_game,team,bet_type,line,odds
 2023-02-13,14:00:00,2023-02-13,CGY Flames,puckline,-1.5,+145
 2023-02-13,14:00:00,2023-02-13,CGY Flames,moneyline,,−165
-2023-02-13,14:00:00,2023-02-13,OTT Senators,puckline,+1.5,−195
+2023-02-13,14:00:00,2023-02-13,OTT Senators,puckline,1.5,−195
 2023-02-13,14:00:00,2023-02-13,OTT Senators,moneyline,,+140
-2023-02-13,14:00:00,2023-02-13,ARI Coyotes,puckline,+1.5,−120
+2023-02-13,14:00:00,2023-02-13,ARI Coyotes,puckline,1.5,−120
 2023-02-13,14:00:00,2023-02-13,ARI Coyotes,moneyline,,+200
 2023-02-13,14:00:00,2023-02-13,NSH Predators,puckline,-1.5,+100
 2023-02-13,14:00:00,2023-02-13,NSH Predators,moneyline,,−240
-2023-02-13,14:00:00,2023-02-13,FLA Panthers,puckline,+1.5,−290
+2023-02-13,14:00:00,2023-02-13,FLA Panthers,puckline,1.5,−290
 2023-02-13,14:00:00,2023-02-13,FLA Panthers,moneyline,,−110
 2023-02-13,14:00:00,2023-02-13,MIN Wild,puckline,-1.5,+205
 2023-02-13,14:00:00,2023-02-13,MIN Wild,moneyline,,−110
-2023-02-13,14:00:00,2023-02-13,DET Red Wings,puckline,+1.5,−260
+2023-02-13,14:00:00,2023-02-13,DET Red Wings,puckline,1.5,−260
 2023-02-13,14:00:00,2023-02-13,DET Red Wings,moneyline,,−105
 2023-02-13,14:00:00,2023-02-13,VAN Canucks,puckline,-1.5,+185
 2023-02-13,14:00:00,2023-02-13,VAN Canucks,moneyline,,−115
-2023-02-13,14:00:00,2023-02-13,BUF Sabres,puckline,+1.5,−220
+2023-02-13,14:00:00,2023-02-13,BUF Sabres,puckline,1.5,−220
 2023-02-13,14:00:00,2023-02-13,BUF Sabres,moneyline,,+125
 2023-02-13,14:00:00,2023-02-13,LA Kings,puckline,-1.5,+160
 2023-02-13,14:00:00,2023-02-13,LA Kings,moneyline,,−145
+2023-02-14,17:07:23,2023-02-14,CAR Hurricanes,puckline,-1.5,+145
+2023-02-14,17:07:23,2023-02-14,CAR Hurricanes,moneyline,,−170
+2023-02-14,17:07:23,2023-02-14,WAS Capitals,puckline,+1.5,−195
+2023-02-14,17:07:23,2023-02-14,WAS Capitals,moneyline,,+145
+2023-02-14,17:07:23,2023-02-14,CHI Blackhawks,puckline,+1.5,−225
+2023-02-14,17:07:23,2023-02-14,CHI Blackhawks,moneyline,,+120
+2023-02-14,17:07:23,2023-02-14,MTL Canadiens,puckline,-1.5,+165
+2023-02-14,17:07:23,2023-02-14,MTL Canadiens,moneyline,,−140
+2023-02-14,17:07:23,2023-02-14,NJ Devils,puckline,-1.5,+115
+2023-02-14,17:07:23,2023-02-14,NJ Devils,moneyline,,−205
+2023-02-14,17:07:23,2023-02-14,CBJ Blue Jackets,puckline,+1.5,−145
+2023-02-14,17:07:23,2023-02-14,CBJ Blue Jackets,moneyline,,+175
+2023-02-14,17:07:23,2023-02-14,OTT Senators,puckline,+1.5,−155
+2023-02-14,17:07:23,2023-02-14,OTT Senators,moneyline,,+170
+2023-02-14,17:07:23,2023-02-14,NY Islanders,puckline,-1.5,+125
+2023-02-14,17:07:23,2023-02-14,NY Islanders,moneyline,,−200
+2023-02-14,17:07:23,2023-02-14,FLA Panthers,puckline,-1.5,+170
+2023-02-14,17:07:23,2023-02-14,FLA Panthers,moneyline,,−140
+2023-02-14,17:07:23,2023-02-14,STL Blues,puckline,+1.5,−235
+2023-02-14,17:07:23,2023-02-14,STL Blues,moneyline,,+120
+2023-02-14,17:07:23,2023-02-14,SEA Kraken,puckline,+1.5,−225
+2023-02-14,17:07:23,2023-02-14,SEA Kraken,moneyline,,+110
+2023-02-14,17:07:23,2023-02-14,WPG Jets,puckline,-1.5,+165
+2023-02-14,17:07:23,2023-02-14,WPG Jets,moneyline,,−130
+2023-02-14,17:07:23,2023-02-14,BOS Bruins,puckline,-1.5,+195
+2023-02-14,17:07:23,2023-02-14,BOS Bruins,moneyline,,−125
+2023-02-14,17:07:23,2023-02-14,DAL Stars,puckline,+1.5,−275
+2023-02-14,17:07:23,2023-02-14,DAL Stars,moneyline,,+105
+2023-02-14,17:07:23,2023-02-14,TB Lightning,puckline,-1.5,+195
+2023-02-14,17:07:23,2023-02-14,TB Lightning,moneyline,,−125
+2023-02-14,17:07:23,2023-02-14,COL Avalanche,puckline,+1.5,−275
+2023-02-14,17:07:23,2023-02-14,COL Avalanche,moneyline,,+105
+2023-02-14,17:07:23,2023-02-14,PIT Penguins,puckline,-1.5,+140
+2023-02-14,17:07:23,2023-02-14,PIT Penguins,moneyline,,−165
+2023-02-14,17:07:23,2023-02-14,SJ Sharks,puckline,+1.5,−185
+2023-02-14,17:07:23,2023-02-14,SJ Sharks,moneyline,,+140
