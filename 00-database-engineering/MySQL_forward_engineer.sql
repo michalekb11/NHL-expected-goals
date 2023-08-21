@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `nhl`.`game_ids` ;
 CREATE TABLE IF NOT EXISTS `nhl`.`game_ids` (
   `team` CHAR(3) NOT NULL,
   `date` DATE NOT NULL,
-  `game_id` INT NULL,
+  `game_id` VARCHAR(25) NULL,
   PRIMARY KEY (`team`, `date`))
 ENGINE = InnoDB;
 
@@ -36,6 +36,7 @@ DROP TABLE IF EXISTS `nhl`.`schedule` ;
 CREATE TABLE IF NOT EXISTS `nhl`.`schedule` (
   `team` CHAR(3) NOT NULL,
   `date` DATE NOT NULL,
+  `season` INT NULL,
   `location` CHAR(1) NULL,
   `G` SMALLINT UNSIGNED NULL,
   `OT_status` CHAR(2) NULL,
@@ -69,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `nhl`.`skater_games` (
   `name` VARCHAR(75) NULL,
   `age` SMALLINT UNSIGNED NULL,
   `team` CHAR(3) NOT NULL,
-  `season` INT NULL,
+  -- `season` INT NULL,
   `game_num` INT NULL,
   `date` DATE NOT NULL,
   `opponent` CHAR(3) NULL,
@@ -188,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `nhl`.`goalie_games` (
   `name` VARCHAR(75) NULL,
   `age` SMALLINT NULL,
   `team` CHAR(3) NOT NULL,
-  `season` INT NULL,
+  -- `season` INT NULL,
   `game_num` INT NULL,
   `date` DATE NOT NULL,
   `opponent` CHAR(3) NULL,
