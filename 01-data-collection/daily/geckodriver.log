@@ -1,0 +1,36 @@
+1693511874156	geckodriver	INFO	Listening on 127.0.0.1:63712
+1693511874426	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" MOZ_NO_REMOTE="1" "/App ... s" "localhost" "-foreground" "-no-remote" "-profile" "/var/folders/yk/qhxv13m50bl7fyrpnntydjgh0000gn/T/rust_mozprofilefBt3GJ"
+1693511875385	Marionette	INFO	Marionette enabled
+1693511875466	Marionette	INFO	Listening on port 63773
+Read port: 63773
+WebDriver BiDi listening on ws://127.0.0.1:63713
+1693511875916	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /var/folders/yk/qhxv13m50bl7fyrpnntydjgh0000gn/T/rust_mozprofilefBt3GJ/search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:63713/devtools/browser/7b4eca83-dee2-4d97-b1cb-d4a841ccfdf5
+JavaScript warning: https://pagead2.googlesyndication.com/bg/sDErsqHGZKHkf3fdTSK9cGXygIIzfAKaeJHbg3h_I88.js line 2 > eval line 3638 > eval line 1 > eval line 1 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+JavaScript warning: https://pagead2.googlesyndication.com/bg/sDErsqHGZKHkf3fdTSK9cGXygIIzfAKaeJHbg3h_I88.js line 2 > eval line 3983 > eval line 1 > eval line 1 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+JavaScript error: , line 0: TypeError: NetworkError when attempting to fetch resource.
+JavaScript warning: https://pagead2.googlesyndication.com/bg/sDErsqHGZKHkf3fdTSK9cGXygIIzfAKaeJHbg3h_I88.js line 2 > eval line 990 > eval line 1 > eval line 1 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+JavaScript error: , line 0: TypeError: NetworkError when attempting to fetch resource.
+1693511960204	Marionette	WARN	Ignoring event 'pageshow' because document has an invalid readyState of 'loading'.
+JavaScript warning: https://cdn.js7k.com/rq/iv/inside.js, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+JavaScript error: , line 0: TypeError: NetworkError when attempting to fetch resource.
+JavaScript warning: https://pagead2.googlesyndication.com/bg/sDErsqHGZKHkf3fdTSK9cGXygIIzfAKaeJHbg3h_I88.js line 2 > eval line 7581 > eval line 1 > eval line 1 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+JavaScript error: , line 0: uncaught exception: 7
+JavaScript error: , line 0: TypeError: NetworkError when attempting to fetch resource.
+JavaScript warning: https://pagead2.googlesyndication.com/bg/sDErsqHGZKHkf3fdTSK9cGXygIIzfAKaeJHbg3h_I88.js line 2 > eval line 6747 > eval line 1 > eval line 1 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+JavaScript error: , line 0: TypeError: NetworkError when attempting to fetch resource.
+[GFX1-]: Unrecognized feature ACCELERATED_CANVAS2D
+JavaScript error: , line 0: TypeError: NetworkError when attempting to fetch resource.
+JavaScript error: , line 0: TypeError: NetworkError when attempting to fetch resource.
+1693512668149	geckodriver	INFO	Listening on 127.0.0.1:53716
+1693512668661	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" MOZ_NO_REMOTE="1" "/App ... s" "localhost" "-foreground" "-no-remote" "-profile" "/var/folders/yk/qhxv13m50bl7fyrpnntydjgh0000gn/T/rust_mozprofileanOitA"
+1693512669296	Marionette	INFO	Marionette enabled
+1693512669330	Marionette	INFO	Listening on port 53729
+Read port: 53729
+WebDriver BiDi listening on ws://127.0.0.1:53717
+1693512669723	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /var/folders/yk/qhxv13m50bl7fyrpnntydjgh0000gn/T/rust_mozprofileanOitA/search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:53717/devtools/browser/7a3767a5-c6c0-4ba8-a10c-a93fed0648ed
+1693512680267	Marionette	INFO	Stopped listening on port 53729
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
