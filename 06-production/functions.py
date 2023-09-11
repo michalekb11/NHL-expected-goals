@@ -203,3 +203,279 @@ def get_total_odds(sportsbook_recording, today_only=True):
     else:
         return df_total
 ########################################################
+# Function to process forwards section of DF lines
+def process_forwards(section_html):
+    # Names
+    names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
+    names = [n.text.strip() for n in names_html]
+
+    assert len(names) == 12, f'Incorrect number of forwards were found: {len(names)}.'
+
+    # Positions
+    positions = ['LW', 'C', 'RW'] * 4
+
+    # Line number
+    line_num = [item for item in [1, 2, 3, 4] for _ in range(3)]
+
+    # Injury status
+    injury_html = section_html.find_all(class_ = 'rounded-md bg-red-500 pl-1 pr-1 text-2xl uppercase text-white')
+    injury_status = [inj.text.strip().upper() for inj in injury_html]
+    injury_names = [inj.find_next('div').find_next('span').text.strip() for inj in injury_html]
+
+    # Game time decision image (doesn't have text/letters)
+    gtd_html = section_html.find_all('svg')
+    gtd_names = [gtd.find_next('div').find_next('span').text.strip() for gtd in gtd_html]
+
+    # Update the injury lists with GTD info
+    if len(gtd_names) > 0:
+        injury_names.extend(gtd_names)
+        injury_status.extend(['GTD'] * len(gtd_names))
+
+    assert len(injury_status) == len(injury_names), f'Lengths of injury names ({len(injury_names)}) and injury status ({len(injury_status)}) do not match.'
+    assert all(name in names for name in injury_names), 'Not all injury names are found in names masterlist.'
+
+    # Create dictionary of information to return
+    forward_dict = {
+        'names':names,
+        'positions':positions,
+        'line_num':line_num,
+        'injuries':{'name':injury_names, 'injury_status':injury_status}
+    }
+
+    return forward_dict
+########################################################
+# Function to process defenseman
+def process_defenseman(section_html):
+    # Names
+    names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
+    names = [n.text.strip() for n in names_html]
+
+    assert len(names) == 6, f'Incorrect number of defenseman were found: {len(names)}.'
+
+    # Positions
+    positions = ['LD', 'RD'] * 3
+
+    # Line number
+    line_num = [item for item in [1, 2, 3] for _ in range(2)]
+
+    # Injury status
+    injury_html = section_html.find_all(class_ = 'rounded-md bg-red-500 pl-1 pr-1 text-2xl uppercase text-white')
+    injury_status = [inj.text.strip().upper() for inj in injury_html]
+    injury_names = [inj.find_next('div').find_next('span').text.strip() for inj in injury_html]
+
+    # Game time decision image (doesn't have text/letters)
+    gtd_html = section_html.find_all('svg')
+    gtd_names = [gtd.find_next('div').find_next('span').text.strip() for gtd in gtd_html]
+
+    # Update the injury lists with GTD info
+    if len(gtd_names) > 0:
+        injury_names.extend(gtd_names)
+        injury_status.extend(['GTD'] * len(gtd_names))
+
+    assert len(injury_status) == len(injury_names), f'Lengths of injury names ({len(injury_names)}) and injury status ({len(injury_status)}) do not match.'
+    assert all(name in names for name in injury_names), 'Not all injury names are found in names masterlist.'
+
+    # Create dictionary of information to return
+    defense_dict = {
+        'names':names,
+        'positions':positions,
+        'line_num':line_num,
+        'injuries':{'name':injury_names, 'injury_status':injury_status}
+    }
+
+    return defense_dict
+########################################################
+# Function to process power play sections
+def process_power_play(section_html, unit_num):
+    # Names
+    names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
+    names = [n.text.strip() for n in names_html]
+
+    assert len(names) == 5, f'Incorrect number of power play skaters were found: {len(names)}.'
+
+    # Unit number
+    unit = [unit_num] * 5
+
+    # Unit position
+    pp_position = [1, 2, 3, 4, 5]
+
+    # Create dictionary
+    pp_dict = {
+        'name':names,
+        'pp_unit_num':unit,
+        'pp_position':pp_position
+    }
+
+    return pp_dict
+########################################################
+# Function to process penalty kill sections
+def process_penalty_kill(section_html, unit_num):
+    # Names
+    names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
+    names = [n.text.strip() for n in names_html]
+
+    assert len(names) == 4, f'Incorrect number of penalty killers were found: {len(names)}.'
+
+    # Unit number
+    unit = [unit_num] * 4
+
+    # Unit position
+    pk_position = [1, 2, 3, 4]
+
+    # Create dictionary
+    pk_dict = {
+        'name':names,
+        'pk_unit_num':unit,
+        'pk_position':pk_position
+    }
+
+    return pk_dict
+########################################################
+# Function to process goalie section
+def process_goalies(section_html):
+    # Names
+    names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
+    names = [n.text.strip() for n in names_html]
+
+    assert len(names) in (1, 2, 3), f'Too many goalies were found: {len(names)}.'
+
+    # Positions
+    positions = ['G'] * len(names)
+
+    # Depth number
+    depth_num = [i + 1 for i in range(len(names))]
+
+    # Injury status
+    injury_html = section_html.find_all(class_ = 'rounded-md bg-red-500 pl-1 pr-1 text-2xl uppercase text-white')
+    injury_status = [inj.text.strip().upper() for inj in injury_html]
+    injury_names = [inj.find_next('div').find_next('span').text.strip() for inj in injury_html]
+
+    # Game time decision image (doesn't have text/letters)
+    gtd_html = section_html.find_all('svg')
+    gtd_names = [gtd.find_next('div').find_next('span').text.strip() for gtd in gtd_html]
+
+    # Update the injury lists with GTD info
+    if len(gtd_names) > 0:
+        injury_names.extend(gtd_names)
+        injury_status.extend(['GTD'] * len(gtd_names))
+
+    assert len(injury_status) == len(injury_names), f'Lengths of injury names ({len(injury_names)}) and injury status ({len(injury_status)}) do not match.'
+    assert all(name in names for name in injury_names), 'Not all injury names are found in names masterlist.'
+
+    # Create dictionary of information to return
+    goalie_dict = {
+        'names':names,
+        'positions':positions,
+        'depth_num':depth_num,
+        'injuries':{'name':injury_names, 'injury_status':injury_status}
+    }
+    
+    return goalie_dict
+########################################################
+# Function to process injury section
+def process_injuries(section_html):
+    # Injury status
+    injury_html = section_html.find_all(class_ = 'rounded-md bg-red-500 pl-1 pr-1 text-2xl uppercase text-white')
+    injury_status = [inj.text.strip().upper() for inj in injury_html]
+    injury_names = [inj.find_next('div').find_next('span').text.strip() for inj in injury_html]
+
+    ######
+    # Not sure if GTD info is really required for this section. Anyone who is located here is probably not GTD?
+    # Game time decision image (doesn't have text/letters)
+    gtd_html = section_html.find_all('svg')
+    gtd_names = [gtd.find_next('div').find_next('span').text.strip() for gtd in gtd_html]
+
+    # Update the injury lists with GTD info
+    if len(gtd_names) > 0:
+        injury_names.extend(gtd_names)
+        injury_status.extend(['GTD'] * len(gtd_names))
+    #####
+    
+    assert len(injury_status) == len(injury_names), f'Lengths of injury names ({len(injury_names)}) and injury status ({len(injury_status)}) do not match.'
+
+    injury_dict = {
+        'name':injury_names,
+        'injury_status':injury_status
+    }
+    
+    return injury_dict
+########################################################
+# For each team, grab the lineup
+def get_team_lineup(team):
+    # Read in team name to 3 letter code dictionary
+    with open('./data/team_name_dictionary.txt', 'r') as f:
+        team_name_dict = json.load(f)
+        
+    # Date and time of recording
+    dt_now = dt.datetime.now()
+    date_recorded = dt_now.date()
+    time_recorded = dt_now.time().strftime(format = '%H:%M:%S')
+
+    # Basically trick the site to think you are a genuine user?
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+
+    # Main DF URL for line combinations
+    DF_url = 'https://www.dailyfaceoff.com/teams/.../line-combinations'
+
+    # Record the HTML code from url as bs4 object
+    response = requests.get(DF_url.replace('...', team), headers=headers)
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    # Get each section individually (forwards, defense, pp1, pp2, etc.)
+    sections = soup.find_all(class_ = 'text-3xl text-white')
+
+    # Use functions for each section of webpage
+    for sec in sections:
+        sec_name = sec.text.strip().lower()
+        parent_html = sec.find_parent('div').find_parent('div')
+
+        if sec_name == 'forwards':
+            forwards = process_forwards(parent_html)
+        elif sec_name == 'defensive pairings':
+            defenseman = process_defenseman(parent_html)
+        elif sec_name == '1st powerplay unit':
+            pp1 = process_power_play(parent_html, unit_num = 1)
+        elif sec_name == '2nd powerplay unit':
+            pp2 = process_power_play(parent_html, unit_num = 2)
+        elif sec_name == '1st penalty kill unit':
+            pk1 = process_penalty_kill(parent_html, unit_num = 1)
+        elif sec_name == '2nd penalty kill unit':
+            pk2 = process_penalty_kill(parent_html, unit_num = 2)
+        elif sec_name == 'goalies':
+            goalies = process_goalies(parent_html)
+        #elif sec_name == 'injuries':
+            #injuries = process_injuries(parent_html)
+    
+    # Create lineup for each team
+    lineup = pd.DataFrame({
+        'player_id':np.nan,
+        'name':forwards['names'] + defenseman['names'] + goalies['names'],
+        'team':team,
+        'date_recorded':date_recorded,
+        'time_recorded':time_recorded,
+        'position':forwards['positions'] + defenseman['positions'] + goalies['positions'],
+        'depth_chart_rank':forwards['line_num'] + defenseman['line_num'] + goalies['depth_num']
+    })
+
+    # Set up injury data frame to merge
+    injuries = pd.concat([pd.DataFrame(forwards['injuries']), pd.DataFrame(defenseman['injuries']), pd.DataFrame(goalies['injuries'])])
+
+    # Merge in injury information
+    lineup = pd.merge(lineup, injuries, how = 'left', on = 'name')
+
+    # Set up pp data frame
+    power_play = pd.concat([pd.DataFrame(pp1), pd.DataFrame(pp2)])
+    penalty_kill = pd.concat([pd.DataFrame(pk1), pd.DataFrame(pk2)])
+
+    # Special teams merge
+    lineup = pd.merge(lineup, power_play, how = 'left', on = 'name')
+    lineup = pd.merge(lineup, penalty_kill, how = 'left', on = 'name')
+
+    # Cleanup
+    lineup[['pp_unit_num', 'pp_position', 'pk_unit_num', 'pk_position']] = lineup[['pp_unit_num', 'pp_position', 'pk_unit_num', 'pk_position']].astype('Int64')
+    lineup['team'] = lineup['team'].str.lower().replace(team_name_dict)
+    
+    return lineup
+########################################################
+
+########################################################
