@@ -47,6 +47,8 @@ teams_on_date_3letter.extend(schedule['Home'].tolist())
 
 # Get team names for the interested codes
 teams_on_date = [code_to_name[code] for code in teams_on_date_3letter]
+if len(teams_on_date) != 0:
+    print(f'Found {len(teams_on_date)} teams that play games today.')
 
 # Get the lineup for each team and store df's in list
 try:
