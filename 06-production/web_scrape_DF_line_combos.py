@@ -73,7 +73,7 @@ try:
     old_lineups = pd.read_csv(path_to_lineups)
     new_lineups = pd.concat([old_lineups, lineups_all_teams], axis=0).reset_index(drop=True)
     new_lineups.to_csv(path_to_lineups, header=True, index=False)
-    print('DF lineup CSV successfully updated.\n')
+    print(f'DF lineup CSV successfully updated.\nNumber of rows added: {len(lineups_all_teams)}\nNew total rows: {len(new_lineups)}\n')
 except:
     print('DF lineup CSV was not updated.\n')
     raise
