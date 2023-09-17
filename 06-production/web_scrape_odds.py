@@ -11,7 +11,7 @@ dk_hockey_main_url = 'https://sportsbook.draftkings.com/leagues/hockey/nhl?categ
 # Record 'today' and 'tomorrow' tables from DK since these are the tables that could possibly contain information from games occuring today (time zone issues).
 try:
     sportsbook_recording = retrieve_sportsbook_info(dk_hockey_main_url)
-    assert len(sportsbook_recording['game_dates']) > 0, f"No games were recorded."
+    assert len(sportsbook_recording['game_dates']) > 0, f"No games were recorded.\n"
     print('Sportsbook recording completed successfully.\n')
 except:
     print('Sportsbook recording did not complete successfully.\n')
@@ -21,7 +21,7 @@ except:
 try:
     df_ml_odds = get_ml_odds(sportsbook_recording, today_only=True)
     current_ml_odds = pd.read_csv(path_to_ml_odds)
-    assert len(pd.merge(df_ml_odds, current_ml_odds, how='inner', on = ['team', 'date_game'])) == 0, 'Duplicate entries in new and old CSV files.'
+    assert len(pd.merge(df_ml_odds, current_ml_odds, how='inner', on = ['team', 'date_game'])) == 0, 'Duplicate entries in new and old CSV files.\n'
     updated_ml_odds = pd.concat([current_ml_odds, df_ml_odds], axis=0).reset_index(drop=True)
     updated_ml_odds.to_csv(path_to_ml_odds, header=True, index=False)
     print('Moneyline update completed successfully.\n')
@@ -32,7 +32,7 @@ except Exception as e:
 try:
     df_pl_odds = get_pl_odds(sportsbook_recording, today_only=True)
     current_pl_odds = pd.read_csv(path_to_pl_odds)
-    assert len(pd.merge(df_pl_odds, current_pl_odds, how='inner', on = ['team', 'date_game'])) == 0, 'Duplicate entries in new and old CSV files.'
+    assert len(pd.merge(df_pl_odds, current_pl_odds, how='inner', on = ['team', 'date_game'])) == 0, 'Duplicate entries in new and old CSV files.\n'
     updated_pl_odds = pd.concat([current_pl_odds, df_pl_odds], axis=0).reset_index(drop=True)
     updated_pl_odds.to_csv(path_to_pl_odds, header=True, index=False)
     print('Puckline update completed successfully.\n')
