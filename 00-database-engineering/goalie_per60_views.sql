@@ -34,8 +34,6 @@ CREATE VIEW goalie_per60_rolling3 AS (
 	)
 
 	SELECT player_id,
-		name,
-		team,
 		date,
 		60 * (GA_tot / TOI_tot) AS GA60_3,
 		60 * (SA_tot / TOI_tot) AS SA60_3,
@@ -74,8 +72,6 @@ CREATE VIEW goalie_per60_rolling5 AS (
 	)
 
 	SELECT player_id,
-		name,
-		team,
 		date,
 		60 * (GA_tot / TOI_tot) AS GA60_5,
 		60 * (SA_tot / TOI_tot) AS SA60_5,
@@ -114,8 +110,6 @@ CREATE VIEW goalie_per60_rolling10 AS (
 	)
 
 	SELECT player_id,
-		name,
-		team,
 		date,
 		60 * (GA_tot / TOI_tot) AS GA60_10,
 		60 * (SA_tot / TOI_tot) AS SA60_10,
@@ -154,8 +148,6 @@ CREATE VIEW goalie_per60_rolling15 AS (
 	)
 
 	SELECT player_id,
-		name,
-		team,
 		date,
 		60 * (GA_tot / TOI_tot) AS GA60_15,
 		60 * (SA_tot / TOI_tot) AS SA60_15,
@@ -194,8 +186,6 @@ CREATE VIEW goalie_per60_rolling20 AS (
 	)
 
 	SELECT player_id,
-		name,
-		team,
 		date,
 		60 * (GA_tot / TOI_tot) AS GA60_20,
 		60 * (SA_tot / TOI_tot) AS SA60_20,
