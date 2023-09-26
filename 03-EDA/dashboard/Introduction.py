@@ -15,3 +15,7 @@ st.write("""
 
 # Prompt user to select the page they want
 st.sidebar.success("Select a page above.")
+
+def hey():
+    print('hey')
+    return
