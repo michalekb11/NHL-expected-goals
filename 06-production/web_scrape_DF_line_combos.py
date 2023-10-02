@@ -1,8 +1,9 @@
-from functions import get_team_lineup
+from functions import get_team_lineup, clean_name
 import pandas as pd
 import argparse
 import json
 import datetime as dt
+import numpy as np
 
 # Initialize parser
 parser = argparse.ArgumentParser()
@@ -63,6 +64,9 @@ except:
 
 # Conactenate into a final data frame
 lineups_all_teams = pd.concat(lineups_list, ignore_index = True)
+
+# Clean player names
+lineups_all_teams['name'] = lineups_all_teams['name'].apply(clean_name)
 
 # Asserts & other validations
 # All teams must have 20 unique names/players
