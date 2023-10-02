@@ -6,6 +6,7 @@ import datetime as dt
 import os
 import time
 import argparse
+from functions import clean_name
 
 # Initialize parser
 parser = argparse.ArgumentParser()
@@ -58,6 +59,9 @@ injuries.drop(columns = ['Pos', 'Est. Return', 'Next Game (EST)'], inplace=True)
 
 # Rename remaining columns
 injuries.rename(columns={'Player':'name', 'Team':'team', 'Injury':'type', 'Status':'status'}, inplace=True)
+
+# Clean player names
+injuries['name'] = injuries['name'].apply(clean_name)
 
 # Convert team to 3-letter code
 injuries['team'] = injuries['team'].str.lower().replace(team_name_dict)

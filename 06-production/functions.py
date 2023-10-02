@@ -9,9 +9,50 @@ import requests
 from bs4 import BeautifulSoup
 import json
 ########################################################
+def clean_name(name):
+    """Clean player names with special characters and punctuation to standardize across data sources"""
+    # Set up replace dictionary
+    replace_dict = {
+        # Special characters
+        #'Å':'A',
+        'å':'a',
+        'ä':'a',
+        'á':'a',
+        #'Č':'C',
+        'č':'c',
+        #'É':'E',
+        'é':'e',
+        'ë':'e',
+        'è':'e',
+        'í':'i',
+        'ň':'n',
+        'ö':'o',
+        'ø':'o',
+        'ř':'r',
+        #'Š':'S',
+        'š':'s',
+        'ü':'u',
+        'ž':'z',
+
+        # Other punctuation
+        '.':'',
+        '-':' ',
+        "'":''
+    }
+    # Strip white space
+    name = name.strip()
+    # Lowercase
+    name = name.lower()
+    # Replace characters, punctuation, phrases
+    for k, v in replace_dict.items():
+        name = name.replace(k, v)
+
+    # Return cleaned name
+    return name
+########################################################
 # Function to return data frames from DK containing the cleaned odds information for 1) Moneyline/Puckline and 2) O/U's
 def retrieve_sportsbook_info(url):
-
+    """Return dictionary containing DK cleaned odds information for 1) Moneyline/Puckline and 2) O/U's"""
     # Record the current date and time so we know when the recording occured
     dt_now = dt.datetime.now()
 
@@ -46,7 +87,7 @@ def retrieve_sportsbook_info(url):
 
         # If label is not 'today' or 'tomorrow', just go to the next table. This is because even with the time zone issues, games occuring today should never appear in a table not labeled 'today' or 'tomorrow'.
         # Set the date variable to attach to the game times
-        if date_label == 'tue oct 10th':
+        if date_label == 'today':
             date = dt.date.today()
         elif date_label == 'tomorrow':
             date = dt.date.today() + dt.timedelta(days = 1)
@@ -102,6 +143,7 @@ def retrieve_sportsbook_info(url):
     return combined_info
 ########################################################
 def get_ml_odds(sportsbook_recording, today_only = True):
+    """Use DK sportsbook dictionary to return pandas data frame with ML odds"""
     # Read in team name to 3 letter code dictionary
     with open('./data/team_name_dictionary.txt', 'r') as f:
         team_name_dict = json.load(f)
@@ -129,6 +171,7 @@ def get_ml_odds(sportsbook_recording, today_only = True):
         return df_ml
 ########################################################
 def get_pl_odds(sportsbook_recording, today_only=True):
+    """Use DK sportsbook dictionary to return pandas data frame with PL odds"""
     # Read in team name to 3 letter code dictionary
     with open('./data/team_name_dictionary.txt', 'r') as f:
         team_name_dict = json.load(f)
@@ -160,6 +203,7 @@ def get_pl_odds(sportsbook_recording, today_only=True):
         return df_pl
 ########################################################
 def get_total_odds(sportsbook_recording, today_only=True):
+    """Use DK sportsbook dictionary to return pandas data frame with total odds"""
     # Read in team name to 3 letter code dictionary
     with open('./data/team_name_dictionary.txt', 'r') as f:
         team_name_dict = json.load(f)
@@ -202,9 +246,9 @@ def get_total_odds(sportsbook_recording, today_only=True):
         return df_total[df_total['date_game'] == dt.date.today()]
     else:
         return df_total
-########################################################
-# Function to process forwards section of DF lines
+######################################################## 
 def process_forwards(section_html):
+    """Process forwards section of DF lines"""
     # Names
     names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
     names = [n.text.strip() for n in names_html]
@@ -246,6 +290,7 @@ def process_forwards(section_html):
 ########################################################
 # Function to process defenseman
 def process_defenseman(section_html):
+    """Process defenseman section of DF lines"""
     # Names
     names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
     names = [n.text.strip() for n in names_html]
@@ -287,6 +332,7 @@ def process_defenseman(section_html):
 ########################################################
 # Function to process power play sections
 def process_power_play(section_html, unit_num):
+    """Process power play section of DF lines"""
     # Names
     names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
     names = [n.text.strip() for n in names_html]
@@ -310,6 +356,7 @@ def process_power_play(section_html, unit_num):
 ########################################################
 # Function to process penalty kill sections
 def process_penalty_kill(section_html, unit_num):
+    """Process penalty kill section of DF lines"""
     # Names
     names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
     names = [n.text.strip() for n in names_html]
@@ -333,6 +380,7 @@ def process_penalty_kill(section_html, unit_num):
 ########################################################
 # Function to process goalie section
 def process_goalies(section_html):
+    """Process goalie section of DF lines"""
     # Names
     names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
     names = [n.text.strip() for n in names_html]
@@ -374,6 +422,7 @@ def process_goalies(section_html):
 ########################################################
 # Function to process injury section
 def process_injuries(section_html):
+    """Process injury section of DF lines"""
     # Injury status
     injury_html = section_html.find_all(class_ = 'rounded-md bg-red-500 pl-1 pr-1 text-2xl uppercase text-white')
     injury_status = [inj.text.strip().upper() for inj in injury_html]
@@ -400,8 +449,8 @@ def process_injuries(section_html):
     
     return injury_dict
 ########################################################
-# For each team, grab the lineup
 def get_team_lineup(team):
+    """Retrieve lines (F, D, G, PP, PK, etc.) for team X off DF"""
     # Read in team name to 3 letter code dictionary
     with open('./data/team_name_dictionary.txt', 'r') as f:
         team_name_dict = json.load(f)
