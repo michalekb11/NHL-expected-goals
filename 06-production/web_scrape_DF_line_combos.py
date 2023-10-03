@@ -5,6 +5,8 @@ import json
 import datetime as dt
 import numpy as np
 
+print("==========================================================\nStarting DF Line Combinations Scrape\n")
+
 # Initialize parser
 parser = argparse.ArgumentParser()
 
@@ -97,3 +99,5 @@ try:
 except:
     print('DF lineup CSV was not updated.\n')
     raise
+
+print("End DF Line Combinations Scrape\n==========================================================")

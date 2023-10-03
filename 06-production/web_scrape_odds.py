@@ -2,6 +2,8 @@
 from functions import retrieve_sportsbook_info, get_ml_odds, get_pl_odds, get_total_odds
 import pandas as pd
 
+print("==========================================================\nStarting DF Odds Scrape\n")
+
 # Paths
 path_to_ml_odds = './data/daily/odds/ml_odds.csv'
 path_to_pl_odds = './data/daily/odds/pl_odds.csv'
@@ -49,3 +51,5 @@ try:
     print('Total update completed successfully.\n')
 except Exception as e:
     print(f"Total update did not complete successfully:\n {e}")
+
+print("End DK Odds Scrape\n==========================================================")

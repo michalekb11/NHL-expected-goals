@@ -528,5 +528,89 @@ def get_team_lineup(team):
     
     return lineup
 ########################################################
+def get_DF_goalies(date_of_games=None, today_flag=None):
+    """Scrape Daily Faceoff Starting Goalies to get data frame of projected goalie statuses"""
+    # Ensure at least 1 argument is sepcified
+    if date_of_games is None and today_flag is None:
+        raise ValueError("At least one of 'date_of_games' or 'today_flag' must be specified.")
 
+    # Current date and time
+    dt_now = dt.datetime.now()
+    date_recorded = dt_now.date()
+    time_recorded = dt_now.time().strftime(format = '%H:%M:%S')
+
+    # If today's goalies are desired
+    if today_flag:
+        date_of_games = str(date_recorded)
+    
+    # URL for DF goalies
+    url = 'https://www.dailyfaceoff.com/starting-goalies/' + date_of_games
+
+    # Basically trick the site to think you are a genuine user?
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+
+    # Gather HTML from website
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    game_cards = soup.find_all('article', class_ = 'w-full')
+
+    assert len(game_cards) > 0, f"No games were found on daily faceoff for {date_of_games}: {url}"
+
+    # Process each game 
+    teams = []
+    names = []
+    status_list = []
+    for card in game_cards:
+        t, n, s = process_goalie_DF_card(card)
+        teams.extend(t)
+        names.extend(n)
+        status_list.extend(s)
+        
+    # Assemble data frame
+    DF_goalies = pd.DataFrame({
+        #'game_id':game_id,
+        'date_recorded':date_recorded,
+        'time_recorded':time_recorded,
+        'date_game':date_of_games,
+        'team':teams,
+        'name':names,
+        'status':status_list
+    })
+
+    return DF_goalies
+########################################################
+def process_goalie_DF_card(section_html):
+    """Process each game on Daily Faceoff to return list of teams, goalies, and their status"""
+    # Read in team name to 3 letter code dictionary
+    with open('./data/team_name_dictionary.txt', 'r') as f:
+        team_name_dict = json.load(f)
+
+    # Gather teams playing in this matchup
+    teams_html = section_html.find(class_ = 'text-center text-3xl text-white').text
+    teams = teams_html.split(' at ')
+    assert len(teams) == 2, f'Only 2 teams should be on a game card: {teams}'
+    teams = [team_name_dict[team.strip().lower()] for team in teams]
+    
+    # Gather the 2 goalie names
+    names_html = section_html.find_all(class_ = 'text-center text-lg xl:text-2xl')
+    names = [name.text for name in names_html]
+    assert len(names) == 2, f'Only 2 names should be on a game card: {names}'
+    names = [clean_name(name) for name in names]
+
+    # What is the status of the goalies for the upcoming game?
+    status_to_code_dict = {'unconfirmed':'U', 
+                        'projected':'P', 
+                        'likely':'P', 
+                        'expected':'P', 
+                        'confirmed':'C'}
+
+    status_html = section_html.find_all('div', {'class':['flex flex-row items-center justify-center gap-1 xl:justify-end', 'flex flex-row items-center justify-center gap-1 xl:justify-start']})
+    status_list = [status.text.lower().strip() for status in status_html]
+    status_list = [status_to_code_dict[status] for status in status_list]
+    assert all([1 if status in ['U', 'P', 'C'] else 0 for status in status_list]), f'Unknown status in status list: {status_list}'
+
+    #game_id = dt.datetime.strptime(date_of_games, '%Y-%m-%d').strftime('%y%m%d') + '-' + teams[0] + teams[1]
+    #game_id
+
+    return teams, names, status_list
 ########################################################
