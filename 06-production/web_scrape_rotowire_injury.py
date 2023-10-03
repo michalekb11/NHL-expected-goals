@@ -8,6 +8,8 @@ import time
 import argparse
 from functions import clean_name
 
+print("==========================================================\nStarting RW Injury Scrape\n")
+
 # Initialize parser
 parser = argparse.ArgumentParser()
 
@@ -92,3 +94,5 @@ try:
 except:
     print('RW injury CSV was not updated.\n')
     raise
+
+print("End RW Injury Scrape\n==========================================================")
