@@ -554,7 +554,8 @@ def get_DF_goalies(date_of_games=None, today_flag=None):
     soup = BeautifulSoup(response.content, 'html.parser')
     game_cards = soup.find_all('article', class_ = 'w-full')
 
-    assert len(game_cards) > 0, f"No games were found on daily faceoff for {date_of_games}: {url}"
+    if len(game_cards) <= 0: 
+        raise ValueError(f"No games were found on daily faceoff for {date_of_games}: {url}")
 
     # Process each game 
     teams = []
