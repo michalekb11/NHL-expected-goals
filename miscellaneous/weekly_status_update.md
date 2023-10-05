@@ -8,6 +8,8 @@
 
 [Week 4](#week-4)
 
+[Week 5](#week-5)
+
 ## Week 1 (09/11/23 - 09/17/23) <a name="week-1"></a>
 * Created production python files for 3 web scrape scripts (DF lines, RW injuries, and DK game odds)
    - Results will be saved in CSVs. Some basic validations in place, but could be improved. Error handling could be improved.
@@ -24,5 +26,10 @@
    - Page 2 = individual skater statistics as a time series throughout the season
 * Created function to clean player names (ones with special characters etc. to standardize names across data sources).
 
-## Week 3 (10/02/23 - 10/08/23) <a name="week-4"></a>
+## Week 4 (10/02/23 - 10/08/23) <a name="week-4"></a>
 * Wrote web scrape script for projected goalies on daily faceoff
+* Wrote web scrape script to record 60 minute line from draft kings
+* Improved error handling in production files and tested web scrape scripts
+
+## Week 5 (10/09/23 - 10/15/23) <a name="week-5"></a>
+* x
