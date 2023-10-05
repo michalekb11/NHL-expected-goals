@@ -8,6 +8,11 @@ import pytz
 import requests
 from bs4 import BeautifulSoup
 import json
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 ########################################################
 def clean_name(name):
     """Clean player names with special characters and punctuation to standardize across data sources"""
@@ -614,4 +619,130 @@ def process_goalie_DF_card(section_html):
     #game_id
 
     return teams, names, status_list
+########################################################
+def get_60min_odds(date_of_games = None, today_flag = None):
+    """Retrieve DK 60 min line odds for specific date"""
+    # Ensure at least 1 argument is sepcified
+    if date_of_games is None and today_flag is None:
+        raise ValueError("At least one of 'date_of_games' or 'today_flag' must be specified.")
+    
+    # Read in team name to 3 letter code dictionary
+    with open('./data/team_name_dictionary.txt', 'r') as f:
+        team_name_dict = json.load(f)
+
+    # Current date and time
+    dt_now = dt.datetime.now()
+    date_recorded = dt_now.date()
+    time_recorded = dt_now.time().strftime(format = '%H:%M:%S')
+
+    # If today's goalies are desired
+    if today_flag:
+        date_of_games = date_recorded
+    else:
+        date_of_games_split = [int(part) for part in date_of_games.split('-')]
+        date_of_games = dt.date(date_of_games_split[0], date_of_games_split[1], date_of_games_split[2])
+    
+    # URL to scrape
+    url = 'https://sportsbook.draftkings.com/leagues/hockey/nhl?category=game-lines&subcategory=60-min-line'
+
+    # Extra information and empty lists for storing
+    # Only keep the game cards that are on today's date. We need to map month  to a number
+    month_mapping = {
+        'JAN': 1, 'FEB': 2, 'MAR': 3, 'APR': 4, 'MAY': 5, 'JUN': 6,
+        'JUL': 7, 'AUG': 8, 'SEP': 9, 'OCT': 10, 'NOV': 11, 'DEC': 12
+    }
+
+    # Empty lists to store bet options and odds
+    bet_options = []
+    odds = []
+    home_teams = []
+    away_teams = []
+
+    #==========Enter into web driver scrape==========#
+    # Configure Chrome options
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')  # Run in headless mode
+
+    # Create a WebDriver instance
+    driver = webdriver.Chrome(options=options)
+
+    # Open the URL
+    driver.get(url)
+
+    # Explicitly wait for the elements with the specified class to appear
+    wait = WebDriverWait(driver, 30)  # Wait for up to 30 seconds
+
+    # Get each game card
+    game_cards = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'sportsbook-event-accordion__wrapper.expanded')))
+    game_cards_final = []
+
+    # For each card
+    for card in game_cards:
+        # Get the date
+        card_date = card.find_element(By.CLASS_NAME, 'sportsbook-event-accordion__date').text
+
+        # Remove parts of date (day of week, time, the TH in 10TH)
+        split_date = card_date.split()
+        parts_to_keep = []
+        for part in split_date:
+            if part.endswith('AM') or part.endswith('PM') or part in ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']:
+                continue
+            elif part.endswith('TH'):
+                part = part[:-2]
+                parts_to_keep.append(part)
+            else:
+                parts_to_keep.append(month_mapping[part])
+
+        if len(parts_to_keep) != 2:
+            raise ValueError(f'A date was processed incorrectly: {parts_to_keep}')
+        
+        card_date_final = dt.date(dt.datetime.now().year, int(parts_to_keep[0]), int(parts_to_keep[1]))
+
+        # If the game card date is today's date, process the HTML to record team and odds
+        if card_date_final == date_of_games:
+            game_cards_final.append(card) 
+
+    if len(game_cards_final) == 0:
+        raise ValueError(f'No games were found for {str(date_of_games)}: {url}\n')
+    
+    for card in game_cards_final:
+        # Find the bets you can place
+        bet_options_single_game = card.find_elements(By.CLASS_NAME, 'sportsbook-outcome-cell__label')
+        bet_options_single_game = [opt.text.strip().lower() for opt in bet_options_single_game]
+
+        if len(bet_options_single_game) != 3:
+            raise ValueError(f"There should be 3 bet options per game. Found the following: {bet_options_single_game}")
+        
+        bet_options_single_game = [team_name_dict[opt] if opt != 'draw' else opt for opt in bet_options_single_game]
+        bet_options.extend(bet_options_single_game)
+
+        # Find the odds for each possible bet
+        odds_single_game = card.find_elements(By.CLASS_NAME, 'sportsbook-odds.american.default-color')
+        odds_single_game = [int(odd.text.replace("−", "-")) for odd in odds_single_game]
+        if len(odds_single_game) != 3:
+            raise ValueError(f"There should be 3 odds per game. Found the following: {odds_single_game}")
+        odds.extend(odds_single_game)
+
+    # Quit the WebDriver
+    driver.quit()
+    #==========Exit web driver scrape==========#
+
+    # Set home and away teams based on layout on website ("away @ home")
+    home_teams = np.repeat(bet_options[2::3], 3)
+    away_teams = np.repeat(bet_options[::3], 3)
+
+    # Create final data frame
+    df_60min = pd.DataFrame({
+        'home':home_teams,
+        'away':away_teams,
+        'date_recorded':date_recorded,
+        'time_recorded':time_recorded,
+        'date_game':date_of_games,
+        'bet_type':bet_options,
+        'odds':odds
+    })
+
+    return df_60min
+########################################################
+
 ########################################################

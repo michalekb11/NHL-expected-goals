@@ -56,6 +56,6 @@ def main():
         print(f"Total update did not complete successfully: {e}\n")
 
 if __name__ == '__main__':
-    print("==========================================================\nStarting DF Odds Scrape\n")
+    print("==========================================================\nStarting DK Odds Scrape\n")
     main()
     print("End DK Odds Scrape\n==========================================================")
