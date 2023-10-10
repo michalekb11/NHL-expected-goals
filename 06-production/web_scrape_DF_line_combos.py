@@ -37,7 +37,7 @@ def main():
             code_to_name = dict(zip(team_list_3letter, team_list))
 
             # Use hockey reference to find the correct list of teams for today
-            date_of_games = dt.datetime.now().strftime('%Y-%M-%d')
+            date_of_games = dt.datetime.now().strftime('%Y-%m-%d')
             schedule_url = 'https://www.hockey-reference.com/leagues/NHL_2024_games.html'
 
             # Get the schedule from hockey reference for the given season
@@ -82,7 +82,7 @@ def main():
 
     # All teams should have 8 pk names
     pk_check = lineups_all_teams[~lineups_all_teams['pk_unit_num'].isna()].groupby('team')['name'].nunique()
-    pk_check_list = list(pk_check[pp_check != 8].index)
+    pk_check_list = list(pk_check[pk_check != 8].index)
 
     # Print a summary if verbose
     if args.Verbose:

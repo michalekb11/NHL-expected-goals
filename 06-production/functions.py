@@ -682,25 +682,28 @@ def get_60min_odds(date_of_games = None, today_flag = None):
         card_date = card.find_element(By.CLASS_NAME, 'sportsbook-event-accordion__date').text
 
         # Remove parts of date (day of week, time, the TH in 10TH)
-        split_date = card_date.split()
-        parts_to_keep = []
-        for part in split_date:
-            if part.endswith('AM') or part.endswith('PM') or part in ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']:
-                continue
-            elif part.endswith('TH'):
-                part = part[:-2]
-                parts_to_keep.append(part)
-            else:
-                parts_to_keep.append(month_mapping[part])
+        #split_date = card_date.split()
+        #parts_to_keep = []
+        #for part in split_date:
+        #    if part.endswith('AM') or part.endswith('PM') or part in ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']:
+        #        continue
+        #    elif part.endswith('TH'):
+        #        part = part[:-2]
+        #        parts_to_keep.append(part)
+        #    else:
+        #        parts_to_keep.append(month_mapping[part])
 
-        if len(parts_to_keep) != 2:
-            raise ValueError(f'A date was processed incorrectly: {parts_to_keep}')
-        
-        card_date_final = dt.date(dt.datetime.now().year, int(parts_to_keep[0]), int(parts_to_keep[1]))
+        #if len(parts_to_keep) != 2:
+        #    raise ValueError(f'A date was processed incorrectly: {parts_to_keep}')
+        if 'TODAY' in card_date:
+            #card_date_final = dt.date(dt.datetime.now().year, int(parts_to_keep[0]), int(parts_to_keep[1]))
+            card_date_final = dt_now.date()
+        else:
+            continue
 
         # If the game card date is today's date, process the HTML to record team and odds
         if card_date_final == date_of_games:
-            game_cards_final.append(card) 
+           game_cards_final.append(card) 
 
     if len(game_cards_final) == 0:
         raise ValueError(f'No games were found for {str(date_of_games)}: {url}\n')

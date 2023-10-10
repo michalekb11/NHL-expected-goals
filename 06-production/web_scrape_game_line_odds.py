@@ -23,7 +23,7 @@ def main():
     try:
         df_ml_odds = get_ml_odds(sportsbook_recording, today_only=True)
         current_ml_odds = pd.read_csv(path_to_ml_odds)
-        if len(pd.merge(df_ml_odds, current_ml_odds, how='inner', on = ['team', 'date_game'])) == 0:
+        if len(pd.merge(df_ml_odds, current_ml_odds, how='inner', on = ['team', 'date_game'])) != 0:
             raise ValueError('Duplicate entries in new and old CSV files.')
         updated_ml_odds = pd.concat([current_ml_odds, df_ml_odds], axis=0).reset_index(drop=True)
         updated_ml_odds.to_csv(path_to_ml_odds, header=True, index=False)
@@ -35,7 +35,7 @@ def main():
     try:
         df_pl_odds = get_pl_odds(sportsbook_recording, today_only=True)
         current_pl_odds = pd.read_csv(path_to_pl_odds)
-        if len(pd.merge(df_pl_odds, current_pl_odds, how='inner', on = ['team', 'date_game'])) == 0: 
+        if len(pd.merge(df_pl_odds, current_pl_odds, how='inner', on = ['team', 'date_game'])) != 0: 
             raise ValueError('Duplicate entries in new and old CSV files.')
         updated_pl_odds = pd.concat([current_pl_odds, df_pl_odds], axis=0).reset_index(drop=True)
         updated_pl_odds.to_csv(path_to_pl_odds, header=True, index=False)
@@ -47,7 +47,7 @@ def main():
     try:
         df_total_odds = get_total_odds(sportsbook_recording, today_only=True)
         current_total_odds = pd.read_csv(path_to_total_odds)
-        if len(pd.merge(df_total_odds, current_total_odds, how='inner', on = ['home', 'away', 'date_game', 'bet_type'])) == 0:
+        if len(pd.merge(df_total_odds, current_total_odds, how='inner', on = ['home', 'away', 'date_game', 'bet_type'])) != 0:
             raise ValueError('Duplicate entries in new and old CSV files.')
         updated_total_odds = pd.concat([current_total_odds, df_total_odds], axis=0).reset_index(drop=True)
         updated_total_odds.to_csv(path_to_total_odds, header=True, index=False)
