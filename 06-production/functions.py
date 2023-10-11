@@ -256,17 +256,41 @@ def get_total_odds(sportsbook_recording, today_only=True):
 ######################################################## 
 def process_forwards(section_html):
     """Process forwards section of DF lines"""
-    # Names
-    names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
-    names = [n.text.strip() for n in names_html]
+    # xxxxxx
+    lines = section_html.find_all(class_ = 'mb-4 flex flex-row flex-wrap justify-evenly border-b')
+    lines.append(section_html.find_next(class_ = 'flex flex-row flex-wrap justify-evenly').find_next(class_ = 'flex flex-row flex-wrap justify-evenly'))
 
-    assert len(names) == 12, f'Incorrect number of forwards were found: {len(names)}.'
+    # xxxxxxx
+    standard_positions = ['LW', 'C', 'RW']
+    names = []
+    positions = []
+    line_num = []
+
+    for line_num_zero_index, line in enumerate(lines):
+        containers = line.find_all(class_ = 'w-1/3 text-center xl:w-48')
+        for ind, container in enumerate(containers):
+            name_html = container.find(class_ = 'text-xs font-bold uppercase xl:text-base')
+            if name_html is not None:
+                name = name_html.text.strip()
+                names.append(name)
+                positions.append(standard_positions[ind])
+                line_num.append(line_num_zero_index + 1)
+            else:
+                continue
+
+    # Names
+    #names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
+    #names = [n.text.strip() for n in names_html]
+
+    if len(names) != 12:
+        print(f'Incorrect number of forwards were found: {len(names)}.\n{names}\n')
+        #return None
 
     # Positions
-    positions = ['LW', 'C', 'RW'] * 4
+    #positions = ['LW', 'C', 'RW'] * 4
 
     # Line number
-    line_num = [item for item in [1, 2, 3, 4] for _ in range(3)]
+    #line_num = [item for item in [1, 2, 3, 4] for _ in range(3)]
 
     # Injury status
     injury_html = section_html.find_all(class_ = 'rounded-md bg-red-500 pl-1 pr-1 text-2xl uppercase text-white')
@@ -368,13 +392,16 @@ def process_penalty_kill(section_html, unit_num):
     names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
     names = [n.text.strip() for n in names_html]
 
-    assert len(names) == 4, f'Incorrect number of penalty killers were found: {len(names)}.'
+    if len(names) > 4:
+        print(f'Incorrect number of penalty killers were found: {len(names)}.')
+        return None
 
     # Unit number
-    unit = [unit_num] * 4
+    unit = [unit_num] * len(names)
 
     # Unit position
     pk_position = [1, 2, 3, 4]
+    pk_position = [pk_position[i] for i in range(len(names))]
 
     # Create dictionary
     pk_dict = {
@@ -501,6 +528,9 @@ def get_team_lineup(team):
             goalies = process_goalies(parent_html)
         #elif sec_name == 'injuries':
             #injuries = process_injuries(parent_html)
+
+    if any(df is None for df in [forwards, defenseman, pp1, pp2, pk1, pk2, goalies]):
+        return None
     
     # Create lineup for each team
     lineup = pd.DataFrame({

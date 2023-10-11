@@ -48,13 +48,13 @@ def main():
             # Filter for date == date of interest
             schedule = schedule[schedule['Date'] == date_of_games]
             if schedule.shape[0] == 0:
-                raise ValueError('No teams found playing today.')
+                raise ValueError('No teams found playing today.\n')
             teams_on_date_3letter = schedule['Visitor'].tolist()
             teams_on_date_3letter.extend(schedule['Home'].tolist())
 
             # Get team names for the interested codes
             team_list = [code_to_name[code] for code in teams_on_date_3letter]
-            print(f'Found {len(team_list)} teams that play games today.')
+            print(f'Found {len(team_list)} teams that play games today.\n')
         except ValueError as e:
             print(f'{e}\n')
             return
@@ -62,6 +62,15 @@ def main():
     # Get the lineup for each team and store df's in list
     try:
         lineups_list = list(map(get_team_lineup, team_list))
+
+        # Find the indexes of None values
+        indexes_to_remove = [index for index, df in enumerate(lineups_list) if df is None]
+        teams_removed = [team_list[index] for index in indexes_to_remove]
+        if len(teams_removed) > 0:
+            print(f'The following teams were removed and must be entered into CSV manually:\n{teams_removed}\n')
+
+        # Remove the None values from the list
+        lineups_list = [df for df in lineups_list if df is not None]
     except:
         print('Lineup scrape did not complete successfully.\n')
         raise
@@ -74,7 +83,8 @@ def main():
 
     # Asserts & other validations
     # All teams must have 20 unique names/players
-    assert lineups_all_teams.groupby("team")['name'].nunique().unique() == np.array([20]), 'Incorrect number of players scraped for at least 1 team.\n'
+    # No longer necessary since some players are not listed in lineup???
+    #assert lineups_all_teams.groupby("team")['name'].nunique().unique() == np.array([20]), 'Incorrect number of players scraped for at least 1 team.\n'
 
     # All teams should have 10 power play names
     pp_check = lineups_all_teams[~lineups_all_teams['pp_unit_num'].isna()].groupby('team')['name'].nunique()
@@ -86,7 +96,6 @@ def main():
 
     # Print a summary if verbose
     if args.Verbose:
-        print(f'Total row count: {len(lineups_all_teams)}\n')
         if pp_check_list:
             print(f'The following teams do not have 10 players on the power play: {pp_check_list}\n')
         if pk_check_list:
