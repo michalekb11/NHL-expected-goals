@@ -777,5 +777,143 @@ def get_60min_odds(date_of_games = None, today_flag = None):
 
     return df_60min
 ########################################################
+def get_anytime_scorer_odds(date_of_games = None, today_flag = None):
+    """Gather dataframe of DK anytime scorer odds for games occuring on particular date"""
+    # Ensure at least 1 argument is sepcified
+    if date_of_games is None and today_flag is None:
+        raise ValueError("At least one of 'date_of_games' or 'today_flag' must be specified.")
+    
+    # Current date and time
+    dt_now = dt.datetime.now()
+    date_recorded = dt_now.date()
+    time_recorded = dt_now.time().strftime(format = '%H:%M:%S')
 
+    # Read in team name to 3 letter code dictionary
+    with open('./data/team_name_dictionary.txt', 'r') as f:
+        team_name_dict = json.load(f)
+        
+    # If today's scorer odds are desired
+    if today_flag:
+        date_of_games = date_recorded
+    else:
+        date_of_games_split = [int(part) for part in date_of_games.split('-')]
+        date_of_games = dt.date(date_of_games_split[0], date_of_games_split[1], date_of_games_split[2])
+
+    url = 'https://sportsbook.draftkings.com/leagues/hockey/nhl?category=goalscorer'
+
+    # Empty lists to store names and odds
+    names = []
+    odds = []
+    home_teams = []
+    away_teams = []
+
+    #==========Enter into web driver scrape==========#
+    # Configure Chrome options
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')  # Run in headless mode
+
+    # Create a WebDriver instance
+    driver = webdriver.Chrome(options=options)
+
+    # Open the URL
+    driver.get(url)
+
+    # Explicitly wait for the elements with the specified class to appear
+    wait = WebDriverWait(driver, 30)  # Wait for up to 30 seconds
+
+    # Get each game card
+    game_cards = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'sportsbook-event-accordion__wrapper.expanded')))
+    game_cards_final = []
+
+    # For each card
+    for card in game_cards:
+        # Get the date
+        card_date = card.find_element(By.CLASS_NAME, 'sportsbook-event-accordion__date').text
+
+        if 'TODAY' in card_date:
+            card_date_final = date_recorded
+        elif 'TOMORROW' in card_date:
+            # ===NOT TESTED YET===
+            card_date_final = date_recorded + dt.timedelta(days=1)
+        else:
+            # ===NOT TESTED YET===
+            # Remove parts of date (day of week, time, the TH in 10TH)
+            month_mapping = {
+                'JAN': 1, 'FEB': 2, 'MAR': 3, 'APR': 4, 'MAY': 5, 'JUN': 6,
+                'JUL': 7, 'AUG': 8, 'SEP': 9, 'OCT': 10, 'NOV': 11, 'DEC': 12
+            }
+            split_date = card_date.split()
+            parts_to_keep = []
+            for part in split_date:
+                if part.endswith('AM') or part.endswith('PM') or part in ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']:
+                    continue
+                elif part.endswith('TH'):
+                    part = part[:-2]
+                    parts_to_keep.append(part)
+                else:
+                    parts_to_keep.append(month_mapping[part])
+            if len(parts_to_keep) != 2:
+                print(f'A date was processed incorrectly: {parts_to_keep}')
+                continue
+            card_date_final = dt.date(dt.datetime.now().year, int(parts_to_keep[0]), int(parts_to_keep[1]))
+
+        # If the game card date is today's date, process the HTML to record team and odds
+        if card_date_final == date_of_games:
+            game_cards_final.append(card) 
+
+    for card in game_cards_final:
+        # Find index of "Anytime Goalscorer" column 
+        colnames = card.find_element(By.CLASS_NAME, 'scorer-7__header-wrapper').text
+        colnames = colnames.split('\n')
+        colnames = [col.strip().lower() for col in colnames]
+        assert len(colnames) == 3, f"3 column names should've been located: {colnames}\n"
+        assert 'anytime scorer' in colnames, f"'anytime scorer' column not found. {colnames}\n"
+        anytime_index = colnames.index('anytime scorer')
+        anytime_end_index = anytime_index - 3
+
+            # Locate teams on each card
+        teams = card.find_element(By.CLASS_NAME, 'sportsbook-event-accordion__title-wrapper').text
+        teams = teams.split('\n')
+        teams = [team.strip().lower() for team in teams]
+        teams.pop(teams.index('at'))
+        teams = [team_name_dict[team] for team in teams]
+        assert len(teams) == 2, f"Incorrect number of teams found: {teams}\n"
+
+        # Locate names and odds together since if done separately, an ordering issue arises from the scrape
+        names_and_odds = card.find_elements(By.CLASS_NAME, 'scorer-7__body')
+        names_and_odds_split = [info.text.split('\n') for info in names_and_odds]
+
+        # Generate list of names
+        names_single_game = [splits[0] for splits in names_and_odds_split]
+        names_single_game = [clean_name(name) for name in  names_single_game]
+        
+        # Generate list of odds
+        odds_single_game = [splits[anytime_end_index] for splits in names_and_odds_split]
+        odds_single_game = [int(odd.replace("−", "-")) for odd in odds_single_game]
+
+        # Append these values to running list
+        assert len(names_single_game) == len(odds_single_game), f"Number of names should be the same as the number of odds:\nNum names:{len(names_single_game)}\nNum odds: {len(odds_single_game)}\n"
+        names.extend(names_single_game)
+        odds.extend(odds_single_game)
+        away_teams.extend([teams[0]] * len(names_single_game))
+        home_teams.extend([teams[1]] * len(names_single_game))
+
+    driver.quit()
+    #==========Exit web driver scrape==========#
+    # Create final data frame
+    anytime_scorer = pd.DataFrame({
+        'player_id':np.nan,
+        'name':names,
+        'home':home_teams,
+        'away':away_teams,
+        'date_recorded':date_recorded,
+        'time_recorded':time_recorded,
+        'date_game':date_of_games,
+        'odds':odds
+    })
+
+    # Remove the 'No goalscorer' rows
+    anytime_scorer = anytime_scorer[anytime_scorer['name'] != 'no goalscorer']
+
+    return anytime_scorer
 ########################################################
