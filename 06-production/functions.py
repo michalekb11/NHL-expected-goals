@@ -549,9 +549,13 @@ def get_team_lineup(team):
     # Merge in injury information
     lineup = pd.merge(lineup, injuries, how = 'left', on = 'name')
 
-    # Set up pp data frame
+    # Set up pp/pk data frame
     power_play = pd.concat([pd.DataFrame(pp1), pd.DataFrame(pp2)])
     penalty_kill = pd.concat([pd.DataFrame(pk1), pd.DataFrame(pk2)])
+
+    # If a player plays on both units, only select the higher unit?
+    #power_play = power_play.loc[power_play.groupby('name')['pp_unit_num'].idxmax()]
+    #penalty_kill = penalty_kill.loc[penalty_kill.groupby('name')['pk_unit_num'].idxmax()]
 
     # Special teams merge
     lineup = pd.merge(lineup, power_play, how = 'left', on = 'name')
