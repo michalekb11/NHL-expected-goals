@@ -157,6 +157,7 @@ def get_ml_odds(sportsbook_recording, today_only = True):
 
     # List of moneyline odds for today's games
     ml_odds = sportsbook_recording['odds'][2::3]
+    ml_odds = [int(odd) for odd in ml_odds]
 
     # Create the data frame for today's odds for moneyline
     df_ml = pd.DataFrame({
@@ -188,6 +189,7 @@ def get_pl_odds(sportsbook_recording, today_only=True):
 
     # List of odds for today's pucklines
     pl_odds = sportsbook_recording['odds'][::3]
+    pl_odds = [int(odd) for odd in pl_odds]
 
     # Create the data frame for today's odds for puckline
     df_pl = pd.DataFrame({
@@ -231,6 +233,7 @@ def get_total_odds(sportsbook_recording, today_only=True):
 
     # List of today's O/U odds
     ou_odds = sportsbook_recording['odds'][1::3]
+    ou_odds = [int(odd) for odd in ou_odds]
         
     df_total = pd.DataFrame({
         'home':home_teams,
