@@ -26,7 +26,7 @@ selected_metric = st.sidebar.selectbox("Select a metric", metric_list, index=met
 
 # Dropdown to select a player
 #selected_player = st.selectbox("Select a player", data['id_name'].unique())
-selected_players = st.sidebar.multiselect("Select players", data['id_name'].unique(), default=['Connor McDavid - /m/mcdavco01'])
+selected_players = st.sidebar.multiselect("Select players", data['id_name'].unique(), default=['connor mcdavid - /m/mcdavco01'])
 
 # Drop down to select a season
 seasons_list = data['season'].unique().tolist()
