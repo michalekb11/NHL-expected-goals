@@ -866,7 +866,7 @@ def get_anytime_scorer_odds(date_of_games = None, today_flag = None):
 
         # If the game card date is today's date, process the HTML to record team and odds
         if card_date_final == date_of_games:
-            game_cards_final.append(card) 
+            game_cards_final.append(card)
 
     for card in game_cards_final:
         # Find index of "Anytime Goalscorer" column 
