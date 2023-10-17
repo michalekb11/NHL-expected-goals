@@ -31,7 +31,7 @@ def main():
     
     # Print summary
     if args.Verbose:
-        print(f"Number of teams found on DK: {len(set(df_anytime_scorer['home']))}\n")
+        print(f"Number of games found on DK: {len(set(df_anytime_scorer['home']))}\n")
         print(f"Number of players found on DK: {len(df_anytime_scorer)}\n")
 
     # Save to CSV

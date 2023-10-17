@@ -186,6 +186,7 @@ def get_pl_odds(sportsbook_recording, today_only=True):
 
     # List of pucklines for today
     pl_lines = sportsbook_recording['lines'][::2]
+    pl_lines = [float(line) for line in pl_lines]
 
     # List of odds for today's pucklines
     pl_odds = sportsbook_recording['odds'][::3]
