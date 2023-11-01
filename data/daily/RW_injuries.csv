@@ -2591,3 +2591,126 @@ player_id,name,team,date_recorded,time_recorded,type,status
 ,tucker poolman,VAN,2023-10-31,10:00:53,head,IR-LT
 ,shea weber,ARI,2023-10-31,10:00:53,ankle,IR-LT
 ,kirby dach,MTL,2023-10-31,10:00:53,knee,IR
+,devon levi,BUF,2023-11-01,11:16:23,lower body,DTD
+,matthew savoie,BUF,2023-11-01,11:16:23,shoulder,IR-NR
+,rasmus ristolainen,PHI,2023-11-01,11:16:23,undisclosed,IR
+,adam ruzicka,CGY,2023-11-01,11:16:23,shoulder,DTD
+,cale makar,COL,2023-11-01,11:16:23,undisclosed,DTD
+,bowen byram,COL,2023-11-01,11:16:23,undisclosed,DTD
+,john gibson,ANA,2023-11-01,11:16:23,upper body,DTD
+,brock mcginn,ANA,2023-11-01,11:16:23,lower body,IR
+,jamie drysdale,ANA,2023-11-01,11:16:23,lower body,IR
+,nikolai kovalenko,COL,2023-11-01,11:16:23,wrist,DTD
+,ryan suzuki,CAR,2023-11-01,11:16:23,shoulder,IR-NR
+,matt luff,DET,2023-11-01,11:16:23,upper body,IR
+,oliver ekman larsson,FLA,2023-11-01,11:16:23,undisclosed,DTD
+,sam bennett,FLA,2023-11-01,11:16:23,lower body,DTD
+,scott mayfield,NYI,2023-11-01,11:16:23,lower body,DTD
+,artem zub,OTT,2023-11-01,11:16:23,upper body,DTD
+,tyler motte,TBL,2023-11-01,11:16:23,upper body,IR
+,nic dowd,WSH,2023-11-01,11:16:23,upper body,IR
+,sonny milano,WSH,2023-11-01,11:16:23,illness,DTD
+,charlie lindgren,WSH,2023-11-01,11:16:23,undisclosed,DTD
+,jake mccabe,TOR,2023-11-01,11:16:23,groin,DTD
+,matthew boldy,MIN,2023-11-01,11:16:23,upper body,DTD
+,frederick gaudreau,MIN,2023-11-01,11:16:23,upper body,DTD
+,colin miller,NJD,2023-11-01,11:16:23,lower body,IR
+,tomas nosek,NJD,2023-11-01,11:16:23,lower body,IR
+,mattias janmark,EDM,2023-11-01,11:16:23,shoulder,DTD
+,ryan fanti,EDM,2023-11-01,11:16:23,hip,IR-NR
+,robin lehner,VGK,2023-11-01,11:16:23,hip,IR-LT
+,nicolas roy,VGK,2023-11-01,11:16:23,undisclosed,IR
+,teddy blueger,VAN,2023-11-01,11:16:23,bruise,DTD
+,vasily podkolzin,VAN,2023-11-01,11:16:23,concussion,DTD
+,connor clifton,BUF,2023-11-01,11:16:23,suspension,O
+,oliver kylington,CGY,2023-11-01,11:16:23,personal,IR-LT
+,erik brannstrom,OTT,2023-11-01,11:16:23,concussion,O
+,logan brown,TBL,2023-11-01,11:16:23,undisclosed,IR-LT
+,jakub lauko,BOS,2023-11-01,11:16:23,face,IR
+,conor timmins,TOR,2023-11-01,11:16:23,lower body,IR-LT
+,jared spurgeon,MIN,2023-11-01,11:16:23,upper body,IR-LT
+,daniil miromanov,VGK,2023-11-01,11:16:23,undisclosed,IR-LT
+,zach whitecloud,VGK,2023-11-01,11:16:23,upper body,IR-LT
+,christian dvorak,MTL,2023-11-01,11:16:23,knee,IR-LT
+,guillaume brisebois,VAN,2023-11-01,11:16:23,undisclosed,IR-LT
+,alex vlasic,CHI,2023-11-01,11:16:23,concussion,DTD
+,taylor hall,CHI,2023-11-01,11:16:23,shoulder,IR
+,john ludvig,PIT,2023-11-01,11:16:23,concussion,DTD
+,patrik laine,CBJ,2023-11-01,11:16:23,upper body,IR
+,eric comrie,BUF,2023-11-01,11:16:23,lower body,IR
+,kevin rooney,CGY,2023-11-01,11:16:23,shoulder,IR-LT
+,pavel francouz,COL,2023-11-01,11:16:23,groin,IR-LT
+,jean luc foudy,COL,2023-11-01,11:16:23,lower body,IR-NR
+,joshua jacobs,STL,2023-11-01,11:16:23,undisclosed,IR-NR
+,anton malmstrom,STL,2023-11-01,11:16:23,undisclosed,IR-NR
+,jason zucker,ARI,2023-11-01,11:16:23,lower body,IR
+,vasily ponomarev,CAR,2023-11-01,11:16:23,knee,IR-NR
+,daylan kuefler,NYI,2023-11-01,11:16:23,undisclosed,IR-NR
+,sam hentges,MIN,2023-11-01,11:16:23,undisclosed,IR-NR
+,caedan bankier,MIN,2023-11-01,11:16:23,undisclosed,IR-NR
+,michael milne,MIN,2023-11-01,11:16:23,undisclosed,IR-NR
+,nolan foote,NJD,2023-11-01,11:16:23,undisclosed,IR-NR
+,nico daws,NJD,2023-11-01,11:16:23,undisclosed,IR-NR
+,brian halonen,NJD,2023-11-01,11:16:23,undisclosed,IR-NR
+,chris wideman,MTL,2023-11-01,11:16:23,back,IR
+,mitchell russell,SJS,2023-11-01,11:16:23,undisclosed,IR-NR
+,logan couture,SJS,2023-11-01,11:16:23,lower body,IR
+,matt benning,SJS,2023-11-01,11:16:23,undisclosed,IR
+,viktor arvidsson,LAK,2023-11-01,11:16:23,back,IR-LT
+,andre lee,LAK,2023-11-01,11:16:23,undisclosed,IR-NR
+,nicklas backstrom,WSH,2023-11-01,11:16:23,hip,IR
+,max pacioretty,WSH,2023-11-01,11:16:23,achilles,IR-LT
+,joel edmundson,WSH,2023-11-01,11:16:23,hand,IR-LT
+,jerad rosburg,DAL,2023-11-01,11:16:23,undisclosed,IR-NR
+,daniil tarasov,CBJ,2023-11-01,11:16:23,knee,IR-NR
+,alex goligoski,MIN,2023-11-01,11:16:23,lower body,IR-LT
+,luke schenn,NSH,2023-11-01,11:16:23,lower body,IR
+,colin blackwell,CHI,2023-11-01,11:16:23,groin,IR
+,zach benson,BUF,2023-11-01,11:16:23,lower body,O
+,alex killorn,ANA,2023-11-01,11:16:23,finger,IR
+,brett pesce,CAR,2023-11-01,11:16:23,lower body,O
+,jonah gadjovich,FLA,2023-11-01,11:16:23,upper body,IR
+,nico hischier,NJD,2023-11-01,11:16:23,upper body,O
+,charlie mcavoy,BOS,2023-11-01,11:16:23,suspension,O
+,calum ritchie,COL,2023-11-01,11:16:23,shoulder,O
+,brandon tanev,SEA,2023-11-01,11:16:23,lower body,IR
+,jack quinn,BUF,2023-11-01,11:16:23,achilles,IR-NR
+,isaiah saville,VGK,2023-11-01,11:16:23,undisclosed,IR-NR
+,cody glass,NSH,2023-11-01,11:16:23,lower body,IR
+,will butcher,PIT,2023-11-01,11:16:23,undisclosed,IR-NR
+,raivis ansons,PIT,2023-11-01,11:16:23,undisclosed,IR-NR
+,robby fabbri,DET,2023-11-01,11:16:23,lower body,IR
+,marc staal,PHI,2023-11-01,11:16:23,upper body,IR
+,milan lucic,BOS,2023-11-01,11:16:23,ankle,IR-LT
+,alex nedeljkovic,PIT,2023-11-01,11:16:23,lower body,IR-LT
+,brandon montour,FLA,2023-11-01,11:16:23,shoulder,IR
+,gabriel vilardi,WPG,2023-11-01,11:16:23,knee,IR
+,matt grzelcyk,BOS,2023-11-01,11:16:23,upper body,IR-LT
+,aaron ekblad,FLA,2023-11-01,11:16:23,shoulder,IR-LT
+,chase de leo,ANA,2023-11-01,11:16:23,knee,IR-NR
+,samuel honzek,CGY,2023-11-01,11:16:23,lower body,O
+,ville heinola,WPG,2023-11-01,11:16:23,ankle,IR-NR
+,thomas chabot,OTT,2023-11-01,11:16:23,hand,IR-LT
+,jeremie poirier,CGY,2023-11-01,11:16:23,arm,O
+,andrei vasilevskiy,TBL,2023-11-01,11:16:23,back,IR-LT
+,andre burakovsky,SEA,2023-11-01,11:16:23,upper body,O
+,alexander barabanov,SJS,2023-11-01,11:16:23,finger,IR
+,david savard,MTL,2023-11-01,11:16:23,hand,IR
+,jakob pelletier,CGY,2023-11-01,11:16:23,shoulder,IR-NR
+,cam allen,WSH,2023-11-01,11:16:23,shoulder,O
+,shane pinto,OTT,2023-11-01,11:16:23,suspension,O
+,chris wagner,COL,2023-11-01,11:16:23,achilles,IR-NR
+,luke philp,CHI,2023-11-01,11:16:23,achilles,IR-NR
+,samuel savoie,CHI,2023-11-01,11:16:23,lower body,IR-NR
+,isac lundestrom,ANA,2023-11-01,11:16:23,achilles,IR-NR
+,maros jedlicka,COL,2023-11-01,11:16:23,upper body,O
+,gabriel landeskog,COL,2023-11-01,11:16:23,knee,IR-LT
+,matt murray,TOR,2023-11-01,11:16:23,hip,IR-LT
+,ryan ellis,PHI,2023-11-01,11:16:23,back,IR-LT
+,bryan little,ARI,2023-11-01,11:16:23,head,IR-LT
+,jakub voracek,ARI,2023-11-01,11:16:23,concussion,IR
+,carey price,MTL,2023-11-01,11:16:23,knee,IR-LT
+,shea weber,ARI,2023-11-01,11:16:23,ankle,IR-LT
+,jake muzzin,TOR,2023-11-01,11:16:23,neck,IR-LT
+,kirby dach,MTL,2023-11-01,11:16:23,knee,IR
+,tucker poolman,VAN,2023-11-01,11:16:23,head,IR-LT
