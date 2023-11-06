@@ -12,6 +12,12 @@
 
 [Week 6](#week-6)
 
+[Week 7](#week-7)
+
+[Week 8](#week-8)
+
+[Week 9](#week-9)
+
 ## Week 1 (09/11/23 - 09/17/23) <a name="week-1"></a>
 * Created production python files for 3 web scrape scripts (DF lines, RW injuries, and DK game odds)
    - Results will be saved in CSVs. Some basic validations in place, but could be improved. Error handling could be improved.
@@ -40,3 +46,14 @@
 ## Week 6 (10/16/23 - 10/22/23) <a name="week-6"></a>
 * Fixed scraping bugs that arose following opening day of the season
 * Wrote web scrape script for anytime goalscorer odds
+
+## Week 7 (10/24/23 - 10/29/23) <a name="week-7"></a>
+* Daily scrapes
+* Fall break
+
+## Week 8 (10/30/23 - 11/05/23) <a name="week-8"></a>
+* Daily scrapes
+
+## Week 9 (11/06/23 - 11/12/23) <a name="week-9"></a>
+* Daily scrapes
+* xxxx
