@@ -372,13 +372,19 @@ def process_power_play(section_html, unit_num):
     names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
     names = [n.text.strip() for n in names_html]
 
-    assert len(names) == 5, f'Incorrect number of power play skaters were found: {len(names)}.'
+    assert len(names) in [4, 5], f'Incorrect number of power play skaters were found: {len(names)}. Names: {names}\n'
 
     # Unit number
-    unit = [unit_num] * 5
+    if len(names) == 4:
+        unit = [unit_num] * 4
+    else:
+        unit = [unit_num] * 5
 
     # Unit position
-    pp_position = [1, 2, 3, 4, 5]
+    if len(names) == 4:
+        pp_position = [1, 2, 3, 4]
+    else:
+        pp_position = [1, 2, 3, 4, 5]
 
     # Create dictionary
     pp_dict = {
@@ -870,41 +876,72 @@ def get_anytime_scorer_odds(date_of_games = None, today_flag = None):
             game_cards_final.append(card)
 
     for card in game_cards_final:
-        # Find index of "Anytime Goalscorer" column 
-        colnames = card.find_element(By.CLASS_NAME, 'scorer-7__header-wrapper').text
-        colnames = colnames.split('\n')
-        colnames = [col.strip().lower() for col in colnames]
-        assert len(colnames) == 3, f"3 column names should've been located: {colnames}\n"
-        assert 'anytime scorer' in colnames, f"'anytime scorer' column not found. {colnames}\n"
-        anytime_index = colnames.index('anytime scorer')
-        anytime_end_index = anytime_index - 3
+        try:
+            # Find index of "Anytime Goalscorer" column 
+            colnames = card.find_element(By.CLASS_NAME, 'scorer-7__header-wrapper').text
+            colnames = colnames.split('\n')
+            colnames = [col.strip().lower() for col in colnames]
+            assert len(colnames) == 3, f"3 column names should've been located: {colnames}\n"
+            assert 'anytime scorer' in colnames, f"'anytime scorer' column not found. {colnames}\n"
+            anytime_index = colnames.index('anytime scorer')
+            anytime_end_index = anytime_index - 3
 
             # Locate teams on each card
-        teams = card.find_element(By.CLASS_NAME, 'sportsbook-event-accordion__title-wrapper').text
-        teams = teams.split('\n')
-        teams = [team.strip().lower() for team in teams]
-        teams.pop(teams.index('at'))
-        teams = [team_name_dict[team] for team in teams]
-        assert len(teams) == 2, f"Incorrect number of teams found: {teams}\n"
+            teams = card.find_element(By.CLASS_NAME, 'sportsbook-event-accordion__title-wrapper').text
+            teams = teams.split('\n')
+            teams = [team.strip().lower() for team in teams]
+            teams.pop(teams.index('at'))
+            teams = [team_name_dict[team] for team in teams]
+            assert len(teams) == 2, f"Incorrect number of teams found: {teams}\n"
 
-        # Locate names and odds together since if done separately, an ordering issue arises from the scrape
-        names_and_odds = card.find_elements(By.CLASS_NAME, 'scorer-7__body')
-        names_and_odds_split = [info.text.split('\n') for info in names_and_odds]
+            # Locate names and odds together since if done separately, an ordering issue arises from the scrape
+            names_and_odds = card.find_elements(By.CLASS_NAME, 'scorer-7__body')
+            names_and_odds_split = [info.text.split('\n') for info in names_and_odds]
+            assert all([len(s) == 2 for s in names_and_odds_split]), "Names and odds list is incorrect length. Should be 2 (name and odd of scoring).\n"
 
-        # Generate list of names
-        names_single_game = [splits[0] for splits in names_and_odds_split]
-        names_single_game = [clean_name(name) for name in  names_single_game]
-        
-        # Generate list of odds
-        odds_single_game = [splits[anytime_end_index] for splits in names_and_odds_split]
-        odds_single_game = [int(odd.replace("−", "-")) for odd in odds_single_game]
+            # Generate list of names
+            names_single_game = [splits[0] for splits in names_and_odds_split]
+            names_single_game = [clean_name(name) for name in  names_single_game]
+            
+            # Generate list of odds
+            odds_single_game = [splits[anytime_end_index] for splits in names_and_odds_split]
+            odds_single_game = [int(odd.replace("−", "-")) for odd in odds_single_game]
 
-        # Append these values to running list
-        assert len(names_single_game) == len(odds_single_game), f"Number of names should be the same as the number of odds:\nNum names:{len(names_single_game)}\nNum odds: {len(odds_single_game)}\n"
-        names.extend(names_single_game)
-        odds.extend(odds_single_game)
-        away_teams.extend([teams[0]] * len(names_single_game))
-        home_teams.extend([teams[1]] * len(names_single_game))
+            # Append these values to running list
+            assert len(names_single_game) == len(odds_single_game), f"Number of names should be the same as the number of odds:\nNum names:{len(names_single_game)}\nNum odds: {len(odds_single_game)}\n"
+            names.extend(names_single_game)
+            odds.extend(odds_single_game)
+            away_teams.extend([teams[0]] * len(names_single_game))
+            home_teams.extend([teams[1]] * len(names_single_game))
+        except:
+            # Locate teams on each card
+            teams = card.find_element(By.CLASS_NAME, 'sportsbook-event-accordion__title-wrapper').text
+            teams = teams.split('\n')
+            teams = [team.strip().lower() for team in teams]
+            teams.pop(teams.index('at'))
+            teams = [team_name_dict[team] for team in teams]
+            assert len(teams) == 2, f"Incorrect number of teams found: {teams}\n"
+
+            # Locate names and odds together since if done separately, an ordering issue arises from the scrape
+            names_and_odds = card.find_elements(By.CLASS_NAME, 'component-204-horizontal__outcome-row')
+            names_and_odds_split = [info.text.split('\n') for info in names_and_odds]
+            assert all([len(s) >= 2 for s in names_and_odds_split]), f"Names and odds list is incorrect length. Should be at least 2 (name and odd of scoring): {names_and_odds_split}"
+            names_and_odds_split = [[info[0], info[-1]] for info in names_and_odds_split]
+            
+            # Generate list of names
+            names_single_game = [splits[0] for splits in names_and_odds_split]
+            names_single_game = [clean_name(name) for name in  names_single_game]
+
+            # Generate list of odds
+            odds_single_game = [splits[1] for splits in names_and_odds_split]
+            odds_single_game = [int(odd.replace("−", "-")) for odd in odds_single_game]
+
+            # Append these values to running list
+            assert len(names_single_game) == len(odds_single_game), f"Number of names should be the same as the number of odds:\nNum names:{len(names_single_game)}\nNum odds: {len(odds_single_game)}\n"
+            names.extend(names_single_game)
+            odds.extend(odds_single_game)
+            away_teams.extend([teams[0]] * len(names_single_game))
+            home_teams.extend([teams[1]] * len(names_single_game))
 
     driver.quit()
     #==========Exit web driver scrape==========#
