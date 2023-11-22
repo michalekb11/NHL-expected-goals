@@ -12,6 +12,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import re
 
 ########################################################
 def clean_name(name):
@@ -63,18 +64,42 @@ def retrieve_sportsbook_info(url):
     # Record the current date and time so we know when the recording occured
     dt_now = dt.datetime.now()
 
-    # Record the HTML code from url as bs4 object
-    response = requests.get(url)
-    soup = BeautifulSoup(response.content, 'html.parser')
+    try:
+        # Record the HTML code from url as bs4 object
+        response = requests.get(url)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        # Each sportsbook table on the page separated in a list
+        # We need them as separate items in list because each one is a different date.
+        # This is the only way to correctly assign a date to each game.
+        sportsbook_tables = soup.find_all(class_ = 'sportsbook-table')
 
-    # Each sportsbook table on the page separated in a list
-    # We need them as separate items in list because each one is a different date.
-    # This is the only way to correctly assign a date to each game.
-    sportsbook_tables = soup.find_all(class_ = 'sportsbook-table')
-
-    # If no tables were detected, raise an error.
-    if len(sportsbook_tables) == 0:
-        raise Exception('No DK tables were found.')
+        # If no tables were detected, raise an error.
+        if len(sportsbook_tables) == 0:
+            raise ValueError('No sportsbook tables were found.') 
+    except ValueError:
+        # Print message
+        print(f"The first attempt to webscrape did not find sportsbook tables. Attempting method using Selenium.\n")
+        # Configure Chrome options
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')  # Run in headless mode
+        # Create a WebDriver instance
+        driver = webdriver.Chrome(options=options)
+        # Open the URL
+        driver.get("https://sportsbook.draftkings.com/leagues/hockey/nhl")
+        # Explicitly wait for the elements with the specified class to appear
+        wait = WebDriverWait(driver, 30)  # Wait for up to 30 seconds
+        # Get to the correct URL if you were rerouted to the home NHL URL
+        print(f'Driver has been directed to main hockey URL. This should have the game cards.\n')
+        # Get the html as a string after we ensure all game cards are located
+        wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "sportsbook-table")))
+        html_string = driver.find_element(By.XPATH, "//body").get_attribute('outerHTML')
+        # Convert to beautiful soup object
+        soup = BeautifulSoup(html_string, "html.parser")
+        # Find the sportsbook tables
+        sportsbook_tables = soup.find_all(class_ = 'sportsbook-table')
+        # If we still did not find any tables, raise another error
+        if len(sportsbook_tables) == 0:
+            raise ValueError('No sportsbook tables were found.')
 
     # Establish time zones. DK stores in UTC. We will need to convert this to Central Time (taking into account whether currently in DST, etc.)
     central_tz = pytz.timezone('America/Chicago')
@@ -716,6 +741,17 @@ def get_60min_odds(date_of_games = None, today_flag = None):
     # Explicitly wait for the elements with the specified class to appear
     wait = WebDriverWait(driver, 30)  # Wait for up to 30 seconds
 
+    # Get to the correct URL if you were rerouted to the home NHL URL
+    if bool(re.search('/leagues/hockey/nhl$', driver.current_url)):
+        print(f'We were rerouted to NHL home URL. Navigating to 60 min URL.\n')
+        # Find the tab we should click
+        link_60min = wait.until(EC.presence_of_element_located((By.LINK_TEXT, "60 MIN LINE")), f"On URL {driver.current_url}, could not find tab '60 MIN LINE'\n")
+        # Click the 60min link to get to correct URL
+        link_60min.click()
+        # Ensure we are on correct URL
+        assert bool(re.search('subcategory=60-min-line$', driver.current_url)), f"Current URL not 60 min line: {driver.current_url}\n"
+        print(f'Successfully navigated to 60 min line URL.\n')
+
     # Get each game card
     game_cards = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'sportsbook-event-accordion__wrapper.expanded')))
     game_cards_final = []
@@ -834,6 +870,18 @@ def get_anytime_scorer_odds(date_of_games = None, today_flag = None):
 
     # Explicitly wait for the elements with the specified class to appear
     wait = WebDriverWait(driver, 30)  # Wait for up to 30 seconds
+
+    # Get to the correct URL if you were rerouted to the home NHL URL
+    if bool(re.search('/leagues/hockey/nhl$', driver.current_url)):
+        print(f'We were rerouted to NHL home URL. Navigating to goalscorer URL.\n')
+        # Find the tab we should click
+        goalscorer_link = wait.until(EC.presence_of_element_located((By.LINK_TEXT, "GOALSCORER")), f"On URL {driver.current_url}, could not find tab 'GOALSCORER'\n")
+        # Click the goalscorer link to get to correct URL
+        goalscorer_link.click()
+        
+        # Ensure we are on correct URL
+        assert bool(re.search('category=goalscorer$', driver.current_url)), f"Current URL not goalscorer: {driver.current_url}\n"
+        print(f'Successfully navigated to goalscorer URL.\n')
 
     # Get each game card
     game_cards = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'sportsbook-event-accordion__wrapper.expanded')))
