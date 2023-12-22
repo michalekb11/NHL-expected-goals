@@ -129,12 +129,15 @@ def retrieve_sportsbook_info(url):
         # Gather DK version of time information
         dk_times = [time.text for time in table.find_all(class_ = 'event-cell__start-time')]
         dk_times = [dt.datetime.strptime(time, '%I:%M%p').time() for time in dk_times]
+        print(dk_times[0])
 
         # Create the DK version of the game's date and time
         tbl_games_dt = [dt.datetime.combine(date, time) for time in dk_times]
+        print(tbl_games_dt[0])
 
         # Perform the time zone change to central time
         tbl_games_dt = [gametime.replace(tzinfo = utc_tz).astimezone(central_tz).replace(tzinfo = None) for gametime in tbl_games_dt]
+        print(tbl_games_dt[0])
         games_dt.extend(tbl_games_dt)
         
         # Get the list of teams playing
