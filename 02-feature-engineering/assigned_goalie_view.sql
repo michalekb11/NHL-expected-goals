@@ -23,12 +23,14 @@ DROP VIEW IF EXISTS assigned_goalie;
 CREATE VIEW assigned_goalie AS (
     WITH ordered AS (
         SELECT player_id,
+            team,
             date,
             ROW_NUMBER() OVER (PARTITION BY team, date ORDER BY GA DESC, SA DESC, TOI DESC, decision DESC) AS goalie_priority
 		FROM goalie_games
     )
 
     SELECT player_id,
+        team,
         date
     FROM ordered
     WHERE goalie_priority = 1
