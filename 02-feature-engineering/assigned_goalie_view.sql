@@ -16,7 +16,7 @@
     -- 1. Choose the goalie that gave up the most goals (this is the association we want to learn)
     -- 2. Choose the goalie that faced the most shots (most "action" or events that could have resulted in a goal)
     -- 3. Choose the goalie that had the most time on ice (second version of most "action")
-    -- 4. Choose one goalie at random
+    -- 4. Choose the goalie that received decision (gave up game winner or got the win)
 -- ------------------------------------------------------
 DROP VIEW IF EXISTS assigned_goalie;
 
@@ -24,7 +24,8 @@ CREATE VIEW assigned_goalie AS (
     WITH ordered AS (
         SELECT player_id,
             date,
-            ROW_NUMBER() OVER (PARTITION BY team, date ORDER BY GA DESC SA DESC TOI DESC) AS goalie_priority
+            ROW_NUMBER() OVER (PARTITION BY team, date ORDER BY GA DESC, SA DESC, TOI DESC, decision DESC) AS goalie_priority
+		FROM goalie_games
     )
 
     SELECT player_id,
