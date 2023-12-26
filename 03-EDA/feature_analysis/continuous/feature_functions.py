@@ -34,7 +34,8 @@ def boxplot(feature, target, ax=None):
     plt.show(g)
     return
 
-def density_plot(feature, target):
+def make_density_plot(feature, target):
+    target = np.array(target, dtype=str)
     # Clear any old graphic
     plt.clf()
     # Set up data
@@ -42,14 +43,14 @@ def density_plot(feature, target):
     num_lables = len(set(target))
     # Create plot
     if num_lables == 2:
-        g = sns.kdeplot(data=data, x='feature', hue='target', common_norm=False, palette=['salmon', 'seagreen'])
+        g = sns.kdeplot(data=data, x='feature', hue='target', common_norm=False, palette={'False':'salmon', 'True':'seagreen'})
     elif num_lables == 3:
-        g = sns.kdeplot(data=data, x='feature', hue='target', common_norm=False, palette=['salmon', 'mediumseagreen', 'darkgreen'])
+        g = sns.kdeplot(data=data, x='feature', hue='target', common_norm=False, palette={'0':'salmon', '1':'mediumseagreen', '2+':'darkgreen'})
     else:
         g = sns.kdeplot(data=data, x='feature', hue='target', common_norm=False)
-    # Other customizaitons
+
+    # Other customizations
     plt.xlabel(feature.name)
-    plt.legend(title=target.name)
     plt.show(g)
     return
 
@@ -58,31 +59,37 @@ def diff_in_means(feature, target):
     """Calculate the difference in means of feature in target levels"""
     # Standardize feature
     x = np.array(feature)
-    x_standard = (x - np.mean(x)) / np.std(x)
+    x_standard = (x - np.nanmean(x)) / np.nanstd(x)
 
     # Ensure only 2 levels, 2nd level is max 
     y_unique = np.unique(target)
-    assert len(set(target)) == 2, "Target should be binary"
+    assert len(y_unique) == 2, "Target should be binary"
     assert max(y_unique) == y_unique[1], "Unique values of target are out of order"
 
+    x_goals = x_standard[[True if elem == y_unique[1] else False for elem in target]]
+    x_nogoal = x_standard[[True if elem == y_unique[0] else False for elem in target]]
+
     # Compute difference in mean
-    diff = x_standard[target == y_unique[1]].mean() - x_standard[target == y_unique[0]].mean()
+    diff = np.nanmean(x_goals) - np.nanmean(x_nogoal)
 
     return diff
 
-# Function for difference in means between target levels
+# Function for difference in medians between target levels
 def diff_in_medians(feature, target):
-    """Calculate the difference in means of feature in target levels"""
+    """Calculate the difference in medians of feature in target levels"""
     # Standardize feature
     x = np.array(feature)
-    x_standard = (x - np.mean(x)) / np.std(x)
+    x_standard = (x - np.nanmean(x)) / np.nanstd(x)
 
     # Ensure only 2 levels, 2nd level is max 
     y_unique = np.unique(target)
     assert len(set(target)) == 2, "Target should be binary"
     assert max(y_unique) == y_unique[1], "Unique values of target are out of order"
 
-    # Compute difference in mean
-    diff = np.median(x_standard[target == y_unique[1]]) - np.median(x_standard[target == y_unique[0]])
+    x_goals = x_standard[[True if elem == y_unique[1] else False for elem in target]]
+    x_nogoal = x_standard[[True if elem == y_unique[0] else False for elem in target]]
+
+    # Compute difference in median
+    diff = np.nanmedian(x_goals) - np.nanmedian(x_nogoal)
 
     return diff
