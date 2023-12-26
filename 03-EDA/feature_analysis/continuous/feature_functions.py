@@ -34,7 +34,7 @@ def boxplot(feature, target, ax=None):
     plt.show(g)
     return
 
-def make_density_plot(feature, target):
+def density_plot(feature, target):
     target = np.array(target, dtype=str)
     # Clear any old graphic
     plt.clf()
