@@ -102,8 +102,9 @@ def retrieve_sportsbook_info(url):
             raise ValueError('No sportsbook tables were found.')
 
     # Establish time zones. DK stores in UTC. We will need to convert this to Central Time (taking into account whether currently in DST, etc.)
-    central_tz = pytz.timezone('America/Chicago')
-    utc_tz = pytz.timezone('UTC')
+    # Note: DK has switched to correct tz when scraping, so this is no longer needed
+    #central_tz = pytz.timezone('America/Chicago')
+    #utc_tz = pytz.timezone('UTC')
 
     # Create empty spaces to store each set of datetimes, teams, lines, and odds
     # We will extend these lists for each DK table we come across
@@ -129,15 +130,12 @@ def retrieve_sportsbook_info(url):
         # Gather DK version of time information
         dk_times = [time.text for time in table.find_all(class_ = 'event-cell__start-time')]
         dk_times = [dt.datetime.strptime(time, '%I:%M%p').time() for time in dk_times]
-        print(dk_times[0])
 
         # Create the DK version of the game's date and time
         tbl_games_dt = [dt.datetime.combine(date, time) for time in dk_times]
-        print(tbl_games_dt[0])
 
-        # Perform the time zone change to central time
-        tbl_games_dt = [gametime.replace(tzinfo = utc_tz).astimezone(central_tz).replace(tzinfo = None) for gametime in tbl_games_dt]
-        print(tbl_games_dt[0])
+        # Perform the time zone change to central time (if necessary... currently scraping the accurate time zone)
+        #tbl_games_dt = [gametime.replace(tzinfo = utc_tz).astimezone(central_tz).replace(tzinfo = None) for gametime in tbl_games_dt]
         games_dt.extend(tbl_games_dt)
         
         # Get the list of teams playing
