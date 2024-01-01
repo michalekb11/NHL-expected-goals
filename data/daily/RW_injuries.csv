@@ -9979,3 +9979,135 @@ player_id,name,team,date_recorded,time_recorded,type,status
 ,tucker poolman,VAN,2023-12-31,09:53:17,head,IR-LT
 ,jake muzzin,TOR,2023-12-31,09:53:17,neck,IR-LT
 ,travis boyd,ARI,2023-12-31,09:53:17,pectoral,IR
+,milan lucic,BOS,2024-01-01,11:01:12,ankle,IR-LT
+,derek forbort,BOS,2024-01-01,11:01:12,undisclosed,IR-LT
+,jesper fast,CAR,2024-01-01,11:01:12,upper body,DTD
+,sean kuraly,CBJ,2024-01-01,11:01:12,abdomen,IR
+,elvis merzlikins,CBJ,2024-01-01,11:01:12,illness,DTD
+,nick blankenburg,CBJ,2024-01-01,11:01:12,upper body,IR
+,kaapo kakko,NYR,2024-01-01,11:01:12,lower body,IR-LT
+,bryan rust,PIT,2024-01-01,11:01:12,upper body,IR-LT
+,matt nieto,PIT,2024-01-01,11:01:12,lower body,IR
+,jesse puljujarvi,PIT,2024-01-01,11:01:12,hip,O
+,pierre olivier joseph,PIT,2024-01-01,11:01:12,illness,DTD
+,cam allen,WSH,2024-01-01,11:01:12,shoulder,O
+,tj oshie,WSH,2024-01-01,11:01:12,lower body,IR
+,max pacioretty,WSH,2024-01-01,11:01:12,achilles,IR-LT
+,sonny milano,WSH,2024-01-01,11:01:12,upper body,IR
+,charlie lindgren,WSH,2024-01-01,11:01:12,upper body,DTD
+,martin fehervary,WSH,2024-01-01,11:01:12,upper body,DTD
+,oliver kylington,CGY,2024-01-01,11:01:12,personal,IR-LT
+,jakob pelletier,CGY,2024-01-01,11:01:12,shoulder,IR-NR
+,nikita zaitsev,CHI,2024-01-01,11:01:12,illness,DTD
+,jerad rosburg,DAL,2024-01-01,11:01:12,undisclosed,IR-NR
+,mats zuccarello,MIN,2024-01-01,11:01:12,upper body,IR
+,jonas brodin,MIN,2024-01-01,11:01:12,upper body,IR-LT
+,kirill kaprizov,MIN,2024-01-01,11:01:12,upper body,DTD
+,filip gustavsson,MIN,2024-01-01,11:01:12,lower body,DTD
+,vinni lettieri,MIN,2024-01-01,11:01:12,lower body,DTD
+,sam hentges,MIN,2024-01-01,11:01:12,undisclosed,IR-NR
+,michael milne,MIN,2024-01-01,11:01:12,undisclosed,IR-NR
+,christian dvorak,MTL,2024-01-01,11:01:12,upper body,O
+,tyson barrie,NSH,2024-01-01,11:01:12,upper body,DTD
+,kevin lankinen,NSH,2024-01-01,11:01:12,illness,DTD
+,conor sheary,TBL,2024-01-01,11:01:12,hand,DTD
+,haydn fleury,TBL,2024-01-01,11:01:12,undisclosed,DTD
+,erik cernak,TBL,2024-01-01,11:01:12,undisclosed,DTD
+,mikhail sergachev,TBL,2024-01-01,11:01:12,lower body,DTD
+,david gustafsson,WPG,2024-01-01,11:01:12,lower body,IR
+,jj moser,ARI,2024-01-01,11:01:12,upper body,DTD
+,vladislav kolyachonok,ARI,2024-01-01,11:01:12,lower body,IR
+,ross colton,COL,2024-01-01,11:01:12,leg,DTD
+,jean luc foudy,COL,2024-01-01,11:01:12,lower body,IR-NR
+,sam gagner,EDM,2024-01-01,11:01:12,undisclosed,DTD
+,dylan holloway,EDM,2024-01-01,11:01:12,lower body,IR-LT
+,adam pelech,NYI,2024-01-01,11:01:12,upper body,IR-LT
+,ryan pulock,NYI,2024-01-01,11:01:12,lower body,IR-LT
+,rourke chartier,OTT,2024-01-01,11:01:12,upper body,IR
+,carson soucy,VAN,2024-01-01,11:01:12,lower body,IR-LT
+,guillaume brisebois,VAN,2024-01-01,11:01:12,undisclosed,IR-LT
+,ville husso,DET,2024-01-01,11:01:12,lower body,IR
+,klim kostin,DET,2024-01-01,11:01:12,upper body,IR
+,logan couture,SJS,2024-01-01,11:01:12,lower body,IR
+,matt benning,SJS,2024-01-01,11:01:12,lower body,IR
+,jacob macdonald,SJS,2024-01-01,11:01:12,lower body,IR
+,givani smith,SJS,2024-01-01,11:01:12,lower body,IR
+,mario ferraro,SJS,2024-01-01,11:01:12,upper body,DTD
+,nico sturm,SJS,2024-01-01,11:01:12,abdomen,IR
+,mitchell russell,SJS,2024-01-01,11:01:12,undisclosed,IR-NR
+,ryan reaves,TOR,2024-01-01,11:01:12,lower body,IR
+,curtis lazar,NJD,2024-01-01,11:01:12,lower body,DTD
+,tomas nosek,NJD,2024-01-01,11:01:12,foot,IR
+,timo meier,NJD,2024-01-01,11:01:12,undisclosed,DTD
+,nolan foote,NJD,2024-01-01,11:01:12,undisclosed,IR-NR
+,troy terry,ANA,2024-01-01,11:01:12,upper body,DTD
+,shea theodore,VGK,2024-01-01,11:01:12,upper body,IR-LT
+,adin hill,VGK,2024-01-01,11:01:12,undisclosed,IR
+,kaedan korczak,VGK,2024-01-01,11:01:12,lower body,IR
+,philipp grubauer,SEA,2024-01-01,11:01:12,lower body,IR
+,adam boqvist,CBJ,2024-01-01,11:01:12,shoulder,IR
+,jake oettinger,DAL,2024-01-01,11:01:12,lower body,O
+,rasmus kupari,WPG,2024-01-01,11:01:12,shoulder,IR
+,justin faulk,STL,2024-01-01,11:01:12,lower body,DTD
+,joshua jacobs,STL,2024-01-01,11:01:12,undisclosed,IR-NR
+,anton malmstrom,STL,2024-01-01,11:01:12,undisclosed,IR-NR
+,filip chytil,NYR,2024-01-01,11:01:12,upper body,IR-LT
+,tanner molendyk,NSH,2024-01-01,11:01:12,wrist,O
+,taylor raddysh,CHI,2024-01-01,11:01:12,groin,IR
+,joey anderson,CHI,2024-01-01,11:01:12,shoulder,IR
+,tyler johnson,CHI,2024-01-01,11:01:12,undisclosed,O
+,andreas athanasiou,CHI,2024-01-01,11:01:12,groin,IR
+,seth jones,CHI,2024-01-01,11:01:12,shoulder,IR
+,ville heinola,WPG,2024-01-01,11:01:12,ankle,IR-NR
+,tristan luneau,ANA,2024-01-01,11:01:12,illness,O
+,jeremie poirier,CGY,2024-01-01,11:01:12,arm,O
+,kevin rooney,CGY,2024-01-01,11:01:12,shoulder,IR-LT
+,mathieu joseph,OTT,2024-01-01,11:01:12,lower body,IR-LT
+,pheonix copley,LAK,2024-01-01,11:01:12,undisclosed,IR-LT
+,joseph woll,TOR,2024-01-01,11:01:12,ankle,IR
+,ben hutton,VGK,2024-01-01,11:01:12,upper body,O
+,tanner pearson,MTL,2024-01-01,11:01:12,upper body,IR
+,jaden schwartz,SEA,2024-01-01,11:01:12,lower body,IR-LT
+,matt luff,DET,2024-01-01,11:01:12,upper body,IR
+,nikolai kovalenko,COL,2024-01-01,11:01:12,undisclosed,O
+,frederik andersen,CAR,2024-01-01,11:01:12,illness,IR
+,chris wideman,MTL,2024-01-01,11:01:12,back,IR
+,rafael harvey pinard,MTL,2024-01-01,11:01:12,lower body,IR
+,pierre edouard bellemare,SEA,2024-01-01,11:01:12,leg,IR
+,logan brown,TBL,2024-01-01,11:01:12,undisclosed,IR-LT
+,boone jenner,CBJ,2024-01-01,11:01:12,jaw,IR
+,noah cates,PHI,2024-01-01,11:01:12,foot,IR
+,leo carlsson,ANA,2024-01-01,11:01:12,knee,IR
+,shane pinto,OTT,2024-01-01,11:01:12,suspension,O
+,artturi lehkonen,COL,2024-01-01,11:01:12,neck,IR-LT
+,zach werenski,CBJ,2024-01-01,11:01:12,ankle,IR
+,patrik laine,CBJ,2024-01-01,11:01:12,collarbone,IR
+,ryan fanti,EDM,2024-01-01,11:01:12,hip,IR-NR
+,luke philp,CHI,2024-01-01,11:01:12,achilles,IR-NR
+,chris wagner,COL,2024-01-01,11:01:12,achilles,IR-NR
+,robin lehner,VGK,2024-01-01,11:01:12,hip,IR-LT
+,daniil miromanov,VGK,2024-01-01,11:01:12,undisclosed,IR-LT
+,kyle connor,WPG,2024-01-01,11:01:12,knee,IR
+,samuel savoie,CHI,2024-01-01,11:01:12,lower body,IR-NR
+,barrett hayton,ARI,2024-01-01,11:01:12,hand,IR
+,isac lundestrom,ANA,2024-01-01,11:01:12,achilles,IR-NR
+,viktor arvidsson,LAK,2024-01-01,11:01:12,back,IR-LT
+,dougie hamilton,NJD,2024-01-01,11:01:12,pectoral,IR
+,alex newhook,MTL,2024-01-01,11:01:12,ankle,IR
+,maros jedlicka,COL,2024-01-01,11:01:12,upper body,O
+,gabriel landeskog,COL,2024-01-01,11:01:12,knee,IR-LT
+,john klingberg,TOR,2024-01-01,11:01:12,hip,IR-LT
+,matt murray,TOR,2024-01-01,11:01:12,hip,IR-LT
+,carey price,MTL,2024-01-01,11:01:12,knee,IR-LT
+,bryan little,ARI,2024-01-01,11:01:12,head,IR-LT
+,jakub voracek,ARI,2024-01-01,11:01:12,concussion,IR
+,ryan ellis,PHI,2024-01-01,11:01:12,back,IR-LT
+,ben harpur,NYR,2024-01-01,11:01:12,pectoral,O
+,nicklas backstrom,WSH,2024-01-01,11:01:12,hip,IR-LT
+,taylor hall,CHI,2024-01-01,11:01:12,knee,IR
+,kirby dach,MTL,2024-01-01,11:01:12,knee,IR
+,shea weber,ARI,2024-01-01,11:01:12,ankle,IR-LT
+,pavel francouz,COL,2024-01-01,11:01:12,groin,IR-LT
+,tucker poolman,VAN,2024-01-01,11:01:12,head,IR-LT
+,jake muzzin,TOR,2024-01-01,11:01:12,neck,IR-LT
+,travis boyd,ARI,2024-01-01,11:01:12,pectoral,IR
