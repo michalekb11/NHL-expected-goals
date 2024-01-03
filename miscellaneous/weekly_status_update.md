@@ -6,6 +6,8 @@
 
 [Week 11](#week-11) | [Week 12](#week-12) | [Week 13](#week-13) | [Week 14](#week-14) | [Week 15](#week-15) 
 
+[Week 16](#week-16) | [Week 17](#week-17) | [Week 18](#week-18) | [Week 19](#week-19) | [Week 20](#week-20) 
+
 ## Week 1 (09/11/23 - 09/17/23) <a name="week-1"></a>
 * Created production python files for 3 web scrape scripts (DF lines, RW injuries, and DK game odds)
    - Results will be saved in CSVs. Some basic validations in place, but could be improved. Error handling could be improved.
@@ -59,7 +61,27 @@
 
 ## Week 13 (12/04/23 - 12/10/23) <a name="week-13"></a>
 * Daily scrapes
-* xxx
 
+## Week 14 (12/11/23 - 12/17/23) <a name="week-14"></a>
+* Daily scrapes
+
+## Week 15 (12/18/23 - 12/24/23) <a name="week-15"></a>
+* Daily scrapes
+* Created goalie assignment view that assigns goalies a priority for each game (chooses 1 per game)
+* Updates to continuous feature report
+
+## Week 16 (12/25/23 - 12/31/23) <a name="week-16"></a>
+* Daily scrapes
+* Ran the reports for continous and discrete features (as well as creating excel workbooks highlighting some results)
+* Small bug fixes to scraping functions
+
+## Week 17 (01/01/24 - 01/07/24) <a name="week-17"></a>
+* Daily scrapes
+* Created a baseline object class for modeling
+* Wrote template PyTorch code required to train regression neural network
+* (Ran into issues with MySQL crashing)
+
+## Week 18 (01/08/24 - 01/14/24) <a name="week-18"></a>
+* x
 
 
