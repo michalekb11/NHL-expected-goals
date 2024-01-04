@@ -352,18 +352,47 @@ def process_forwards(section_html):
 # Function to process defenseman
 def process_defenseman(section_html):
     """Process defenseman section of DF lines"""
-    # Names
-    names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
-    names = [n.text.strip() for n in names_html]
+    # Find each line of containers within defense section
+    lines = section_html.find_all(class_ = 'mb-4 flex flex-row flex-wrap justify-evenly border-b')
+    lines.append(section_html.find_next(class_ = 'flex flex-row flex-wrap justify-evenly'))
 
-    assert len(names) == 6, f'Incorrect number of defenseman were found: {len(names)}.'
+    # Find names within each container (blank containers have no name and will be skipped)
+    standard_positions = ['LD', 'RD']
+    names = []
+    positions = []
+    line_num = []
+
+    for line_num_zero_index, line in enumerate(lines):
+        containers = line.find_all(class_ = 'w-1/2 text-center xl:w-48')
+        for ind, container in enumerate(containers):
+            name_html = container.find(class_ = 'text-xs font-bold uppercase xl:text-base')
+            if name_html is not None:
+                name = name_html.text.strip()
+                names.append(name)
+                positions.append(standard_positions[ind])
+                line_num.append(line_num_zero_index + 1)
+            else:
+                continue
+
+    if len(names) != 6:
+        print(f'Incorrect number of defenseman were found: {len(names)}.\n{names}\n')
+        #return None
+
+    #####
+    # OLD CODE FOR SCRAPING DEFENSE LINEUPS. SOMETIMES TEAMS DON'T DRESS 6 DEFENSEMAN
+    # Names
+    #names_html = section_html.find_all(class_ = 'text-xs font-bold uppercase xl:text-base')
+    #names = [n.text.strip() for n in names_html]
+
+    #assert len(names) == 6, f'Incorrect number of defenseman were found: {len(names)}.'
 
     # Positions
-    positions = ['LD', 'RD'] * 3
+    #positions = ['LD', 'RD'] * 3
 
     # Line number
-    line_num = [item for item in [1, 2, 3] for _ in range(2)]
-
+    #line_num = [item for item in [1, 2, 3] for _ in range(2)]
+    #####
+        
     # Injury status
     injury_html = section_html.find_all(class_ = 'rounded-md bg-red-500 pl-1 pr-1 text-2xl uppercase text-white')
     injury_status = [inj.text.strip().upper() for inj in injury_html]
