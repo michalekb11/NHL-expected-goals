@@ -28,13 +28,13 @@ CREATE VIEW goalie_per60_rolling3 AS (
 			SUM(gg.SA) OVER(PARTITION BY gg.player_id, sched.season ORDER BY gg.date ROWS BETWEEN 3 PRECEDING AND 1 PRECEDING) AS SA_tot,
 			SUM(gg.SV) OVER(PARTITION BY gg.player_id, sched.season ORDER BY gg.date ROWS BETWEEN 3 PRECEDING AND 1 PRECEDING) AS SV_tot
 		FROM goalie_games gg
-        LEFT JOIN schedule sched
+        LEFT JOIN SCHEDULE sched
 			ON gg.team = sched.team
             AND gg.date = sched.date
 	)
 
 	SELECT player_id,
-		date,
+		DATE,
 		60 * (GA_tot / TOI_tot) AS GA60_3,
 		60 * (SA_tot / TOI_tot) AS SA60_3,
 		60 * (SV_tot / TOI_tot) AS SV60_3,
@@ -45,9 +45,9 @@ CREATE VIEW goalie_per60_rolling3 AS (
 );
 
 -- Check results
-select * from goalie_per60_rolling3 limit 100;
-select count(*) from goalie_per60_rolling3; -- 6,556
-select count(*) from goalie_games where game_num > 3; -- 6,556
+-- SELECT * FROM goalie_per60_rolling3 LIMIT 100;
+-- SELECT count(*) FROM goalie_per60_rolling3; -- 6,556
+-- SELECT count(*) FROM goalie_games WHERE game_num > 3; -- 6,556
 
 -- ---------------------------------------------------------
 -- View for last 5 games
@@ -66,13 +66,13 @@ CREATE VIEW goalie_per60_rolling5 AS (
 			SUM(gg.SA) OVER(PARTITION BY gg.player_id, sched.season ORDER BY gg.date ROWS BETWEEN 5 PRECEDING AND 1 PRECEDING) AS SA_tot,
 			SUM(gg.SV) OVER(PARTITION BY gg.player_id, sched.season ORDER BY gg.date ROWS BETWEEN 5 PRECEDING AND 1 PRECEDING) AS SV_tot
 		FROM goalie_games gg
-        LEFT JOIN schedule sched
+        LEFT JOIN SCHEDULE sched
 			ON gg.team = sched.team
             AND gg.date = sched.date
 	)
 
 	SELECT player_id,
-		date,
+		DATE,
 		60 * (GA_tot / TOI_tot) AS GA60_5,
 		60 * (SA_tot / TOI_tot) AS SA60_5,
 		60 * (SV_tot / TOI_tot) AS SV60_5,
@@ -83,9 +83,9 @@ CREATE VIEW goalie_per60_rolling5 AS (
 );
 
 -- Check results
-select * from goalie_per60_rolling5 limit 100;
-select count(*) from goalie_per60_rolling5; -- 6,041
-select count(*) from goalie_games where game_num > 5; -- 6,041
+-- SELECT * FROM goalie_per60_rolling5 LIMIT 100;
+-- SELECT count(*) FROM goalie_per60_rolling5; -- 6,041
+-- SELECT count(*) FROM goalie_games WHERE game_num > 5; -- 6,041
 
 -- ---------------------------------------------------------
 -- View for last 10 games
@@ -104,13 +104,13 @@ CREATE VIEW goalie_per60_rolling10 AS (
 			SUM(gg.SA) OVER(PARTITION BY gg.player_id, sched.season ORDER BY gg.date ROWS BETWEEN 10 PRECEDING AND 1 PRECEDING) AS SA_tot,
 			SUM(gg.SV) OVER(PARTITION BY gg.player_id, sched.season ORDER BY gg.date ROWS BETWEEN 10 PRECEDING AND 1 PRECEDING) AS SV_tot
 		FROM goalie_games gg
-        LEFT JOIN schedule sched
+        LEFT JOIN SCHEDULE sched
 			ON gg.team = sched.team
             AND gg.date = sched.date
 	)
 
 	SELECT player_id,
-		date,
+		DATE,
 		60 * (GA_tot / TOI_tot) AS GA60_10,
 		60 * (SA_tot / TOI_tot) AS SA60_10,
 		60 * (SV_tot / TOI_tot) AS SV60_10,
@@ -121,9 +121,9 @@ CREATE VIEW goalie_per60_rolling10 AS (
 );
 
 -- Check results
-select * from goalie_per60_rolling10 limit 100;
-select count(*) from goalie_per60_rolling10; -- 4,891
-select count(*) from goalie_games where game_num > 10; -- 4,891
+-- SELECT * FROM goalie_per60_rolling10 LIMIT 100;
+-- SELECT count(*) FROM goalie_per60_rolling10; -- 4,891
+-- SELECT count(*) FROM goalie_games WHERE game_num > 10; -- 4,891
 
 -- ---------------------------------------------------------
 -- View for last 15 games
@@ -142,13 +142,13 @@ CREATE VIEW goalie_per60_rolling15 AS (
 			SUM(gg.SA) OVER(PARTITION BY gg.player_id, sched.season ORDER BY gg.date ROWS BETWEEN 15 PRECEDING AND 1 PRECEDING) AS SA_tot,
 			SUM(gg.SV) OVER(PARTITION BY gg.player_id, sched.season ORDER BY gg.date ROWS BETWEEN 15 PRECEDING AND 1 PRECEDING) AS SV_tot
 		FROM goalie_games gg
-        LEFT JOIN schedule sched
+        LEFT JOIN SCHEDULE sched
 			ON gg.team = sched.team
             AND gg.date = sched.date
 	)
 
 	SELECT player_id,
-		date,
+		DATE,
 		60 * (GA_tot / TOI_tot) AS GA60_15,
 		60 * (SA_tot / TOI_tot) AS SA60_15,
 		60 * (SV_tot / TOI_tot) AS SV60_15,
@@ -159,9 +159,9 @@ CREATE VIEW goalie_per60_rolling15 AS (
 );
 
 -- Check results
-select * from goalie_per60_rolling15 limit 100;
-select count(*) from goalie_per60_rolling15; -- 3,855
-select count(*) from goalie_games where game_num > 15; -- 3,855
+-- SELECT * FROM goalie_per60_rolling15 LIMIT 100;
+-- SELECT count(*) FROM goalie_per60_rolling15; -- 3,855
+-- SELECT count(*) FROM goalie_games WHERE game_num > 15; -- 3,855
 
 -- ---------------------------------------------------------
 -- View for last 20 games
@@ -180,13 +180,13 @@ CREATE VIEW goalie_per60_rolling20 AS (
 			SUM(gg.SA) OVER(PARTITION BY gg.player_id, sched.season ORDER BY gg.date ROWS BETWEEN 20 PRECEDING AND 1 PRECEDING) AS SA_tot,
 			SUM(gg.SV) OVER(PARTITION BY gg.player_id, sched.season ORDER BY gg.date ROWS BETWEEN 20 PRECEDING AND 1 PRECEDING) AS SV_tot
 		FROM goalie_games gg
-        LEFT JOIN schedule sched
+        LEFT JOIN SCHEDULE sched
 			ON gg.team = sched.team
             AND gg.date = sched.date
 	)
 
 	SELECT player_id,
-		date,
+		DATE,
 		60 * (GA_tot / TOI_tot) AS GA60_20,
 		60 * (SA_tot / TOI_tot) AS SA60_20,
 		60 * (SV_tot / TOI_tot) AS SV60_20,
@@ -197,6 +197,6 @@ CREATE VIEW goalie_per60_rolling20 AS (
 );
 
 -- Check results
-select * from goalie_per60_rolling20 limit 100;
-select count(*) from goalie_per60_rolling20; -- 2,927
-select count(*) from goalie_games where game_num > 20; -- 2,927
+-- SELECT * FROM goalie_per60_rolling20 LIMIT 100;
+-- SELECT count(*) FROM goalie_per60_rolling20; -- 2,927
+-- SELECT count(*) FROM goalie_games WHERE game_num > 20; -- 2,927

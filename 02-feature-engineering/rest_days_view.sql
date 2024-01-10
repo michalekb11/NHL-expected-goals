@@ -21,10 +21,17 @@
 DROP VIEW IF EXISTS rest_days;
 
 CREATE VIEW rest_days AS (
-    SELECT player_id,
-        date,
-        DATEDIFF(date, LAG(date) OVER (PARTITION BY season, player_id ORDER BY date)) - 1 AS rest_days
-    FROM skater_games
+    SELECT sk.player_id,
+        sk.DATE,
+        DATEDIFF(sk.DATE, LAG(sk.DATE) OVER (PARTITION BY sched.season, sk.player_id ORDER BY sk.DATE)) - 1 AS rest_days
+    FROM skater_games sk
+    LEFT JOIN SCHEDULE sched
+    	ON sk.team = sched.team
+    	AND sk.date = sched.date
 );
 
--- NOTE: This code has not been tested due to issues with MySQL. Test to make sure it works as intended.
+-- SELECT COUNT(*) FROM rest_days; -- 125637
+-- SELECT * FROM rest_days LIMIT 100;
+-- SELECT * FROM rest_days ORDER BY rest_days DESC LIMIT 100;
+-- SELECT * FROM rest_days WHERE player_id = '/d/dorofpa01' ORDER BY DATE;
+
