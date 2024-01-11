@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `nhl`.`game_ids` (
   `date` DATE NOT NULL,
   `game_id` VARCHAR(25) NULL,
   PRIMARY KEY (`team`, `date`))
-ENGINE = InnoDB;
+ENGINE = INNODB;
 
 
 -- -----------------------------------------------------
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `nhl`.`schedule` (
     REFERENCES `nhl`.`game_ids` (`team` , `date`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+ENGINE = INNODB;
 
 -- -----------------------------------------------------
 -- Trigger: Upon insert into game_ids, cascade into schedule
@@ -57,7 +57,7 @@ DROP TRIGGER IF EXISTS after_game_id_insert;
 
 CREATE TRIGGER after_game_id_insert 
 	AFTER INSERT ON game_ids FOR EACH ROW 
-	INSERT INTO schedule (team, date) 
+	INSERT INTO SCHEDULE (team, DATE) 
 	VALUES (NEW.team, NEW.date);
 
 -- -----------------------------------------------------
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `nhl`.`skater_games` (
     REFERENCES `nhl`.`schedule` (`team` , `date`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+ENGINE = INNODB;
 
 
 -- -----------------------------------------------------
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `nhl`.`ml_odds` (
     REFERENCES `nhl`.`schedule` (`team` , `date`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+ENGINE = INNODB;
 
 
 -- -----------------------------------------------------
@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `nhl`.`pl_odds` (
     REFERENCES `nhl`.`schedule` (`team` , `date`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+ENGINE = INNODB;
 
 
 -- -----------------------------------------------------
@@ -176,8 +176,34 @@ CREATE TABLE IF NOT EXISTS `nhl`.`total_odds` (
     REFERENCES `nhl`.`schedule` (`team`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+ENGINE = INNODB;
 
+-- -----------------------------------------------------
+-- Table `nhl`.`regulation_odds`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `nhl`.`regulation_odds` ;
+
+CREATE TABLE IF NOT EXISTS `nhl`.`regulation_odds` (
+  `home` CHAR(3) NOT NULL,
+  `away` CHAR(3) NOT NULL,
+  `date_recorded` DATE NULL,
+  `time_recorded` TIME NULL,
+  `date_game` DATE NOT NULL,
+  `bet_type` VARCHAR(10) NOT NULL,
+  `odds` INT NULL,
+  PRIMARY KEY (`bet_type`, `home`, `away`, `date_game`),
+  INDEX `fk_regulation_odds_schedule1_idx` (`home` ASC, `away` ASC, `date_game` ASC) VISIBLE,
+  CONSTRAINT `fk_regulation_odds_schedule1`
+    FOREIGN KEY (`home` , `date_game`)
+    REFERENCES `nhl`.`schedule` (`team` , `date`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_regulation_odds_schedule2`
+    FOREIGN KEY (`away`)
+    REFERENCES `nhl`.`schedule` (`team`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE)
+ENGINE = INNODB;
 
 -- -----------------------------------------------------
 -- Table `nhl`.`goalie_games`
@@ -208,7 +234,7 @@ CREATE TABLE IF NOT EXISTS `nhl`.`goalie_games` (
     REFERENCES `nhl`.`schedule` (`team` , `date`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+ENGINE = INNODB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
