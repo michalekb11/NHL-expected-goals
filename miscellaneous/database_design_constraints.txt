@@ -1,0 +1,32 @@
+1. Can I insert a new player that has played in at least 1 game into the player history table?
+    - Yes. Relies on a trigger (just send the insert) AND stored procedure (called inside of the trigger) that checks whether the player ID exists in the table. If not, insert a new row.
+    - Other option. Query the table into python, check in python, if there is a difference, make an update.
+    - The question is, should the checks occur in MySQL or python? Most likely MySQL using trigger and procedure.
+
+2. What if I try to insert or process 2 rows of the same player into the player history table? This requires an order...
+    - The trigger would need to call the procedure for each row in order
+
+3. How do I convert player names to the correct player id?
+    - Going to create a python script or function that takes in all possibly relevant information (name for sure, age, team, etc.)
+    - Function will query player history trying to use all possible info (most specific). If it cannot find a match, recursively take info away and try again until you are left with just name. If there is exactly 1 match, use that player id. If there is more than one match, prompt the user to select the correct one? If there are 0 matches, prompt the user to find the correct player id (from hockeyreference.com) and type it in?
+
+4. What do I do when a player is in the projected lineup (or goalie or injury) and their player id is not in the player history table?
+    - The function should prompt you to find the correct one on hockeyreference.com or create your own following the same schema.
+
+5. Is it okay to create my own player id if the player is not on hockey reference?
+    - The only concern is that later in time, hockey reference could add a different player of similar name, in which case the player id would be the same. Then this is a problem, since I would wrongly associate the new player and ID with the old player ID after scraping? Maybe I could create my own player id, but this would also be difficult.
+
+6. How do I make a correct update to player history upon insertion?
+    - Stored procedure logic:
+        * Check if player id exists. If not, insert new row with end date = max(end date).
+        * If it exists and all the rest of the row is same, skp insertion completely.
+        * If it exists and there is something different (team, age, etc.), set end date of current = date of game. Then, insert new row with new information and end date = max(end date).
+
+7. How will I deal with goalscorer odds that returns names that have more than just the name? 
+    - Ex: "sebastian aho (car)"
+    - Need to pull that info out of name and assign that to the team variable before you send into the match function for player ids.
+
+8. How will I deal with players that have duplicate primary key in lineup (or injury?) tables?
+    - Ex: alex ovechkin pp1 and pp2
+    - Thought about converting unit num column to categorical and using "both", but this wont work in situations where the position diffs on each pp unit...
+    - Might need to change the table columns???
