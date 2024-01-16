@@ -24,7 +24,7 @@ CREATE VIEW rest_days AS (
     SELECT sk.player_id,
         sk.DATE,
         DATEDIFF(sk.DATE, LAG(sk.DATE) OVER (PARTITION BY sched.season, sk.player_id ORDER BY sk.DATE)) - 1 AS rest_days
-    FROM skater_games sk
+    FROM skater_game sk
     LEFT JOIN SCHEDULE sched
     	ON sk.team = sched.team
     	AND sk.date = sched.date

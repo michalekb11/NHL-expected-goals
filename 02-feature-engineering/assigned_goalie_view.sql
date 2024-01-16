@@ -26,7 +26,7 @@ CREATE VIEW assigned_goalie AS (
             team,
             date,
             ROW_NUMBER() OVER (PARTITION BY team, date ORDER BY GA DESC, SA DESC, TOI DESC, decision DESC) AS goalie_priority
-		FROM goalie_games
+		FROM goalie_game
     )
 
     SELECT player_id,

@@ -11,14 +11,14 @@ CREATE VIEW home_away_status AS (
 	SELECT sk.player_id,
 		sk.date,
 		CASE WHEN sched.location = 'H' THEN 1 ELSE 0 END AS home_game_flag
-	FROM skater_games sk
+	FROM skater_game sk
 	LEFT JOIN schedule sched
 		ON sk.team = sched.team
 		AND sk.date = sched.date
 );
 
 -- Check results
--- select count(*) from skater_games; -- 125,637
+-- select count(*) from skater_game; -- 125,637
 -- select count(*) from home_away_status; -- 125,637
 -- select home_game_flag, count(*) from home_away_status group by home_game_flag;
 

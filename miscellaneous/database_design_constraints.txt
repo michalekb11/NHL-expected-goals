@@ -6,6 +6,7 @@
 
 2. What if I try to insert or process 2 rows of the same player into the player history table? This requires an order...
     - The trigger would need to call the procedure for each row in order
+    - Current solution (procedure) should handle this by checking if there was a previous row and if there is a next row.
 
 3. How do I convert player names to the correct player id?
     - Going to create a python script or function that takes in all possibly relevant information (name for sure, age, team, etc.)
@@ -13,6 +14,7 @@
 
 4. What do I do when a player is in the projected lineup (or goalie or injury) and their player id is not in the player history table?
     - The function should prompt you to find the correct one on hockeyreference.com or create your own following the same schema.
+    - Should this player id should also be inserted into the player history table?
 
 5. Is it okay to create my own player id if the player is not on hockey reference?
     - The only concern is that later in time, hockey reference could add a different player of similar name, in which case the player id would be the same. Then this is a problem, since I would wrongly associate the new player and ID with the old player ID after scraping? Maybe I could create my own player id, but this would also be difficult.
@@ -22,6 +24,7 @@
         * Check if player id exists. If not, insert new row with end date = max(end date).
         * If it exists and all the rest of the row is same, skp insertion completely.
         * If it exists and there is something different (team, age, etc.), set end date of current = date of game. Then, insert new row with new information and end date = max(end date).
+    - Current procedure has complex ifelse logic (likely not optimal...)
 
 7. How will I deal with goalscorer odds that returns names that have more than just the name? 
     - Ex: "sebastian aho (car)"
