@@ -20,11 +20,10 @@ USE `nhl` ;
 DROP TABLE IF EXISTS `nhl`.`game_id` ;
 
 CREATE TABLE IF NOT EXISTS `nhl`.`game_id` (
-  `game_id` VARCHAR(25) NOT NULL,
   `team` CHAR(3) NOT NULL,
   `date` DATE NOT NULL,
-  PRIMARY KEY (`game_id`),
-  CONSTRAINT `unq_game_id` UNIQUE (`team`, `date`))
+  `game_id` VARCHAR(25) NOT NULL,
+  PRIMARY KEY (`team`, `date`))
 ENGINE = INNODB;
 
 -- -----------------------------------------------------
