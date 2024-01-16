@@ -429,12 +429,6 @@ def process_power_play(section_html, unit_num):
 
     assert len(names) in [4, 5], f'Incorrect number of power play skaters were found: {len(names)}. Names: {names}\n'
 
-    # Unit number
-    if len(names) == 4:
-        unit = [unit_num] * 4
-    else:
-        unit = [unit_num] * 5
-
     # Unit position
     if len(names) == 4:
         pp_position = [1, 2, 3, 4]
@@ -444,8 +438,7 @@ def process_power_play(section_html, unit_num):
     # Create dictionary
     pp_dict = {
         'name':names,
-        'pp_unit_num':unit,
-        'pp_position':pp_position
+        f'pp{unit_num}_position':pp_position
     }
 
     return pp_dict
@@ -461,9 +454,6 @@ def process_penalty_kill(section_html, unit_num):
         print(f'Incorrect number of penalty killers were found: {len(names)}.')
         return None
 
-    # Unit number
-    unit = [unit_num] * len(names)
-
     # Unit position
     pk_position = [1, 2, 3, 4]
     pk_position = [pk_position[i] for i in range(len(names))]
@@ -471,8 +461,7 @@ def process_penalty_kill(section_html, unit_num):
     # Create dictionary
     pk_dict = {
         'name':names,
-        'pk_unit_num':unit,
-        'pk_position':pk_position
+        f'pk{unit_num}_position':pk_position
     }
 
     return pk_dict
@@ -615,8 +604,8 @@ def get_team_lineup(team):
     lineup = pd.merge(lineup, injuries, how = 'left', on = 'name')
 
     # Set up pp/pk data frame
-    power_play = pd.concat([pd.DataFrame(pp1), pd.DataFrame(pp2)])
-    penalty_kill = pd.concat([pd.DataFrame(pk1), pd.DataFrame(pk2)])
+    power_play = pd.merge(pd.DataFrame(pp1), pd.DataFrame(pp2), on='name', how='outer')
+    penalty_kill = pd.merge(pd.DataFrame(pk1), pd.DataFrame(pk2), on='name', how='outer')
 
     # If a player plays on both units, only select the higher unit?
     #power_play = power_play.loc[power_play.groupby('name')['pp_unit_num'].idxmax()]
@@ -627,7 +616,7 @@ def get_team_lineup(team):
     lineup = pd.merge(lineup, penalty_kill, how = 'left', on = 'name')
 
     # Cleanup
-    lineup[['pp_unit_num', 'pp_position', 'pk_unit_num', 'pk_position']] = lineup[['pp_unit_num', 'pp_position', 'pk_unit_num', 'pk_position']].astype('Int64')
+    lineup[['pp1_position', 'pp2_position', 'pk1_position', 'pk2_position']] = lineup[['pp1_position', 'pp2_position', 'pk1_position', 'pk2_position']].astype('Int64')
     lineup['team'] = lineup['team'].str.lower().replace(team_name_dict)
     
     return lineup
