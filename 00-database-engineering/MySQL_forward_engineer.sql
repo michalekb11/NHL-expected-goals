@@ -1,5 +1,4 @@
 -- MySQL Workbench Forward Engineering
-
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
@@ -42,8 +41,8 @@ CREATE TABLE IF NOT EXISTS `nhl`.`schedule` (
   `OT_status` CHAR(2) NULL,
   `win_flag` TINYINT NULL,
   PRIMARY KEY (`team`, `date`),
-  INDEX `fk_schedule_game_ids1_idx` (`team` ASC, `date` ASC) VISIBLE,
-  CONSTRAINT `fk_schedule_game_ids1`
+  INDEX `fk_schedule_game_id1_idx` (`team` ASC, `date` ASC) VISIBLE,
+  CONSTRAINT `fk_schedule_game_id1`
     FOREIGN KEY (`team` , `date`)
     REFERENCES `nhl`.`game_id` (`team` , `date`)
     ON DELETE NO ACTION
@@ -75,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `nhl`.`player_history` (
   `team` CHAR(3) NULL,
   PRIMARY KEY (`player_id`, `start_date`),
   CONSTRAINT `fk_player_history_schedule1`
-    FOREIGN KEY `team`
+    FOREIGN KEY (`team`)
     REFERENCES `nhl`.`schedule` (`team`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE
@@ -233,17 +232,15 @@ CREATE TABLE IF NOT EXISTS `nhl`.`injury` (
     ON UPDATE CASCADE
 )
 ENGINE = INNODB;
--- -----------------------------------------------------
--- Table `nhl`.`skater_games`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `nhl`.`skater_games` ;
 
-CREATE TABLE IF NOT EXISTS `nhl`.`skater_games` (
+-- -----------------------------------------------------
+-- Table `nhl`.`skater_game`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `nhl`.`skater_game` ;
+
+CREATE TABLE IF NOT EXISTS `nhl`.`skater_game` (
   `player_id` VARCHAR(50) NOT NULL,
-  `name` VARCHAR(75) NULL,
-  `age` SMALLINT UNSIGNED NULL,
   `team` CHAR(3) NOT NULL,
-  -- `season` INT NULL,
   `game_num` INT NULL,
   `date` DATE NOT NULL,
   `opponent` CHAR(3) NULL,
@@ -269,28 +266,22 @@ CREATE TABLE IF NOT EXISTS `nhl`.`skater_games` (
   `FOL` INT UNSIGNED NULL,
   `FOW_pct` FLOAT NULL,
   PRIMARY KEY (`player_id`, `team`, `date`),
-  INDEX `fk_skater_games_schedule1_idx` (`team` ASC, `date` ASC) VISIBLE,
-  CONSTRAINT `fk_skater_games_schedule1`
+  INDEX `fk_skater_game_schedule1_idx` (`team` ASC, `date` ASC) VISIBLE,
+  CONSTRAINT `fk_skater_game_schedule1`
     FOREIGN KEY (`team` , `date`)
     REFERENCES `nhl`.`schedule` (`team` , `date`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
 ENGINE = INNODB;
 
-
-
-
 -- -----------------------------------------------------
--- Table `nhl`.`goalie_games`
+-- Table `nhl`.`goalie_game`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `nhl`.`goalie_games` ;
+DROP TABLE IF EXISTS `nhl`.`goalie_game` ;
 
-CREATE TABLE IF NOT EXISTS `nhl`.`goalie_games` (
+CREATE TABLE IF NOT EXISTS `nhl`.`goalie_game` (
   `player_id` VARCHAR(50) NOT NULL,
-  `name` VARCHAR(75) NULL,
-  `age` SMALLINT NULL,
   `team` CHAR(3) NOT NULL,
-  -- `season` INT NULL,
   `game_num` INT NULL,
   `date` DATE NOT NULL,
   `opponent` CHAR(3) NULL,
@@ -303,15 +294,72 @@ CREATE TABLE IF NOT EXISTS `nhl`.`goalie_games` (
   `PIM` INT UNSIGNED NULL,
   `TOI` FLOAT NULL,
   PRIMARY KEY (`player_id`, `team`, `date`),
-  INDEX `fk_goalie_games_schedule1_idx` (`team` ASC, `date` ASC) VISIBLE,
-  CONSTRAINT `fk_goalie_games_schedule1`
+  INDEX `fk_goalie_game_schedule1_idx` (`team` ASC, `date` ASC) VISIBLE,
+  CONSTRAINT `fk_goalie_game_schedule1`
     FOREIGN KEY (`team` , `date`)
     REFERENCES `nhl`.`schedule` (`team` , `date`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
 ENGINE = INNODB;
 
+-- -----------------------------------------------------
+-- Table `nhl`.`projected_goalie`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `nhl`.`projected_goalie` ;
 
+CREATE TABLE IF NOT EXISTS `nhl`.`projected_goalie` (
+  `player_id` VARCHAR(50) NOT NULL,
+  `date_recorded` DATE NOT NULL,
+  `time_recorded` TIME NOT NULL,
+  `date_game` DATE NOT NULL,
+  `team` CHAR(3) NULL,
+  `status` CHAR(1) NULL,
+  PRIMARY KEY (`player_id`, `date_recorded`, `time_recorded`),
+  CONSTRAINT `fk_projected_goalie_player_history1`
+    FOREIGN KEY (`player_id`)
+    REFERENCES `nhl`.`player_history` (`player_id`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE,
+  INDEX `fk_projected_goalie_schedule1_idx` (`team` ASC, `date_game` ASC) VISIBLE,
+  CONSTRAINT `fk_projected_goalie_schedule1_idx`
+    FOREIGN KEY (`team` , `date_game`)
+    REFERENCES `nhl`.`schedule` (`team` , `date`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE)
+ENGINE = INNODB;
+
+-- -----------------------------------------------------
+-- Table `nhl`.`projected_lineup`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `nhl`.`projected_lineup` ;
+
+CREATE TABLE IF NOT EXISTS `nhl`.`projected_lineup` (
+  `player_id` VARCHAR(50) NOT NULL,
+  `date_recorded` DATE NOT NULL,
+  `time_recorded` TIME NOT NULL,
+  `team` CHAR(3) NULL,
+  `position` VARCHAR(5) NULL,
+  `depth_chart_rank` SMALLINT UNSIGNED NULL,
+  `injury_status` VARCHAR(10) NULL,
+  `pp1_position` SMALLINT UNSIGNED NULL,
+  `pp2_position` SMALLINT UNSIGNED NULL,
+  `pk1_position` SMALLINT UNSIGNED NULL,
+  `pk2_position` SMALLINT UNSIGNED NULL,
+  PRIMARY KEY (`player_id`, `date_recorded`, `time_recorded`),
+  CONSTRAINT `fk_projected_lineup_player_history1`
+    FOREIGN KEY (`player_id`)
+    REFERENCES `nhl`.`player_history` (`player_id`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_projected_lineup_schedule1_idx`
+    FOREIGN KEY (`team`)
+    REFERENCES `nhl`.`schedule` (`team`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE)
+ENGINE = INNODB;
+
+-- -----------------------------------------------------
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+-- -----------------------------------------------------
