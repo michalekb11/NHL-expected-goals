@@ -10,9 +10,9 @@
 -- the player has not "changed teams" even if they may have been traded 
 -- or signed during the offseason.
 -- ------------------------------------------------------
-DROP VIEW IF EXISTS team_change5;
+DROP VIEW IF EXISTS team_change05;
 
-CREATE VIEW team_change5 AS (
+CREATE VIEW team_change05 AS (
 	WITH team_lag AS (
 		SELECT sk.player_id,
 			sk.team,
@@ -24,14 +24,14 @@ CREATE VIEW team_change5 AS (
 			LAG(sk.team, 3) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.game_num) AS team_lag3,
 			LAG(sk.team, 4) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.game_num) AS team_lag4,
 			LAG(sk.team, 5) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.game_num) AS team_lag5
-		FROM skater_games sk
-		LEFT JOIN schedule sched
+		FROM skater_game sk
+		LEFT JOIN SCHEDULE sched
 			ON sk.team = sched.team
 			AND sk.date = sched.date
 	)
 
 	SELECT player_id,
-		date,
+		DATE,
 		CASE 
 			WHEN (team <> team_lag1 
 				OR team <> team_lag2 
@@ -40,21 +40,21 @@ CREATE VIEW team_change5 AS (
 				OR team <> team_lag5) 
 			THEN 1 
 			ELSE 0 
-		END AS team_change5_flag
+		END AS team_change05_flag
 	 FROM team_lag
  );
  
  -- Check results
- -- select count(*) from skater_games; -- 125,637
- -- select count(*) from team_change5; -- 125,637
- -- select team_change5_flag, count(*) from team_change5 group by team_change5_flag;
- -- select * from team_change5 limit 1000;
- -- select * from team_change5 where player_id = '/p/pacioma01';
- -- select * from team_change5 where player_id = '/b/barrity01';
+ -- select count(*) from skater_game; -- 125,637
+ -- select count(*) from team_change05; -- 125,637
+ -- select team_change05_flag, count(*) from team_change05 group by team_change05_flag;
+ -- select * from team_change05 limit 1000;
+ -- select * from team_change05 where player_id = '/p/pacioma01';
+ -- select * from team_change05 where player_id = '/b/barrity01';
  
  -- ------------------------------------------------------
  -- Same thing but for the last 10 games instead of only the last 5
- DROP VIEW IF EXISTS team_change10;
+DROP VIEW IF EXISTS team_change10;
 
 CREATE VIEW team_change10 AS (
 	WITH team_lag AS (
@@ -73,14 +73,14 @@ CREATE VIEW team_change10 AS (
             LAG(sk.team, 8) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.game_num) AS team_lag8,
             LAG(sk.team, 9) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.game_num) AS team_lag9,
             LAG(sk.team, 10) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.game_num) AS team_lag10
-		FROM skater_games sk
-		LEFT JOIN schedule sched
+		FROM skater_game sk
+		LEFT JOIN SCHEDULE sched
 			ON sk.team = sched.team
 			AND sk.date = sched.date
 	)
 
 	SELECT player_id,
-		date,
+		DATE,
 		CASE 
 			WHEN (team <> team_lag1 
 				OR team <> team_lag2 
@@ -99,7 +99,7 @@ CREATE VIEW team_change10 AS (
  );
  
  -- Check results
- -- select count(*) from skater_games; -- 125,637
+ -- select count(*) from skater_game; -- 125,637
  -- select count(*) from team_change10; -- 125,637
  -- select team_change10_flag, count(*) from team_change10 group by team_change10_flag;
  -- select * from team_change10 limit 1000;

@@ -15,7 +15,7 @@ CREATE VIEW point_streak AS (
 			sk.game_num,
 			sk.P,
 			CASE WHEN sk.P > 0 THEN 1 ELSE -1 END AS P_flag
-		FROM skater_games sk
+		FROM skater_game sk
 		LEFT JOIN schedule sched
 			ON sk.team = sched.team
 			AND sk.date = sched.date
@@ -53,7 +53,7 @@ CREATE VIEW point_streak AS (
 );
 
 -- Check results
--- select count(*) from skater_games; -- 125,637
+-- select count(*) from skater_game; -- 125,637
 -- select count(*) from point_streak; -- 125,637
 -- select * from point_streak limit 100;
 -- select * from point_streak where player_id = '/g/gudasra01';

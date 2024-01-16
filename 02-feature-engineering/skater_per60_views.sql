@@ -13,12 +13,11 @@
 
 -- ---------------------------------------------------------
 -- View for last 3 games
-DROP VIEW IF EXISTS skater_per60_rolling3;
+DROP VIEW IF EXISTS skater_per60_rolling03;
 
-CREATE VIEW skater_per60_rolling3 AS (
+CREATE VIEW skater_per60_rolling03 AS (
 	WITH stat_totals AS (
 		SELECT sk.player_id,
-			sk.name,
 			sk.team,
 			sk.date,
             sk.game_num,
@@ -42,50 +41,49 @@ CREATE VIEW skater_per60_rolling3 AS (
 			SUM(sk.BLK) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 3 PRECEDING AND 1 PRECEDING) AS BLK_tot,
 			SUM(sk.FOW) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 3 PRECEDING AND 1 PRECEDING) AS FOW_tot,
 			SUM(sk.FOL) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 3 PRECEDING AND 1 PRECEDING) AS FOL_tot
-		FROM skater_games sk
-        LEFT JOIN schedule sched
+		FROM skater_game sk
+        LEFT JOIN SCHEDULE sched
 			ON sk.team = sched.team
             AND sk.date = sched.date
 	)
 
 	SELECT player_id,
-		date,
-		60 * (G_tot / TOI_tot) AS G60_3,
-		60 * (A_tot / TOI_tot) AS A60_3,
-		60 * (P_tot / TOI_tot) AS P60_3,
-		60 * (rating_tot / TOI_tot) AS rating60_3,
-		60 * (PIM_tot / TOI_tot) AS PIM60_3,
-		60 * (EVG_tot / TOI_tot) AS EVG60_3,
-		60 * (PPG_tot / TOI_tot) AS PPG60_3,
-		60 * (SHG_tot / TOI_tot) AS SHG60_3,
-		60 * (GWG_tot / TOI_tot) AS GWG60_3,
-		60 * (EVA_tot / TOI_tot) AS EVA60_3,
-		60 * (PPA_tot / TOI_tot) AS PPA60_3,
-		60 * (SHA_tot / TOI_tot) AS SHA60_3,
-		60 * (S_tot / TOI_tot) AS S60_3,
-		60 * (shifts_tot / TOI_tot) AS shifts60_3,
-		60 * (HIT_tot / TOI_tot) AS HIT60_3,
-		60 * (BLK_tot / TOI_tot) AS BLK60_3,
-		60 * (FOW_tot / TOI_tot) AS FOW60_3,
-		60 * (FOL_tot / TOI_tot) AS FOL60_3,
-		TOI_tot / 3 AS avgTOI_3
+		DATE,
+		60 * (G_tot / TOI_tot) AS G60_03,
+		60 * (A_tot / TOI_tot) AS A60_03,
+		60 * (P_tot / TOI_tot) AS P60_03,
+		60 * (rating_tot / TOI_tot) AS rating60_03,
+		60 * (PIM_tot / TOI_tot) AS PIM60_03,
+		60 * (EVG_tot / TOI_tot) AS EVG60_03,
+		60 * (PPG_tot / TOI_tot) AS PPG60_03,
+		60 * (SHG_tot / TOI_tot) AS SHG60_03,
+		60 * (GWG_tot / TOI_tot) AS GWG60_03,
+		60 * (EVA_tot / TOI_tot) AS EVA60_03,
+		60 * (PPA_tot / TOI_tot) AS PPA60_03,
+		60 * (SHA_tot / TOI_tot) AS SHA60_03,
+		60 * (S_tot / TOI_tot) AS S60_03,
+		60 * (shifts_tot / TOI_tot) AS shifts60_03,
+		60 * (HIT_tot / TOI_tot) AS HIT60_03,
+		60 * (BLK_tot / TOI_tot) AS BLK60_03,
+		60 * (FOW_tot / TOI_tot) AS FOW60_03,
+		60 * (FOL_tot / TOI_tot) AS FOL60_03,
+		TOI_tot / 3 AS avgTOI_03
 	FROM stat_totals
 	WHERE game_num > 3
 );
 
 -- Check results
-select * from skater_per60_rolling3 limit 100;
-select count(*) from skater_per60_rolling3; -- 117,367
-select count(*) from skater_games where game_num > 3; -- 117,367
+-- SELECT * FROM skater_per60_rolling03 LIMIT 100;
+-- SELECT count(*) FROM skater_per60_rolling03; -- 117,367
+-- SELECT count(*) FROM skater_game WHERE game_num > 3; -- 117,367
 
 -- ---------------------------------------------------------
 -- View for last 5 games
-DROP VIEW IF EXISTS skater_per60_rolling5;
+DROP VIEW IF EXISTS skater_per60_rolling05;
 
-CREATE VIEW skater_per60_rolling5 AS (
+CREATE VIEW skater_per60_rolling05 AS (
 	WITH stat_totals AS (
 		SELECT sk.player_id,
-			sk.name,
 			sk.team,
 			sk.date,
             sk.game_num,
@@ -109,41 +107,41 @@ CREATE VIEW skater_per60_rolling5 AS (
 			SUM(sk.BLK) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 5 PRECEDING AND 1 PRECEDING) AS BLK_tot,
 			SUM(sk.FOW) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 5 PRECEDING AND 1 PRECEDING) AS FOW_tot,
 			SUM(sk.FOL) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 5 PRECEDING AND 1 PRECEDING) AS FOL_tot
-		FROM skater_games sk
-        LEFT JOIN schedule sched
+		FROM skater_game sk
+        LEFT JOIN SCHEDULE sched
 			ON sk.team = sched.team
             AND sk.date = sched.date
 	)
 
 	SELECT player_id,
-		date,
-		60 * (G_tot / TOI_tot) AS G60_5,
-		60 * (A_tot / TOI_tot) AS A60_5,
-		60 * (P_tot / TOI_tot) AS P60_5,
-		60 * (rating_tot / TOI_tot) AS rating60_5,
-		60 * (PIM_tot / TOI_tot) AS PIM60_5,
-		60 * (EVG_tot / TOI_tot) AS EVG60_5,
-		60 * (PPG_tot / TOI_tot) AS PPG60_5,
-		60 * (SHG_tot / TOI_tot) AS SHG60_5,
-		60 * (GWG_tot / TOI_tot) AS GWG60_5,
-		60 * (EVA_tot / TOI_tot) AS EVA60_5,
-		60 * (PPA_tot / TOI_tot) AS PPA60_5,
-		60 * (SHA_tot / TOI_tot) AS SHA60_5,
-		60 * (S_tot / TOI_tot) AS S60_5,
-		60 * (shifts_tot / TOI_tot) AS shifts60_5,
-		60 * (HIT_tot / TOI_tot) AS HIT60_5,
-		60 * (BLK_tot / TOI_tot) AS BLK60_5,
-		60 * (FOW_tot / TOI_tot) AS FOW60_5,
-		60 * (FOL_tot / TOI_tot) AS FOL60_5,
-		TOI_tot / 5 AS avgTOI_5
+		DATE,
+		60 * (G_tot / TOI_tot) AS G60_05,
+		60 * (A_tot / TOI_tot) AS A60_05,
+		60 * (P_tot / TOI_tot) AS P60_05,
+		60 * (rating_tot / TOI_tot) AS rating60_05,
+		60 * (PIM_tot / TOI_tot) AS PIM60_05,
+		60 * (EVG_tot / TOI_tot) AS EVG60_05,
+		60 * (PPG_tot / TOI_tot) AS PPG60_05,
+		60 * (SHG_tot / TOI_tot) AS SHG60_05,
+		60 * (GWG_tot / TOI_tot) AS GWG60_05,
+		60 * (EVA_tot / TOI_tot) AS EVA60_05,
+		60 * (PPA_tot / TOI_tot) AS PPA60_05,
+		60 * (SHA_tot / TOI_tot) AS SHA60_05,
+		60 * (S_tot / TOI_tot) AS S60_05,
+		60 * (shifts_tot / TOI_tot) AS shifts60_05,
+		60 * (HIT_tot / TOI_tot) AS HIT60_05,
+		60 * (BLK_tot / TOI_tot) AS BLK60_05,
+		60 * (FOW_tot / TOI_tot) AS FOW60_05,
+		60 * (FOL_tot / TOI_tot) AS FOL60_05,
+		TOI_tot / 5 AS avgTOI_05
 	FROM stat_totals
 	WHERE game_num > 5
 );
 
 -- Check results
-select * from skater_per60_rolling5 limit 100;
-select count(*) from skater_per60_rolling5; -- 112,219
-select count(*) from skater_games where game_num > 5; -- 112,219
+-- SELECT * FROM skater_per60_rolling05 LIMIT 100;
+-- SELECT count(*) FROM skater_per60_rolling05; -- 112,219
+-- SELECT count(*) FROM skater_game WHERE game_num > 5; -- 112,219
 
 -- ---------------------------------------------------------
 -- View for last 10 games
@@ -152,7 +150,6 @@ DROP VIEW IF EXISTS skater_per60_rolling10;
 CREATE VIEW skater_per60_rolling10 AS (
 	WITH stat_totals AS (
 		SELECT sk.player_id,
-			sk.name,
 			sk.team,
 			sk.date,
             sk.game_num,
@@ -176,14 +173,14 @@ CREATE VIEW skater_per60_rolling10 AS (
 			SUM(sk.BLK) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 10 PRECEDING AND 1 PRECEDING) AS BLK_tot,
 			SUM(sk.FOW) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 10 PRECEDING AND 1 PRECEDING) AS FOW_tot,
 			SUM(sk.FOL) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 10 PRECEDING AND 1 PRECEDING) AS FOL_tot
-		FROM skater_games sk
-        LEFT JOIN schedule sched
+		FROM skater_game sk
+        LEFT JOIN SCHEDULE sched
 			ON sk.team = sched.team
             AND sk.date = sched.date
 	)
 
 	SELECT player_id,
-		date,
+		DATE,
 		60 * (G_tot / TOI_tot) AS G60_10,
 		60 * (A_tot / TOI_tot) AS A60_10,
 		60 * (P_tot / TOI_tot) AS P60_10,
@@ -208,9 +205,9 @@ CREATE VIEW skater_per60_rolling10 AS (
 );
 
 -- Check results
-select * from skater_per60_rolling10 limit 100;
-select count(*) from skater_per60_rolling10; -- 100,207
-select count(*) from skater_games where game_num > 10; -- 100,207
+-- SELECT * FROM skater_per60_rolling10 LIMIT 100;
+-- SELECT count(*) FROM skater_per60_rolling10; -- 100,207
+-- SELECT count(*) FROM skater_game WHERE game_num > 10; -- 100,207
 
 -- ---------------------------------------------------------
 -- View for last 15 games
@@ -219,7 +216,6 @@ DROP VIEW IF EXISTS skater_per60_rolling15;
 CREATE VIEW skater_per60_rolling15 AS (
 	WITH stat_totals AS (
 		SELECT sk.player_id,
-			sk.name,
 			sk.team,
 			sk.date,
             sk.game_num,
@@ -243,14 +239,14 @@ CREATE VIEW skater_per60_rolling15 AS (
 			SUM(sk.BLK) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 15 PRECEDING AND 1 PRECEDING) AS BLK_tot,
 			SUM(sk.FOW) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 15 PRECEDING AND 1 PRECEDING) AS FOW_tot,
 			SUM(sk.FOL) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 15 PRECEDING AND 1 PRECEDING) AS FOL_tot
-		FROM skater_games sk
-        LEFT JOIN schedule sched
+		FROM skater_game sk
+        LEFT JOIN SCHEDULE sched
 			ON sk.team = sched.team
             AND sk.date = sched.date
 	)
 
 	SELECT player_id,
-		date,
+		DATE,
 		60 * (G_tot / TOI_tot) AS G60_15,
 		60 * (A_tot / TOI_tot) AS A60_15,
 		60 * (P_tot / TOI_tot) AS P60_15,
@@ -275,9 +271,9 @@ CREATE VIEW skater_per60_rolling15 AS (
 );
 
 -- Check results
-select * from skater_per60_rolling15 limit 100;
-select count(*) from skater_per60_rolling15; -- 89,104
-select count(*) from skater_games where game_num > 15; -- 89,104
+-- SELECT * FROM skater_per60_rolling15 LIMIT 100;
+-- SELECT count(*) FROM skater_per60_rolling15; -- 89,104
+-- SELECT count(*) FROM skater_game WHERE game_num > 15; -- 89,104
 
 -- ---------------------------------------------------------
 -- View for last 20 games
@@ -286,7 +282,6 @@ DROP VIEW IF EXISTS skater_per60_rolling20;
 CREATE VIEW skater_per60_rolling20 AS (
 	WITH stat_totals AS (
 		SELECT sk.player_id,
-			sk.name,
 			sk.team,
 			sk.date,
             sk.game_num,
@@ -310,14 +305,14 @@ CREATE VIEW skater_per60_rolling20 AS (
 			SUM(sk.BLK) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 20 PRECEDING AND 1 PRECEDING) AS BLK_tot,
 			SUM(sk.FOW) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 20 PRECEDING AND 1 PRECEDING) AS FOW_tot,
 			SUM(sk.FOL) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 20 PRECEDING AND 1 PRECEDING) AS FOL_tot
-		FROM skater_games sk
-        LEFT JOIN schedule sched
+		FROM skater_game sk
+        LEFT JOIN SCHEDULE sched
 			ON sk.team = sched.team
             AND sk.date = sched.date
 	)
 
 	SELECT player_id,
-		date,
+		DATE,
 		60 * (G_tot / TOI_tot) AS G60_20,
 		60 * (A_tot / TOI_tot) AS A60_20,
 		60 * (P_tot / TOI_tot) AS P60_20,
@@ -342,6 +337,6 @@ CREATE VIEW skater_per60_rolling20 AS (
 );
 
 -- Check results
-select * from skater_per60_rolling20 limit 100;
-select count(*) from skater_per60_rolling20; -- 78,580
-select count(*) from skater_games where game_num > 20; -- 78,580
+-- select * from skater_per60_rolling20 limit 100;
+-- select count(*) from skater_per60_rolling20; -- 78,580
+-- select count(*) from skater_game where game_num > 20; -- 78,580
