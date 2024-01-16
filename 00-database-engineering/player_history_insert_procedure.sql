@@ -68,8 +68,8 @@ BEGIN
     	
     -- Scenario 1: No previous row, no next row
     IF previous_start_date IS NULL AND next_start_date IS NULL THEN
-        INSERT INTO player_history (player_id, name, team, start_date, end_date)
-        VALUES (new_id, new_name, new_team, new_date_game, '9999-12-31');
+        INSERT INTO player_history (player_id, name, team, start_date)
+        VALUES (new_id, new_name, new_team, new_date_game);
         
    
     ELSEIF previous_start_date IS NULL THEN
@@ -95,8 +95,8 @@ BEGIN
      	WHERE player_id = new_id AND start_date = previous_start_date AND end_date = previous_end_date;
      	
      	-- Insert new row
-     	INSERT INTO player_history (player_id, name, dob, team, start_date, end_date)
-     	VALUES (new_id, new_name, final_dob, new_team, new_date_game, '9999-12-31');
+     	INSERT INTO player_history (player_id, name, dob, team, start_date)
+     	VALUES (new_id, new_name, final_dob, new_team, new_date_game);
      
      
      -- Previous row is different, next row is same or different
