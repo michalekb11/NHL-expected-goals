@@ -6,7 +6,7 @@ import datetime as dt
 import os
 import time
 import argparse
-from functions import clean_name
+from webscrape import clean_name
 
 
 def main():

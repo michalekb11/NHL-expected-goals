@@ -1,4 +1,4 @@
-from functions import get_DF_goalies
+from webscrape import get_DF_goalies
 import pandas as pd
 import argparse
 

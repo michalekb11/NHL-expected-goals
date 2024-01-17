@@ -13,6 +13,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import re
+from cleanup import clean_name
 ########################################################
 # Function to return data frames from DK containing the cleaned odds information for 1) Moneyline/Puckline and 2) O/U's
 def retrieve_sportsbook_info(url):
@@ -997,3 +998,79 @@ def get_date_of_birth(player_id):
         print(f'No date of birth was found for player id: {player_id}')
         return ''
     return dob_html['data-birth']
+########################################################
+def retrieve_schedule(season, last_N_days=None, all_future=False):
+    # Read in team name dictionary for cleaning
+    with open('./data/team_name_dictionary.txt', 'r') as f:
+        # Load the dictionary from the file
+        team_name_dict = json.load(f)
+
+    # Set up hockey reference URL
+    url = 'https://www.hockey-reference.com/leagues/NHL_' + str(season) + '_games.html'
+
+    # Get the schedule from hockey reference for the given season
+    season_results = pd.read_html(url, attrs={'class':'stats_table', 'id':'games'})[0]
+
+    # Clean up the schedule
+    season_results.drop(columns=['Att.', 'LOG', 'Notes'], inplace = True)
+    season_results.columns = ['date', 'away', 'away_G',  'home', 'home_G', 'OT_status']
+    season_results['date'] = pd.to_datetime(season_results['date'])
+    
+    # Filtering: User can specifify to backtrack a certain number of games for updates to rows that were previously inserted
+    if last_N_days:
+        start_date_splice = pd.Timestamp.today().date() - pd.to_timedelta(last_N_days, unit='d')
+        start_date_splice = pd.to_datetime(start_date_splice)
+    else:
+        start_date_splice = season_results['date'].min()
+
+    # Filtering: User can scrape the rest of the schedule for the season (games not played) or can stop after scraping today's upcoming games (also not played, but required for insertion of other data)
+    if all_future:
+        end_date_splice = season_results['date'].max()
+    else:
+        end_date_splice = pd.Timestamp.today()
+    
+    # Perform filtering
+    season_results = season_results.loc[(season_results['date'] >= start_date_splice) & (season_results['date'] <= end_date_splice), :]
+    if len(season_results) == 0:
+        raise ValueError("The filtered data frame contains no games.")
+
+    # Change team to 3 letter code
+    season_results.loc[:, 'away'] = season_results['away'].str.lower().replace(team_name_dict)
+    season_results.loc[:, 'home'] = season_results['home'].str.lower().replace(team_name_dict)
+
+    # Assign a game ID column to each row of the data frame
+    # Game ID = yymmdd_homeaway
+    # This line was giving warning about assigning using copy of slice... tried a different way
+    #season_results['game_id'] = season_results.apply(lambda row: f"{row['date'].strftime('%y%m%d')}_{row['home']}{row['away']}", axis=1)
+    season_results = season_results.assign(game_id=season_results.apply(lambda row: f"{row['date'].strftime('%y%m%d')}_{row['home']}{row['away']}", axis=1))
+
+
+    # Ensure there is a winner for each game (one team with more goals)
+    assert len(season_results.loc[season_results['away_G'] == season_results['home_G'],:]) == 0, "A game was found that has an unclear winner/loser.\n"
+
+    # Melt df so that there is 1 row per team/game
+    home_melt = pd.melt(season_results, id_vars=['date', 'game_id',  'home', 'OT_status'], value_vars=['home_G'], value_name='G').drop(columns='variable').rename(columns={'home':'team'})
+    away_melt = pd.melt(season_results, id_vars=['date', 'game_id', 'away', 'OT_status'], value_vars=['away_G'], value_name='G').drop(columns='variable').rename(columns={'away':'team'})
+
+    # Add the column location to each
+    home_melt['location'] = 'H'
+    away_melt['location'] = 'A'
+
+    # Combine the melted df's
+    combined_melt = pd.concat([home_melt, away_melt], axis=0)
+
+    # Add a column for the winner of each game
+    combined_melt['win_flag'] = combined_melt['G'].eq(combined_melt.groupby('game_id')['G'].transform('max')) #.astype(int)
+    # Reset some values to null is G is missing (game has not been played yet)
+    combined_melt.loc[combined_melt['G'].isna(), 'win_flag'] = pd.NA
+    # Convert columns to int
+    combined_melt[['G', 'win_flag']] = combined_melt[['G', 'win_flag']].astype(pd.Int64Dtype())
+
+    # Add season column
+    combined_melt['season'] = season
+
+    # Get correct column order
+    combined_melt = combined_melt[['team', 'game_id', 'date', 'season', 'location', 'G', 'OT_status', 'win_flag']]
+
+    return combined_melt
+########################################################

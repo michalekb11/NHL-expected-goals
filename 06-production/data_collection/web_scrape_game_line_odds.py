@@ -1,5 +1,5 @@
 # Functions
-from functions import retrieve_sportsbook_info, get_ml_odds, get_pl_odds, get_total_odds
+from webscrape import retrieve_sportsbook_info, get_ml_odds, get_pl_odds, get_total_odds
 import pandas as pd
 
 def main():

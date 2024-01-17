@@ -1,4 +1,4 @@
-from functions import get_60min_odds
+from webscrape import get_60min_odds
 import argparse
 import pandas as pd
 
