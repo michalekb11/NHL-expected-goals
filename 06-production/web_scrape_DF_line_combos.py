@@ -87,11 +87,11 @@ def main():
     #assert lineups_all_teams.groupby("team")['name'].nunique().unique() == np.array([20]), 'Incorrect number of players scraped for at least 1 team.\n'
 
     # All teams should have 10 power play names
-    pp_check = lineups_all_teams[~(lineups_all_teams['pp1_position'].isna() and lineups_all_teams['pp2_position'].isna())].groupby('team')['name'].nunique()
+    pp_check = lineups_all_teams[~(lineups_all_teams['pp1_position'].isna() & lineups_all_teams['pp2_position'].isna())].groupby('team')['name'].nunique()
     pp_check_list = list(pp_check[pp_check != 10].index)
 
     # All teams should have 8 pk names
-    pk_check = lineups_all_teams[~(lineups_all_teams['pk1_position'].isna() and lineups_all_teams['pk2_position'].isna())].groupby('team')['name'].nunique()
+    pk_check = lineups_all_teams[~(lineups_all_teams['pk1_position'].isna() & lineups_all_teams['pk2_position'].isna())].groupby('team')['name'].nunique()
     pk_check_list = list(pk_check[pk_check != 8].index)
 
     # Print a summary if verbose
