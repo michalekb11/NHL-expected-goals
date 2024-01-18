@@ -4,7 +4,7 @@
 import numpy as np
 import pandas as pd
 import datetime as dt
-#import pytz
+import pytz
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -60,8 +60,8 @@ def retrieve_sportsbook_info(url):
 
     # Establish time zones. DK stores in UTC. We will need to convert this to Central Time (taking into account whether currently in DST, etc.)
     # Note: DK has switched to correct tz when scraping, so this is no longer needed
-    #central_tz = pytz.timezone('America/Chicago')
-    #utc_tz = pytz.timezone('UTC')
+    central_tz = pytz.timezone('America/Chicago')
+    utc_tz = pytz.timezone('UTC')
 
     # Create empty spaces to store each set of datetimes, teams, lines, and odds
     # We will extend these lists for each DK table we come across
@@ -92,7 +92,7 @@ def retrieve_sportsbook_info(url):
         tbl_games_dt = [dt.datetime.combine(date, time) for time in dk_times]
 
         # Perform the time zone change to central time (if necessary... currently scraping the accurate time zone)
-        #tbl_games_dt = [gametime.replace(tzinfo = utc_tz).astimezone(central_tz).replace(tzinfo = None) for gametime in tbl_games_dt]
+        tbl_games_dt = [gametime.replace(tzinfo = utc_tz).astimezone(central_tz).replace(tzinfo = None) for gametime in tbl_games_dt]
         games_dt.extend(tbl_games_dt)
         
         # Get the list of teams playing
