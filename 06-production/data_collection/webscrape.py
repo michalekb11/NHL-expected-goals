@@ -989,7 +989,7 @@ def get_anytime_scorer_odds(date_of_games = None, today_flag = None):
 def get_date_of_birth(player_id):
     """Scrape date of birth as string from hockey reference player home page"""
     # Go to hockey reference
-    response = requests.get(url=f'https://www.hockey-reference.com/players{player_id}.html')
+    response = requests.get(url=f'https://www.hockey-reference.com/players/{player_id[0]}/{player_id}.html')
     soup=BeautifulSoup(response.content, 'html.parser')
     # Find dob span element
     dob_html = soup.find('span', id='necro-birth')
