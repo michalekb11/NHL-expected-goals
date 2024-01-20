@@ -41,7 +41,8 @@ def match_name_to_id(name, mysql, team=None, age=None, date_in_history=None, ver
         'louie':['louis'],
         'danil':['daniil'],
         'grigory':['grigori'],
-        'cal':['callan']
+        'cal':['callan', 'calvin'],
+        'samuel':['sam']
     }
     name_list = [name]
     if name_splits[0] in first_name_dict:
