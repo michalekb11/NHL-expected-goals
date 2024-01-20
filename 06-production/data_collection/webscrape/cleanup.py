@@ -48,7 +48,7 @@ def clean_name(name):
     # Return cleaned name
     return name
 ########################################################
-def match_name_to_id(name, mysql_engine, team=None, age=None, date_in_history=None):
+def match_name_to_id(name, mysql_engine, team=None, age=None, date_in_history=None, verbose=False):
     """Find a matching player ID (or enter the correct ID) using player history table"""
     # If you provide a list of potential teams, we will try to use that
     team_where_clause = ''
@@ -101,9 +101,11 @@ def match_name_to_id(name, mysql_engine, team=None, age=None, date_in_history=No
                 break
 
     # Print the final query that was used to the user:
-    print("====================================")
-    query = f'\n'.join([line for line in query.split('\n') if line.strip() != '']) # Funny looking way to remove empty lines from query
-    print(f'Final query tried:\n\n{query}\n')
+    if verbose:
+        print("====================================")
+        query = f'\n'.join([line for line in query.split('\n') if line.strip() != '']) # Funny looking way to remove empty lines from query
+        print(f'Final query tried:\n\n{query}\n')
+
     # We have tried as many queries as we are willing to. Time to check what we found...
     if potential_ids.size == 1:
         return potential_ids[0]
