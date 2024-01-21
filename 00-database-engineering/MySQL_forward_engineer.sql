@@ -344,7 +344,7 @@ CREATE TABLE IF NOT EXISTS `nhl`.`projected_lineup` (
   `pp2_position` SMALLINT UNSIGNED NULL,
   `pk1_position` SMALLINT UNSIGNED NULL,
   `pk2_position` SMALLINT UNSIGNED NULL,
-  PRIMARY KEY (`player_id`, `date_recorded`, `time_recorded`),
+  PRIMARY KEY (`player_id`, `date_recorded`, `time_recorded`, `depth_chart_rank`),
   CONSTRAINT `fk_projected_lineup_player_history1`
     FOREIGN KEY (`player_id`)
     REFERENCES `nhl`.`player_history` (`player_id`)
