@@ -1,4 +1,5 @@
-from functions import get_team_lineup, clean_name
+from webscrape import get_team_lineup
+from cleanup import clean_name
 import pandas as pd
 import argparse
 import json

@@ -1,4 +1,4 @@
-from functions import get_anytime_scorer_odds
+from webscrape import get_anytime_scorer_odds
 import argparse
 import pandas as pd
 

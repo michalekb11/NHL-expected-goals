@@ -1,4 +1,4 @@
-# All functions required for deployment of data collection and model
+# All functions required for data collection from websites
 ########################################################
 # Libraries
 import numpy as np
@@ -13,51 +13,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import re
-import sqlalchemy
-
-########################################################
-def clean_name(name):
-    """Clean player names with special characters and punctuation to standardize across data sources"""
-    # Set up replace dictionary
-    replace_dict = {
-        # Special characters
-        #'Å':'A',
-        'å':'a',
-        'ä':'a',
-        'á':'a',
-        #'Č':'C',
-        'č':'c',
-        #'É':'E',
-        'é':'e',
-        'ë':'e',
-        'è':'e',
-        'ě':'e',
-        'í':'i',
-        'ļ':'l',
-        'ň':'n',
-        'ö':'o',
-        'ø':'o',
-        'ř':'r',
-        #'Š':'S',
-        'š':'s',
-        'ü':'u',
-        'ž':'z',
-
-        # Other punctuation
-        '.':'',
-        '-':' ',
-        "'":''
-    }
-    # Strip white space
-    name = name.strip()
-    # Lowercase
-    name = name.lower()
-    # Replace characters, punctuation, phrases
-    for k, v in replace_dict.items():
-        name = name.replace(k, v)
-
-    # Return cleaned name
-    return name
+from cleanup import clean_name
 ########################################################
 # Function to return data frames from DK containing the cleaned odds information for 1) Moneyline/Puckline and 2) O/U's
 def retrieve_sportsbook_info(url):
@@ -104,8 +60,8 @@ def retrieve_sportsbook_info(url):
 
     # Establish time zones. DK stores in UTC. We will need to convert this to Central Time (taking into account whether currently in DST, etc.)
     # Note: DK has switched to correct tz when scraping, so this is no longer needed
-    #central_tz = pytz.timezone('America/Chicago')
-    #utc_tz = pytz.timezone('UTC')
+    central_tz = pytz.timezone('America/Chicago')
+    utc_tz = pytz.timezone('UTC')
 
     # Create empty spaces to store each set of datetimes, teams, lines, and odds
     # We will extend these lists for each DK table we come across
@@ -136,7 +92,7 @@ def retrieve_sportsbook_info(url):
         tbl_games_dt = [dt.datetime.combine(date, time) for time in dk_times]
 
         # Perform the time zone change to central time (if necessary... currently scraping the accurate time zone)
-        #tbl_games_dt = [gametime.replace(tzinfo = utc_tz).astimezone(central_tz).replace(tzinfo = None) for gametime in tbl_games_dt]
+        tbl_games_dt = [gametime.replace(tzinfo = utc_tz).astimezone(central_tz).replace(tzinfo = None) for gametime in tbl_games_dt]
         games_dt.extend(tbl_games_dt)
         
         # Get the list of teams playing
@@ -1033,7 +989,7 @@ def get_anytime_scorer_odds(date_of_games = None, today_flag = None):
 def get_date_of_birth(player_id):
     """Scrape date of birth as string from hockey reference player home page"""
     # Go to hockey reference
-    response = requests.get(url=f'https://www.hockey-reference.com/players{player_id}.html')
+    response = requests.get(url=f'https://www.hockey-reference.com/players/{player_id[0]}/{player_id}.html')
     soup=BeautifulSoup(response.content, 'html.parser')
     # Find dob span element
     dob_html = soup.find('span', id='necro-birth')
@@ -1043,107 +999,78 @@ def get_date_of_birth(player_id):
         return ''
     return dob_html['data-birth']
 ########################################################
-def match_name_to_id(name, mysql_engine, team=None, age=None, date_in_history=None):
-    """Find a matching player ID (or enter the correct ID) using player history table"""
-    # If you provide a list of potential teams, we will try to use that
-    team_where_clause = ''
-    if team:
-        team_where_clause += f"""AND team IN ('{"', '".join(team)}')"""
+def retrieve_schedule(season, last_N_days=None, all_future=False):
+    # Read in team name dictionary for cleaning
+    with open('./data/team_name_dictionary.txt', 'r') as f:
+        # Load the dictionary from the file
+        team_name_dict = json.load(f)
 
-    # If you provide an age, but in order to calculate age at a particular time in history, you must also provide the date...
-    # If no date in history is provided, we assume that age is meaningless and often not the same as their current age?
-    age_where_clause = ''
-    if age and date_in_history:
-        age_where_clause += f"AND TIMESTAMPDIFF(year, dob, '{date_in_history}') = {age}"
+    # Set up hockey reference URL
+    url = 'https://www.hockey-reference.com/leagues/NHL_' + str(season) + '_games.html'
 
-    # If you provide the date that this record was from, we can search for that point in this player's history
-    # If you do not provide a time in history, we will ??????
-    if date_in_history:
-        date_in_history_where_clause = f"AND start_date <= '{date_in_history}' AND end_date >= '{date_in_history}'"
+    # Get the schedule from hockey reference for the given season
+    season_results = pd.read_html(url, attrs={'class':'stats_table', 'id':'games'})[0]
+
+    # Clean up the schedule
+    season_results.drop(columns=['Att.', 'LOG', 'Notes'], inplace = True)
+    season_results.columns = ['date', 'away', 'away_G',  'home', 'home_G', 'OT_status']
+    season_results['date'] = pd.to_datetime(season_results['date'])
+    
+    # Filtering: User can specifify to backtrack a certain number of games for updates to rows that were previously inserted
+    if last_N_days:
+        start_date_splice = pd.Timestamp.today().date() - pd.to_timedelta(last_N_days, unit='d')
+        start_date_splice = pd.to_datetime(start_date_splice)
     else:
-        date_in_history_where_clause = "AND end_date = '9999-12-31'"
+        start_date_splice = season_results['date'].min()
 
-    # Construct the main query using all possible information available to us
-    query = f"""
-    SELECT DISTINCT(player_id)
-    FROM player_history
-    WHERE name = '{name}'
-    {team_where_clause}
-    {age_where_clause}
-    {date_in_history_where_clause}
-    ;
-    """
-
-    # Try query using all available information
-    potential_ids = pd.read_sql(query, con=mysql_engine).values.flatten()
-
-    # If we did not find match, start removing clauses until we do
-    if potential_ids.size == 0:
-        # Initalize priority list of the where clauses to remove (in order) if there is no match on the previous tries
-        # Concerned that after a while, a new player might have same name and team as someone who played years ago and hit an ID match.
-        remove_priority = [clause for clause in [age_where_clause] if clause] #, date_in_history_where_clause... 
-
-        # If there are no clauses we want to remove, the list will be empty, and this loop will be skipped
-        for remove_clause in remove_priority:
-            # Remove the clause from query
-            query = query.replace(remove_clause, '')
-
-            # Rerun the query to see if theres a new match
-            potential_ids = pd.read_sql(query, con=mysql_engine).values.flatten()
-
-            # If match, break away
-            if potential_ids.size > 0:
-                break
-
-    # Print the final query that was used to the user:
-    print("====================================")
-    query = f'\n'.join([line for line in query.split('\n') if line.strip() != '']) # Funny looking way to remove empty lines from query
-    print(f'Final query tried:\n\n{query}\n')
-    # We have tried as many queries as we are willing to. Time to check what we found...
-    if potential_ids.size == 1:
-        return potential_ids[0]
-    # If multiple, have the user choose the correct one (can select none of the above)
-    elif potential_ids.size > 1:
-        # Print the list of possibilities to user
-        print(f"Found multiple potential IDs for:\nname = {name}\nteam = {team}\nage = {age}\ndate_in_history = {date_in_history}.\n")
-        for n, id in enumerate(potential_ids):
-            print(f"{n}: {id}")
-        
-        # Add option for none of the above
-        print(f"{len(potential_ids)}: None of the above\n")
-        potential_ids = np.append(potential_ids, None)
-
-        # Prompt user for input
-        correct_idx = int(input(f"Enter the number of the correct id.\n"))
-
-        # Return correct id
-        return potential_ids[correct_idx]
+    # Filtering: User can scrape the rest of the schedule for the season (games not played) or can stop after scraping today's upcoming games (also not played, but required for insertion of other data)
+    if all_future:
+        end_date_splice = season_results['date'].max()
     else:
-        # Get input from user with the correct ID if there is one
-        print(f"No ID found for:\nname = {name}\nteam = {team}\nage = {age}\ndate_in_history = {date_in_history}.\n")
-        correct_id = input(f"Enter the correct ID for this player. If you cannot find the ID, press enter (submit empty string).\n")
+        end_date_splice = pd.Timestamp.today()
+    
+    # Perform filtering
+    season_results = season_results.loc[(season_results['date'] >= start_date_splice) & (season_results['date'] <= end_date_splice), :]
+    if len(season_results) == 0:
+        raise ValueError("The filtered data frame contains no games.")
 
-        if correct_id:
-            # Before we return the correct id, we need to ask the user to enter the correct information about this player and insert the info into the player history table so that we have it stored for next time
-            print(f"Enter the folling player information to be inserted into player history table.\n")
-            team_to_insert = input('Team (3 letter code): ')
-            date_to_insert = input("Date in history (ex: '2023-01-01'): ")
-            dob_to_insert = input("Date of birth: ")
+    # Change team to 3 letter code
+    season_results.loc[:, 'away'] = season_results['away'].str.lower().replace(team_name_dict)
+    season_results.loc[:, 'home'] = season_results['home'].str.lower().replace(team_name_dict)
 
-            # Insert information into player history by calling stored procedure
-            insert_query = sqlalchemy.text(f"""
-                INSERT INTO player_history (player_id, start_date, name, dob, team)
-                VALUES ('{correct_id}', '{date_to_insert}', '{name}', '{dob_to_insert}', '{team_to_insert}');
-            """)
+    # Assign a game ID column to each row of the data frame
+    # Game ID = yymmdd_homeaway
+    # This line was giving warning about assigning using copy of slice... tried a different way
+    #season_results['game_id'] = season_results.apply(lambda row: f"{row['date'].strftime('%y%m%d')}_{row['home']}{row['away']}", axis=1)
+    season_results = season_results.assign(game_id=season_results.apply(lambda row: f"{row['date'].strftime('%y%m%d')}_{row['home']}{row['away']}", axis=1))
 
-            # Perform update
-            with mysql_engine.begin() as conn: 
-                conn.execute(insert_query)
-                print(f"Player successfully inserted.\n")
-            
-            # Returnt the correct ID
-            return correct_id
-        
-        else:
-            return None
+
+    # Ensure there is a winner for each game (one team with more goals)
+    assert len(season_results.loc[season_results['away_G'] == season_results['home_G'],:]) == 0, "A game was found that has an unclear winner/loser.\n"
+
+    # Melt df so that there is 1 row per team/game
+    home_melt = pd.melt(season_results, id_vars=['date', 'game_id',  'home', 'OT_status'], value_vars=['home_G'], value_name='G').drop(columns='variable').rename(columns={'home':'team'})
+    away_melt = pd.melt(season_results, id_vars=['date', 'game_id', 'away', 'OT_status'], value_vars=['away_G'], value_name='G').drop(columns='variable').rename(columns={'away':'team'})
+
+    # Add the column location to each
+    home_melt['location'] = 'H'
+    away_melt['location'] = 'A'
+
+    # Combine the melted df's
+    combined_melt = pd.concat([home_melt, away_melt], axis=0)
+
+    # Add a column for the winner of each game
+    combined_melt['win_flag'] = combined_melt['G'].eq(combined_melt.groupby('game_id')['G'].transform('max')) #.astype(int)
+    # Reset some values to null is G is missing (game has not been played yet)
+    combined_melt.loc[combined_melt['G'].isna(), 'win_flag'] = pd.NA
+    # Convert columns to int
+    combined_melt[['G', 'win_flag']] = combined_melt[['G', 'win_flag']].astype(pd.Int64Dtype())
+
+    # Add season column
+    combined_melt['season'] = season
+
+    # Get correct column order
+    combined_melt = combined_melt[['team', 'game_id', 'date', 'season', 'location', 'G', 'OT_status', 'win_flag']]
+
+    return combined_melt
 ########################################################
