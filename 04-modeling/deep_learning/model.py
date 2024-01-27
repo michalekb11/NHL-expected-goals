@@ -9,9 +9,12 @@ class NeuralNetwork(nn.Module):
         super().__init__()
         self.dropout = nn.Dropout(p=0.2)
         self.relu = nn.ReLU()
+        self.softplus = nn.Softplus() # Smooth version of ReLU
         self.fc1 = nn.Linear(n_features, 50)
         self.fc2 = nn.Linear(50, 20)
         self.fc3 = nn.Linear(20, 1)
+
+        # What is batch normalization, and do I need it?
     
     def forward(self, x):
         x = self.fc1(x)
@@ -21,6 +24,7 @@ class NeuralNetwork(nn.Module):
         x = self.relu(x)
         x = self.dropout(x)
         x = self.fc3(x)
+        x = self.softplus(x)
         return x
 
 # Custom dataset class that takes in features as tensor and targets as any iterable?
