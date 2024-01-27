@@ -48,7 +48,7 @@ CREATE VIEW skater_per60_rolling03 AS (
 	)
 
 	SELECT player_id,
-		DATE,
+		`date`,
 		60 * (G_tot / TOI_tot) AS G60_03,
 		60 * (A_tot / TOI_tot) AS A60_03,
 		60 * (P_tot / TOI_tot) AS P60_03,
@@ -114,7 +114,7 @@ CREATE VIEW skater_per60_rolling05 AS (
 	)
 
 	SELECT player_id,
-		DATE,
+		`date`,
 		60 * (G_tot / TOI_tot) AS G60_05,
 		60 * (A_tot / TOI_tot) AS A60_05,
 		60 * (P_tot / TOI_tot) AS P60_05,
@@ -180,7 +180,7 @@ CREATE VIEW skater_per60_rolling10 AS (
 	)
 
 	SELECT player_id,
-		DATE,
+		`date`,
 		60 * (G_tot / TOI_tot) AS G60_10,
 		60 * (A_tot / TOI_tot) AS A60_10,
 		60 * (P_tot / TOI_tot) AS P60_10,
@@ -246,7 +246,7 @@ CREATE VIEW skater_per60_rolling15 AS (
 	)
 
 	SELECT player_id,
-		DATE,
+		`date`,
 		60 * (G_tot / TOI_tot) AS G60_15,
 		60 * (A_tot / TOI_tot) AS A60_15,
 		60 * (P_tot / TOI_tot) AS P60_15,
@@ -312,7 +312,7 @@ CREATE VIEW skater_per60_rolling20 AS (
 	)
 
 	SELECT player_id,
-		DATE,
+		`date`,
 		60 * (G_tot / TOI_tot) AS G60_20,
 		60 * (A_tot / TOI_tot) AS A60_20,
 		60 * (P_tot / TOI_tot) AS P60_20,
