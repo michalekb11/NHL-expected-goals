@@ -93,3 +93,25 @@ def diff_in_medians(feature, target):
     diff = np.nanmedian(x_goals) - np.nanmedian(x_nogoal)
 
     return diff
+
+def time_series_plot(player_df, metric_prefix, rw1='03', rw2='20'):
+    # Seaborn
+    sns.set(style="whitegrid", palette="muted")
+
+    # Create a FacetGrid for S60_20 and S60_03
+    g = sns.FacetGrid(player_df, col="season", hue="gt0", palette={0: 'black', 1: 'green'}, col_wrap=2, sharex=False)
+    g.map(plt.scatter, "date", f"{metric_prefix}_{rw1}", alpha=0.5, s=7)
+    g.map(plt.scatter, "date", f"{metric_prefix}_{rw2}", alpha=0.5, s=7)
+    g.add_legend(title='At least 1 goal', labels=['No', 'Yes'])
+
+    g.set_axis_labels("Date", metric_prefix)
+
+    # Draw a black line connecting all points for S60_20 and S60_03
+    for ax, (season, season_data) in zip(g.axes, player_df.groupby('season')):
+        ax.tick_params(axis='x', rotation=20, labelsize=8)
+        ax.plot(season_data['date'], season_data[f"{metric_prefix}_{rw1}"], color='black', alpha=0.5, linewidth=1, linestyle='--')
+        ax.plot(season_data['date'], season_data[f"{metric_prefix}_{rw2}"], color='black', alpha=0.5, linewidth=1, linestyle='-')
+        ax.set_title(f"Season: {season}")
+
+    plt.show()
+    return
