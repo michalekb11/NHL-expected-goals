@@ -3,7 +3,7 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-
+########################################################################
 def spearman_rank(feature, target, return_pval=False):
     """Calculate spearman rank correlation coefficient between continuous or ordinal feature and target"""
     # Calculate spearman
@@ -14,7 +14,7 @@ def spearman_rank(feature, target, return_pval=False):
         return significance_result.statistic, significance_result.pvalue
 
     return significance_result.statistic
-
+########################################################################
 def boxplot(feature, target, ax=None):
     # Clear any old graphic
     plt.clf()
@@ -33,7 +33,7 @@ def boxplot(feature, target, ax=None):
     plt.xlabel(target.name)
     plt.show(g)
     return
-
+########################################################################
 def density_plot(feature, target):
     target = np.array(target, dtype=str)
     # Clear any old graphic
@@ -53,7 +53,7 @@ def density_plot(feature, target):
     plt.xlabel(feature.name)
     plt.show(g)
     return
-
+########################################################################
 # Function for difference in means between target levels
 def diff_in_means(feature, target):
     """Calculate the difference in means of feature in target levels"""
@@ -73,7 +73,7 @@ def diff_in_means(feature, target):
     diff = np.nanmean(x_goals) - np.nanmean(x_nogoal)
 
     return diff
-
+########################################################################
 # Function for difference in medians between target levels
 def diff_in_medians(feature, target):
     """Calculate the difference in medians of feature in target levels"""
@@ -93,7 +93,7 @@ def diff_in_medians(feature, target):
     diff = np.nanmedian(x_goals) - np.nanmedian(x_nogoal)
 
     return diff
-
+########################################################################
 def time_series_plot(player_df, metric_prefix, rw1='03', rw2='20'):
     # Seaborn
     sns.set(style="whitegrid", palette="muted")
@@ -115,3 +115,29 @@ def time_series_plot(player_df, metric_prefix, rw1='03', rw2='20'):
 
     plt.show()
     return
+########################################################################
+def psi(expected, observed, bucket_type = "bins", n_bins = 10):
+    """Calculate PSI for two numpy arrays. Bin strategies can be 'bins' or 'quantiles'"""
+    # Set breakpoints based off bin strategy
+    if bucket_type == "bins":
+        breakpoints = np.histogram(expected, n_bins)[1]
+    elif bucket_type == "quantiles":
+        breakpoints = np.arange(0, n_bins + 1) / (n_bins) * 100
+        breakpoints = np.percentile(expected, breakpoints)
+    else:
+        raise ValueError(f"Invalid bucket_type: {bucket_type}. Only 'bins' and 'quantiles' allowed.")
+
+    # Find frequencies of for each bin
+    expected_percents = np.histogram(expected, breakpoints)[0] / len(expected)
+    observed_percents = np.histogram(observed, breakpoints)[0] / len(observed)
+
+    # Avoid divide by 0 error
+    expected_percents = np.clip(expected_percents, a_min=0.0001, a_max=None)
+    observed_percents = np.clip(observed_percents, a_min=0.0001, a_max=None)
+
+    # Calculate psi
+    psi_value = (expected_percents - observed_percents) * np.log(expected_percents / observed_percents)
+    psi_value = sum(psi_value)
+
+    return psi_value
+########################################################################

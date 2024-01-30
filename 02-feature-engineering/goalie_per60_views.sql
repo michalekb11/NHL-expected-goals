@@ -34,11 +34,11 @@ CREATE VIEW goalie_per60_rolling03 AS (
 
 	SELECT player_id,
 		`date`,
-		60 * (GA_tot / TOI_tot) AS GA60_3,
-		60 * (SA_tot / TOI_tot) AS SA60_3,
-		60 * (SV_tot / TOI_tot) AS SV60_3,
-        CAST(SV_tot AS FLOAT) / SA_tot AS SVpct_3,
-		TOI_tot / 3 AS avgTOI_3
+		60 * (GA_tot / TOI_tot) AS GA60_03,
+		60 * (SA_tot / TOI_tot) AS SA60_03,
+		60 * (SV_tot / TOI_tot) AS SV60_03,
+        CAST(SV_tot AS FLOAT) / SA_tot AS SVpct_03,
+		TOI_tot / 3 AS avgTOI_03
 	FROM stat_totals
 	WHERE game_num > 3
 );
@@ -71,11 +71,11 @@ CREATE VIEW goalie_per60_rolling05 AS (
 
 	SELECT player_id,
 		`date`,
-		60 * (GA_tot / TOI_tot) AS GA60_5,
-		60 * (SA_tot / TOI_tot) AS SA60_5,
-		60 * (SV_tot / TOI_tot) AS SV60_5,
-        CAST(SV_tot AS FLOAT) / SA_tot AS SVpct_5,
-		TOI_tot / 5 AS avgTOI_5
+		60 * (GA_tot / TOI_tot) AS GA60_05,
+		60 * (SA_tot / TOI_tot) AS SA60_05,
+		60 * (SV_tot / TOI_tot) AS SV60_05,
+        CAST(SV_tot AS FLOAT) / SA_tot AS SVpct_05,
+		TOI_tot / 5 AS avgTOI_05
 	FROM stat_totals
 	WHERE game_num > 5
 );
