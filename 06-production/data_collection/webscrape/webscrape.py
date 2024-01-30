@@ -1060,11 +1060,12 @@ def retrieve_schedule(season, last_N_days=None, all_future=False):
     combined_melt = pd.concat([home_melt, away_melt], axis=0)
 
     # Add a column for the winner of each game
-    combined_melt['win_flag'] = combined_melt['G'].eq(combined_melt.groupby('game_id')['G'].transform('max')) #.astype(int)
+    combined_melt['G'] = combined_melt['G'].astype('Int64')
+    combined_melt['win_flag'] = combined_melt['G'].eq(combined_melt.groupby('game_id')['G'].transform('max')).astype('Int64')
     # Reset some values to null is G is missing (game has not been played yet)
     combined_melt.loc[combined_melt['G'].isna(), 'win_flag'] = pd.NA
     # Convert columns to int
-    combined_melt[['G', 'win_flag']] = combined_melt[['G', 'win_flag']].astype(pd.Int64Dtype())
+    #combined_melt[['G', 'win_flag']] = combined_melt[['G', 'win_flag']].astype(pd.Int64Dtype())
 
     # Add season column
     combined_melt['season'] = season
