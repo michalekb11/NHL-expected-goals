@@ -5,7 +5,7 @@ import pandas as pd
 
 def main():
     # Path to save file
-    path_to_60min_odds = './data/daily/odds/60min_odds.csv'
+    path_to_60min_odds = '/Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_data/data/daily/odds/60min_odds.csv'
 
     # Initialize parser
     parser = argparse.ArgumentParser()

@@ -4,7 +4,7 @@ import pandas as pd
 
 def main():
     # Path to save file
-    path_to_anytime_scorer_odds = './data/daily/odds/anytime_goalscorer.csv'
+    path_to_anytime_scorer_odds = '/Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_data/data/daily/odds/anytime_goalscorer.csv'
 
     # Initialize parser
     parser = argparse.ArgumentParser()

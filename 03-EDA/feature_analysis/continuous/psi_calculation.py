@@ -5,6 +5,9 @@ import numpy as np
 from feature_functions import psi
 import argparse
 
+# Outpu directory
+results_path = '/Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_data/03-EDA/feature_analysis/results/psi'
+
 # Initialize parser
 parser = argparse.ArgumentParser()
 
@@ -69,5 +72,5 @@ for feature in args.Features:
     result_df = pd.DataFrame(results_matrix, columns=season_list, index=season_list)
 
     # Save to a CSV
-    result_df.to_csv(f'03-EDA/feature_analysis/continuous/results/psi/{feature}_psi.csv', header=True, index=True)
+    result_df.to_csv(f'{results_path}/{feature}_psi.csv', header=True, index=True)
 

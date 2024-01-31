@@ -4,9 +4,9 @@ import pandas as pd
 
 def main():
     # Paths
-    path_to_ml_odds = './data/daily/odds/ml_odds.csv'
-    path_to_pl_odds = './data/daily/odds/pl_odds.csv'
-    path_to_total_odds = './data/daily/odds/total_odds.csv'
+    path_to_ml_odds = '/Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_data/data/daily/odds/ml_odds.csv'
+    path_to_pl_odds = '/Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_data/data/daily/odds/pl_odds.csv'
+    path_to_total_odds = '/Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_data/data/daily/odds/total_odds.csv'
     dk_hockey_main_url = 'https://sportsbook.draftkings.com/leagues/hockey/nhl?category=game-lines&subcategory=game'
 
     # Get recording from sportsbook
