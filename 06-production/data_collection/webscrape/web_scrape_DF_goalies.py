@@ -15,7 +15,7 @@ def main():
     args = parser.parse_args()
 
     # CSV path
-    path_to_proj_goalies= './data/daily/DF_projected_goalies.csv'
+    path_to_proj_goalies= '/Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_data/data/daily/DF_projected_goalies.csv'
 
     # Scrape DF goalies on particular date
     try:

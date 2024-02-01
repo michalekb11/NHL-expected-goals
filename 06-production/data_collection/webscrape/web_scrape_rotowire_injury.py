@@ -20,7 +20,7 @@ def main():
     args = parser.parse_args()
 
     # Path to injury data
-    path_to_rw = './data/daily/RW_injuries.csv'
+    path_to_rw = '/Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_data/data/daily/RW_injuries.csv'
 
     # Specifiy the URL where injury information is located
     roto_url = 'https://www.rotowire.com/hockey/injury-report.php'
