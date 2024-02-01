@@ -8,6 +8,8 @@
 
 [Week 16](#week-16) | [Week 17](#week-17) | [Week 18](#week-18) | [Week 19](#week-19) | [Week 20](#week-20) 
 
+[Week 21](#week-21) | [Week 22](#week-22) | [Week 23](#week-23) | [Week 24](#week-24) | [Week 25](#week-25) 
+
 ## Week 1 (09/11/23 - 09/17/23) <a name="week-1"></a>
 * Created production python files for 3 web scrape scripts (DF lines, RW injuries, and DK game odds)
    - Results will be saved in CSVs. Some basic validations in place, but could be improved. Error handling could be improved.
@@ -82,6 +84,39 @@
 * (Ran into issues with MySQL crashing)
 
 ## Week 18 (01/08/24 - 01/14/24) <a name="week-18"></a>
-* x
+* Daily scrapes
+* Tested a new MySQL database connection using SQLAce (mac application) instead of workbench
+* Redesign of entire database architecture to account for more tables and types of data that have been scraped
+
+## Week 19 (01/15/24 - 01/21/24) <a name="week-19"></a>
+* Daily scrapes
+* Wrote function to gather DOB from hockey reference using player id
+* Completed new database ER diagram
+* Wrote stored procedure to handle inserts/upserts into new player_history table
+* Forward engineered all tables
+* Updated feature views to account for new tables
+* Fixed a duplicate key issue for lineups table where same player plays on multiple PP or PK units
+* Wrote function to match a player name to a player ID
+* Wrote production code to scrape daily game schedules and insert directly into MySQL database
+* Made all insertions into game_id, schedule, ml/pl/total odds, regulation odds, player_history, goalscorer odds, projected lineups, projected goalie, and injury tables
+
+## Week 20 (01/22/24 - 01/28/24) <a name="week-20"></a>
+* Daily scrapes
+* Performed k-means clustering on skaters to identify 3 types of players
+* Investigated why rolling20 player stats are more correlated with G than rolling 3, 5, etc.
+* Investigated how much of an impact ice time affects rolling 20 stats
+
+## Week 21 (01/29/24 - 02/04/24) <a name="week-21"></a>
+* Daily scrapes
+* Had to completely re-clone repo and re-install virtual environment due to problem with laptop (lots of errors reinstalling packages)
+* Calculated population stability index (PSI) for all continuous features to measure feature stability
+* Investigated features that seemed to be unstable across seasons
+* Moved all local data to outside of the GitHub repo
+
+## Week 22 (02/05/24 - 02/11/24) <a name="week-22"></a>
+* Daily scrapes
+
+## Week 23 (02/12/24 - 02/18/24) <a name="week-23"></a>
+* Daily scrapes
 
 
