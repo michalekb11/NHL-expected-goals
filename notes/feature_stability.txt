@@ -1,0 +1,26 @@
+Tracking PSI from start of 2021 season through ~late January of 2024 season.
+
+PSI > 0.2:
+- Time on ice (15, 20)
+- Goals against (2021 vs the rest)
+- Shots against (~all pairs in 20)
+- Saves (~all pairs in 20)
+- Save percent (better than saves, but still noticeable in 20)
+
+***NOTE: Goalie stats with high PSI in rolling 20 files are likely due to low sample size. These files have the smallest samples of all features, and thus more variance. High PSI may not be due to distribution shift, but rather sample size.***
+
+PSI > 0.1:
+- Hits (10, 15, 20)
+
+Stable:
+- Assists
+- Blocks
+- Goals
+- Faceoffs
+- Points
+- Point streak
+- Power play points
+- Short handed points
+- Rating
+- Shots
+- Shifts

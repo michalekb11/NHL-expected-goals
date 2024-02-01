@@ -20,13 +20,13 @@ st.title("Feature exploration")
 st.sidebar.title("User Input")
 
 # Drop down to select a metric
-metric_list = [col for col in data.columns if '_3' in col]
-default_metric = 'G60_3'
+metric_list = [col for col in data.columns if '_20' in col]
+default_metric = 'SV60_20' # 'G60_3'
 selected_metric = st.sidebar.selectbox("Select a metric", metric_list, index=metric_list.index(default_metric))
 
 # Dropdown to select a player
 #selected_player = st.selectbox("Select a player", data['id_name'].unique())
-selected_players = st.sidebar.multiselect("Select players", data['id_name'].unique(), default=['connor mcdavid - /m/mcdavco01'])
+selected_players = st.sidebar.multiselect("Select players", data['player_id'].unique(), default=['sorokil01']) # ['connor mcdavid - /m/mcdavco01']
 
 # Drop down to select a season
 seasons_list = data['season'].unique().tolist()
@@ -36,7 +36,7 @@ selected_season = st.sidebar.radio("Select a season", seasons_list, index=season
 ############# DATA FILTERING #############
 # Filter the DataFrame based on the selected player
 #filtered_df = data[data['player_id'] == selected_player]
-filtered_df = data[(data['id_name'].isin(selected_players)) & (data['season'] == selected_season)]
+filtered_df = data[(data['player_id'].isin(selected_players)) & (data['season'] == selected_season)]
 
 ############# PLOTS #############
 # Create a line plot with points for the selected players
@@ -44,12 +44,12 @@ fig = go.Figure()
 
 for player in selected_players:
     try:
-        player_data = filtered_df[filtered_df['id_name'] == player]
+        player_data = filtered_df[filtered_df['player_id'] == player]
         fig.add_trace(go.Scatter(
                         x=player_data['date'],
                         y=player_data[selected_metric],
                         mode='lines+markers',
-                        name=player_data['name'].iloc[0]
+                        name=player_data['player_id'].iloc[0]
                     )
         )
     except IndexError as e:
@@ -57,10 +57,10 @@ for player in selected_players:
         continue
 
 fig.update_layout(
-    title='Rolling window: 3',
+    title='Rolling window: 20',
     xaxis_title='Date',
     yaxis_title=selected_metric,
-    legend=dict(title='Player Names')
+    legend=dict(title='Player IDs')
 )
 
 st.plotly_chart(fig)

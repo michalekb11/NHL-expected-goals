@@ -6,7 +6,7 @@ from feature_functions import psi
 import argparse
 
 # Outpu directory
-results_path = '/Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_data/03-EDA/feature_analysis/results/psi'
+results_path = '/Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_data/03-EDA/feature_analysis/continuous/psi'
 
 # Initialize parser
 parser = argparse.ArgumentParser()

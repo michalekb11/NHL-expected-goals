@@ -6,28 +6,28 @@ import pandas as pd
 @st.cache_data()
 def load_data():
     # Create the engine to connect to the MySQL database
-    engine = sqlalchemy.create_engine('mysql+mysqlconnector://root:root@localhost/nhl')
+    engine = sqlalchemy.create_engine('mysql+mysqlconnector://root:rootdata@localhost/nhl')
 
     # Queries
     # Names
-    names_query = "SELECT DISTINCT player_id, name, date FROM skater_games;"
+    names_query = "SELECT DISTINCT player_id, date FROM goalie_game;" # "SELECT DISTINCT player_id, date FROM skater_game;"
 
     # Season
     season_query = 'SELECT DISTINCT date, season FROM schedule;'
 
     # Skater per60's
-    sk3_query = "SELECT * FROM skater_per60_rolling3;"
+    rolling_query = "SELECT * FROM goalie_per60_rolling20;" # "SELECT * FROM skater_per60_rolling3;"
 
     # Run queries
     names = pd.read_sql(names_query, con=engine)
     seasons = pd.read_sql(season_query, con=engine)
-    sk3 = pd.read_sql(sk3_query, con=engine)
+    rolling = pd.read_sql(rolling_query, con=engine)
 
     # Example feature set
-    feature_set = pd.merge(names, sk3, how='left', on=['player_id', 'date']).merge(seasons, how='left', on='date')
+    feature_set = pd.merge(names, rolling, how='left', on=['player_id', 'date']).merge(seasons, how='left', on='date')
 
     # Add name + ID column
-    feature_set['id_name'] = feature_set['name'] + " - " + feature_set["player_id"]
+    #feature_set['id_name'] = feature_set['name'] + " - " + feature_set["player_id"]
 
     return feature_set
 

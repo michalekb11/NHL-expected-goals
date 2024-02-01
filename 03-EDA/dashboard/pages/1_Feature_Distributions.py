@@ -22,8 +22,8 @@ st.title("Seasonal Distributions")
 st.sidebar.title("User Input")
 
 # Drop down to select a metric
-metric_list = [col for col in data.columns if '_3' in col]
-default_metric = 'G60_3'
+metric_list = [col for col in data.columns if '_20' in col]
+default_metric = 'SV60_20' # 'G60_3'
 selected_metric = st.sidebar.selectbox("Select a metric", metric_list, index=metric_list.index(default_metric))
 
 ############# PLOTS #############
@@ -57,12 +57,3 @@ fig.update_layout(
 
 # Display the Plotly subplot in Streamlit
 st.plotly_chart(fig)
-
-
-
-
-
-
-
-
-
