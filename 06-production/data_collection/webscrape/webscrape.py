@@ -135,7 +135,7 @@ def retrieve_sportsbook_info(url):
 def get_ml_odds(sportsbook_recording, today_only = True):
     """Use DK sportsbook dictionary to return pandas data frame with ML odds"""
     # Read in team name to 3 letter code dictionary
-    with open('./data/team_name_dictionary.txt', 'r') as f:
+    with open('../sports_betting_data/data/team_name_dictionary.txt', 'r') as f:
         team_name_dict = json.load(f)
 
     # List of moneyline odds for today's games
@@ -164,7 +164,7 @@ def get_ml_odds(sportsbook_recording, today_only = True):
 def get_pl_odds(sportsbook_recording, today_only=True):
     """Use DK sportsbook dictionary to return pandas data frame with PL odds"""
     # Read in team name to 3 letter code dictionary
-    with open('./data/team_name_dictionary.txt', 'r') as f:
+    with open('../sports_betting_data/data/team_name_dictionary.txt', 'r') as f:
         team_name_dict = json.load(f)
 
     # List of pucklines for today
@@ -198,7 +198,7 @@ def get_pl_odds(sportsbook_recording, today_only=True):
 def get_total_odds(sportsbook_recording, today_only=True):
     """Use DK sportsbook dictionary to return pandas data frame with total odds"""
     # Read in team name to 3 letter code dictionary
-    with open('./data/team_name_dictionary.txt', 'r') as f:
+    with open('../sports_betting_data/data/team_name_dictionary.txt', 'r') as f:
         team_name_dict = json.load(f)
 
     # List of home teams
@@ -497,7 +497,7 @@ def process_injuries(section_html):
 def get_team_lineup(team):
     """Retrieve lines (F, D, G, PP, PK, etc.) for team X off DF"""
     # Read in team name to 3 letter code dictionary
-    with open('./data/team_name_dictionary.txt', 'r') as f:
+    with open('../sports_betting_data/data/team_name_dictionary.txt', 'r') as f:
         team_name_dict = json.load(f)
         
     # Date and time of recording
@@ -633,7 +633,7 @@ def get_DF_goalies(date_of_games=None, today_flag=None):
 def process_goalie_DF_card(section_html):
     """Process each game on Daily Faceoff to return list of teams, goalies, and their status"""
     # Read in team name to 3 letter code dictionary
-    with open('./data/team_name_dictionary.txt', 'r') as f:
+    with open('../sports_betting_data/data/team_name_dictionary.txt', 'r') as f:
         team_name_dict = json.load(f)
 
     # Gather teams playing in this matchup
@@ -672,7 +672,7 @@ def get_60min_odds(date_of_games = None, today_flag = None):
         raise ValueError("At least one of 'date_of_games' or 'today_flag' must be specified.")
     
     # Read in team name to 3 letter code dictionary
-    with open('./data/team_name_dictionary.txt', 'r') as f:
+    with open('../sports_betting_data/data/team_name_dictionary.txt', 'r') as f:
         team_name_dict = json.load(f)
 
     # Current date and time
@@ -815,7 +815,7 @@ def get_anytime_scorer_odds(date_of_games = None, today_flag = None):
     time_recorded = dt_now.time().strftime(format = '%H:%M:%S')
 
     # Read in team name to 3 letter code dictionary
-    with open('./data/team_name_dictionary.txt', 'r') as f:
+    with open('../sports_betting_data/data/team_name_dictionary.txt', 'r') as f:
         team_name_dict = json.load(f)
         
     # If today's scorer odds are desired
@@ -1001,7 +1001,7 @@ def get_date_of_birth(player_id):
 ########################################################
 def retrieve_schedule(season, last_N_days=None, all_future=False):
     # Read in team name dictionary for cleaning
-    with open('./data/team_name_dictionary.txt', 'r') as f:
+    with open('../sports_betting_data/data/team_name_dictionary.txt', 'r') as f:
         # Load the dictionary from the file
         team_name_dict = json.load(f)
 

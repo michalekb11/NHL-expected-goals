@@ -21,7 +21,7 @@ def main():
     path_to_lineups = '/Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_data/data/daily/DF_lineups.csv'
 
     # Read in team name to 3 letter code dictionary
-    with open('./data/team_name_dictionary.txt', 'r') as f:
+    with open('../sports_betting_data/data/team_name_dictionary.txt', 'r') as f:
         team_name_dict = json.load(f)
 
     # Use the function on each team in list

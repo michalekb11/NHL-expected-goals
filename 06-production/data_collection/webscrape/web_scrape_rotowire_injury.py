@@ -26,7 +26,7 @@ def main():
     roto_url = 'https://www.rotowire.com/hockey/injury-report.php'
 
     # Read in team name to 3 letter code dictionary
-    with open('./data/team_name_dictionary.txt', 'r') as f:
+    with open('../sports_betting_data/data/team_name_dictionary.txt', 'r') as f:
         team_name_dict = json.load(f)
 
     # Record current date and time

@@ -1,0 +1,32 @@
+Completed
+- Everything having to do with database engineering (fixed mysql issue)
+- Basic feature engineering (mainly just player statistics)... if I need to add more in the future I can come back to this. Figured it is better to move onto modeling for now.
+- Some EDA things
+    - Investigated how much ice time impacts per60 stats (ex: 3 games but only 2 min of ice time).
+    - Clustering
+    - Feature stability across seasons
+
+    - Q1: Correlation of rolling 20 vs 3... What is better: one is more correlated with goals, but much less variance. This may be the reason for the correlation? Rolling 3 has much less correlation but much higher variance (almost too much). Do I just choose one in between? It just feels weird avoiding the one with the highest correlation with goals.
+
+    - Q2: Is there any other EDA that I really need to do? How do you know when to stop? Can't "get to know my data" unless I have a question I'm trying to answer (ex: ice time per60).
+
+Made schedule for remaining semester
+- EDA due this Wednesday
+- Modeling aspect April 3rd (8 weeks)
+- Presentation and blog for April 21st (2.5 weeks)
+- Gives ~1 week buffer at end
+
+- Q3: Does that schedule sound good?
+
+Next steps 
+1. Modeling
+    - Q5: Is there a model type I should start with? I have template NN code that I wrote a few weeks ago, figured I would start with that since deep learning seems to be the thing nowadays. I could try others, but not sure if they would realistically be better than neural networks, so I don't want to waste time trying other ones until I figure out NN's dont work?
+
+    - Q6: How to select data for training, validation, and testing? See diagram. How does this differ between simple model using only player stats and a model that uses more features such as injuries (that data starts later)?
+
+    - Q7: Should I just focus on goalscorer for now?
+        * Don't have to worry about aggregating to the team level (in the case that there is less than 18 skaters in projected lineup or lineup is incorrect).
+        * The projected lineup does not have to be correct. Bet would be voided if they don't play.
+        * More rows to optimize/test on (~28,000 vs ~2,000).
+        * Con = only 2024 data.
+        * If the bets for goalscorer show no value whatsoever even with an accurate model, maybe try to pivot to moneyline to see if there is better value there?
