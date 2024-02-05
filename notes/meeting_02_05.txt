@@ -20,13 +20,41 @@ Made schedule for remaining semester
 
 Next steps 
 1. Modeling
-    - Q5: Is there a model type I should start with? I have template NN code that I wrote a few weeks ago, figured I would start with that since deep learning seems to be the thing nowadays. I could try others, but not sure if they would realistically be better than neural networks, so I don't want to waste time trying other ones until I figure out NN's dont work?
+    - Q4: Is there a model type I should start with? I have template NN code that I wrote a few weeks ago, figured I would start with that since deep learning seems to be the thing nowadays. I could try others, but not sure if they would realistically be better than neural networks, so I don't want to waste time trying other ones until I figure out NN's dont work?
 
-    - Q6: How to select data for training, validation, and testing? See diagram. How does this differ between simple model using only player stats and a model that uses more features such as injuries (that data starts later)?
+    - Q5: How to select data for training, validation, and testing? See diagram. How does this differ between simple model using only player stats and a model that uses more features such as injuries (that data starts later)?
 
-    - Q7: Should I just focus on goalscorer for now?
+    - Q6: Should I just focus on goalscorer for now?
         * Don't have to worry about aggregating to the team level (in the case that there is less than 18 skaters in projected lineup or lineup is incorrect).
         * The projected lineup does not have to be correct. Bet would be voided if they don't play.
         * More rows to optimize/test on (~28,000 vs ~2,000).
         * Con = only 2024 data.
         * If the bets for goalscorer show no value whatsoever even with an accurate model, maybe try to pivot to moneyline to see if there is better value there?
+
+
+
+Mean reversion
+- If rolling 3 is mmuch better than rolling 20, they are about to revert to mean, take the diff between the 2...
+- look for more interactions (think about it)
+
+
+
+We need to de-mean the variables to make the features stationary
+The reason rolling 20 is super correlated is because it converges to the long run average which is the best predictor. You're looking for whether the residuals contain any additional information.
+
+The goal is to find the optimal value for the rolling window by finding where the correlation rises and then begins to decrease again after making it stationary (de-mean). Using MA is probably better than using AR? Not sure...
+
+But why would rolling 3 correlation increase after demeaning? 
+
+
+Right now I sum(shots in last 3) / sum(TOI).
+The other way to compute it would be:
+- mean (S/TOI, S/TOI, S/TOI)
+
+Is one of these more stable? Just go with that one?
+
+Need to:
+1. Get last season of player stats.
+2. Write the SQL code to generate revised features. For the player's average of last season - if there is a small data problem - use the average of player type (clustering) during that season?
+3. Write SQL for an offseason move feature specifically
+4. Rerun the feature analysis code to determine correct rolling window sizes for each feature...
