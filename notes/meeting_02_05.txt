@@ -58,3 +58,13 @@ Need to:
 2. Write the SQL code to generate revised features. For the player's average of last season - if there is a small data problem - use the average of player type (clustering) during that season?
 3. Write SQL for an offseason move feature specifically
 4. Rerun the feature analysis code to determine correct rolling window sizes for each feature...
+
+
+
+------- After 2nd meeting 02/09 -------
+Set up 1 baseline (this will be a non-ML baseline).
+Then move straight into trying to beat it with ML 
+Use season 2020 as the reference for last season average for 2021
+Use season 2021 and 2022 as the training set. Use 2023 as validation #1 for the model
+Use first 1/2 of 2024 as the validation set for the betting. Use second 1/2 of 2024 for hold out test set.
+Splitting by season here allows us to not have to worry so much about embargo problem and using last season average?

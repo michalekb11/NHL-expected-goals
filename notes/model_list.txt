@@ -1,0 +1,20 @@
+Baseline (no ML)
+    * Prediction = Average goals per game by that player in their last 82 games. If the number of games is less than 82, use a weighted average of (n_games/82) * player_avg_goals_last_82 + ((82 - n_games)/82) * avg_goals_per_game_all_players_last_season.
+ 
+Model 1
+    Feature list
+        * resid_X60_10
+        * X60_last_season
+        * game_num
+
+    Training data
+        * Season 2021-2022
+
+    Validation set 1
+        * Season 2023
+
+    Validation set 2
+        * 1/2 season 2024
+
+    Test data
+        * <= 1/2 season 2024
