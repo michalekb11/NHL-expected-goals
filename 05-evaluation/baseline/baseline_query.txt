@@ -1,0 +1,50 @@
+WITH all_players_average AS (
+   SELECT sch.season + 1 AS season_plus_one, 
+       AVG(sk.G) AS avg_G_all
+   FROM skater_game sk
+   LEFT JOIN SCHEDULE sch
+       ON sk.date = sch.date
+       AND sk.team = sch.team
+   GROUP BY sch.season 
+),
+
+
+indiv AS (
+	SELECT sk.player_id,
+		sk.date,
+		 sch.season,
+		COUNT(*) OVER(PARTITION BY sk.player_id ORDER BY sk.date ROWS BETWEEN 30 PRECEDING AND 1 PRECEDING) AS last_K,
+		 COUNT(*) OVER(PARTITION BY sk.player_id, sch.season ORDER BY sk.date) AS season_game_num,
+		AVG(sk.G) OVER(PARTITION BY sk.player_id ORDER BY sk.date ROWS BETWEEN 30 PRECEDING AND 1 PRECEDING) AS avg_G
+	FROM skater_game sk
+	LEFT JOIN SCHEDULE sch
+		ON sk.team = sch.team
+		AND sk.date = sch.date
+
+),
+
+combined AS (
+	SELECT indiv.*,
+		all_pl.avg_G_all,
+		CASE 
+			WHEN last_K = 0 THEN avg_G_all
+			WHEN last_K < 30 THEN (last_K / 30) * (avg_G) + (1 - (last_K/30)) * (avg_G_all)
+			ELSE avg_G
+		END AS pred_G
+	FROM indiv
+	LEFT JOIN all_players_average all_pl
+		ON indiv.season = all_pl.season_plus_one 
+	WHERE season >= 2023
+)
+
+SELECT comb.player_id,
+	comb.date,
+	comb.season,
+	comb.last_K,
+	comb.season_game_num,
+	comb.pred_G,
+	sk.G
+FROM combined comb
+LEFT JOIN skater_game sk
+	ON comb.player_id = sk.player_id
+	AND comb.date = sk.date;
