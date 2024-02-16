@@ -3,10 +3,14 @@ import pandas as pd
 import numpy as np
 
 class GoalscorerBetOptimizer:
-    def __init__(self, search_EV_min_lower=None, search_odds_lower=None, search_odds_upper=None):
-        self.search_EV_min_lower = search_EV_min_lower
-        self.search_odds_lower = search_odds_lower
-        self.search_odds_upper = search_odds_upper
+    def __init__(self, EV_min_lower=None, EV_max_lower=None, odds_min_lower=None, odds_max_lower=None, odds_min_upper=None, odds_max_upper=None, step_size=3):
+        self.EV_min_lower = EV_min_lower
+        self.EV_max_lower = EV_max_lower
+        self.odds_min_lower = odds_min_lower
+        self.odds_max_lower = odds_max_lower
+        self.odds_min_upper = odds_min_upper
+        self.odds_max_upper = odds_max_upper
+        self.step_size = step_size
 
     def fit(self, df_odds, df_preds, df_G):
         df = pd.merge(left=df_odds, right=df_preds, how='inner', on=['player_id', 'date']).merge(right=df_G, how='inner', on=['player_id', 'date'])
@@ -32,37 +36,50 @@ class GoalscorerBetOptimizer:
 
 
         n_bets_placed = len(df_copy[df_copy['place_bet_flag'] == 1])
-        profit = df_copy['profit'].sum()
-        avg_profit = profit / n_bets_placed
+        pct_bets_placed = n_bets_placed / df_copy.shape[0]
+        if n_bets_placed == 0:
+            profit = None
+            avg_profit = None
+        else:  
+            profit = df_copy['profit'].sum()
+            avg_profit = profit / n_bets_placed
 
         result_dict = {
-            'df':df_copy,
-            'EV_lower':EV_lower,
-            'odds_lower':odds_lower,
-            'odds_upper':odds_upper,
-            'n_bets_placed':n_bets_placed,
-            'profit':profit,
-            'avg_profit':avg_profit
+            'bets_df':df_copy,
+            'summary':{
+                'EV_lower':self.EV_lower,
+                'odds_lower':self.odds_lower,
+                'odds_upper':self.odds_upper,
+                'n_bets_placed':n_bets_placed,
+                'pct_bets_placed':pct_bets_placed,
+                'profit':profit,
+                'avg_profit':avg_profit
+            }
         }
 
         return result_dict
 
-    def optimize(self, verbose=False):
+    def optimize(self):
         if self.df is None:
             raise ValueError("Object's .fit() method must be called before optimizing bet parameters")
         
         # Create the search space
-        odds_space = np.linspace(self.search_odds_lower, self.search_odds_upper, num = 4, dtype=int)
-        print(odds_space)
+        search_EV_lower = np.linspace(self.EV_min_lower, self.EV_max_lower, num=self.step_size, dtype=float)
+        search_min_odds = np.linspace(self.odds_min_lower, self.odds_max_lower, num=self.step_size, dtype=int)
+        search_max_odds = np.linspace(self.odds_min_upper, self.odds_max_upper, num=self.step_size, dtype=int)
 
-    
+        # Convert arrays to DataFrames aand cross join for every combination
+        search_EV_lower = pd.DataFrame({'EV_lower': search_EV_lower})
+        search_min_odds = pd.DataFrame({'odds_lower': search_min_odds})
+        search_max_odds = pd.DataFrame({'odds_upper': search_max_odds})
+        search_space = pd.merge(search_EV_lower, search_min_odds, how='cross').merge(search_max_odds, how='cross')
 
-# We want it to choose the best EV lower threshold, odds upper and lower threshold FROM THE USER DEFINED SEARCH SPACE
-# We want to be able to call an optimize method that returns a tuple of the best thresholds?
-# Allow a verbose option that writes out results of each combination to a result file (or just return as pandas DF for now)
+        # Apply function to each row
+        results_list = list(search_space.apply(lambda row: self.record_profit(row['EV_lower'], row['odds_lower'], row['odds_upper']),  axis=1))
+        
+        # Combine summary results 
+        #bets_df_list = [result_dict['bets_df'] for result_dict in results_list]
+        summary_df = pd.DataFrame([result_dict['summary'] for result_dict in results_list])
 
-
-# Needs to:
-    # Read in the validation set predictions (player_id, date, xG)
-    # Read in the actual validation results (player_id, date, G)
-    # Read in odds data
+        # Return summary DF
+        return summary_df
