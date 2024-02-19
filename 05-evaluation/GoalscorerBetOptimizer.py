@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 
 class GoalscorerBetOptimizer:
+    """Find betting restrictions that maximize profit for Anytime Goalscorer"""
     def __init__(self, EV_min_lower=None, EV_max_lower=None, odds_min_lower=None, odds_max_lower=None, odds_min_upper=None, odds_max_upper=None, step_size=3):
         self.EV_min_lower = EV_min_lower
         self.EV_max_lower = EV_max_lower
@@ -13,19 +14,25 @@ class GoalscorerBetOptimizer:
         self.step_size = step_size
 
     def fit(self, df_odds, df_preds, df_G):
+        """Create the dataframe to use for optimization (requires our predictions, actual results, and odds)"""
+        # Combine all data frammes
         df = pd.merge(left=df_odds, right=df_preds, how='inner', on=['player_id', 'date']).merge(right=df_G, how='inner', on=['player_id', 'date'])
+        # Set columns that will be used later
         df['prob'] = df['pred_G'].apply(lambda x: poisson_goalscorer(x))
         df['EV'] = df.apply(lambda row: bet_EV(odds=row['odds'], prob=row['prob']), axis=1)
         df['win_flag'] = np.where(df['G'] >= 1, 1, 0)
 
+        # Set class attributes
         self.df = df
         self.n_pred_rows = df_preds.shape[0]
         self.n_optimization_rows = df.shape[0]
         
     def record_profit(self, EV_lower, odds_lower, odds_upper):
+        """Return dictionary describing profit using a set of betting restrictions"""
         if self.df is None:
             raise ValueError("Object's .fit() method must be called before calculating a profit")
         
+        # Don't want to actually update self.df
         df_copy = self.df.copy()
 
         # Decide which wagers to place
@@ -34,7 +41,7 @@ class GoalscorerBetOptimizer:
         # Calculate bet-wise profit (if bet not placed, 0 money gained or lost)
         df_copy['profit'] = df_copy.apply(lambda row: np.select(condlist=[row['place_bet_flag'] == 0, row['win_flag'] == 0], choicelist=[0, -1], default=odds_to_profit(row['odds'])), axis=1)
 
-
+        # Save some interesting information as part of summary
         n_bets_placed = len(df_copy[df_copy['place_bet_flag'] == 1])
         pct_bets_placed = n_bets_placed / df_copy.shape[0]
         if n_bets_placed == 0:
@@ -44,12 +51,13 @@ class GoalscorerBetOptimizer:
             profit = df_copy['profit'].sum()
             avg_profit = profit / n_bets_placed
 
+        # Create and return the summary dictionary
         result_dict = {
             'bets_df':df_copy,
             'summary':{
-                'EV_lower':self.EV_lower,
-                'odds_lower':self.odds_lower,
-                'odds_upper':self.odds_upper,
+                'EV_lower':EV_lower,
+                'odds_lower':odds_lower,
+                'odds_upper':odds_upper,
                 'n_bets_placed':n_bets_placed,
                 'pct_bets_placed':pct_bets_placed,
                 'profit':profit,
@@ -60,6 +68,7 @@ class GoalscorerBetOptimizer:
         return result_dict
 
     def optimize(self):
+        """Iterate over search space to return optimal betting parameters"""
         if self.df is None:
             raise ValueError("Object's .fit() method must be called before optimizing bet parameters")
         

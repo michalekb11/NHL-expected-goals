@@ -11,7 +11,7 @@ from GoalscorerBetEvaluator import GoalscorerBetEvaluator
 output_dir = '/Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_data/05-evaluation'
 
 # Set seed for replication of results
-np.random.seed(42)
+np.random.seed(21)
 
 # MySQL connection
 mysql = MySQL()
@@ -82,7 +82,7 @@ with open(f'{output_dir}/baseline_betting_params.json', 'w') as f:
     json.dump(best_params, f)
 
 # OPTIONAL: Save all combinations that were tried to a file
-param_grid.to_csv(f'{output_dir}/baseline_betting_combinations.csv', header=True, index=False)
+param_grid.to_csv(f'{output_dir}/baseline/validation/baseline_betting_combinations.csv', header=True, index=False)
 ##########
 # Test the best betting parameters on hold out test set
 # Set up evaluator class
@@ -99,9 +99,9 @@ evaluator.fit(df_odds=df_odds, df_preds=df_pred_test, df_G=df_G_test)
 performance = evaluator.record_profit()
 
 # OPTIONAL: save list of bets using best parameters
-performance['bets_df'].to_csv(f'{output_dir}/baseline_bet_list.csv', header=True, index=False)
+performance['bets_df'].to_csv(f'{output_dir}/baseline/test/baseline_bet_list.csv', header=True, index=False)
 
 # Save performance using best parameters
-with open(f'{output_dir}/baseline_performance.json', 'w') as f:
+with open(f'{output_dir}/baseline/test/baseline_performance.json', 'w') as f:
     json.dump(performance['summary'], f)
 ##########
