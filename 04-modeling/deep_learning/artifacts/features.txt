@@ -1,1 +1,0 @@
-game_num, G60_last_season, resid_G60_10, P60_last_season, resid_P60_10, S60_last_season, resid_S60_10, BLK60_last_season, resid_BLK60_10, HIT60_last_season, resid_HIT60_10, avgTOI_last_season, resid_avgTOI_10, home_game_flag, point_streak

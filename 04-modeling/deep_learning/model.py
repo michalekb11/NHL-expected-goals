@@ -7,13 +7,38 @@ import pandas as pd
 class NHLnet(nn.Module):
     def __init__(self, n_features):
         super().__init__()
+        self.fc1 = nn.Linear(n_features, 100)
+        self.bn1 = nn.BatchNorm1d(100)
+        self.fc2 = nn.Linear(100, 50)
+        self.bn2 = nn.BatchNorm1d(50)
+        self.fc3 = nn.Linear(50, 1)
+        self.dropout = nn.Dropout(p=0.2)
+        self.relu = nn.ReLU()
+        #self.softplus = nn.Softplus() # Smooth version of ReLU
+        
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.bn1(x)
+        x = self.relu(x)
+        x = self.dropout(x)
+        x = self.fc2(x)
+        x = self.bn2(x)
+        x = self.relu(x)
+        x = self.dropout(x)
+        x = self.fc3(x)
+        x = self.relu(x)
+        return x
+    
+# Define the NN model
+class NHLnetWide(nn.Module):
+    def __init__(self, n_features):
+        super().__init__()
         self.dropout = nn.Dropout(p=0.2)
         self.relu = nn.ReLU()
         self.softplus = nn.Softplus() # Smooth version of ReLU
-        self.fc1 = nn.Linear(n_features, 100)
-        self.fc2 = nn.Linear(100, 100)
-        self.fc3 = nn.Linear(100, 100)
-        self.fc4 = nn.Linear(100, 1)
+        self.fc1 = nn.Linear(n_features, 1000)
+        self.fc2 = nn.Linear(1000, 100)
+        self.fc3 = nn.Linear(100, 1)
 
         # What is batch normalization, and do I need it?
     
@@ -25,8 +50,6 @@ class NHLnet(nn.Module):
         x = self.relu(x)
         #x = self.dropout(x)
         x = self.fc3(x)
-        x = self.relu(x)
-        x = self.fc4(x)
         x = self.relu(x) # self.softplus(x)
         return x
 

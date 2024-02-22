@@ -1,79 +1,42 @@
-#%%
 import torch
-import pandas as pd
-from model import NHL_Dataset, NHLnet, prep_for_dataloader
+from model import NHL_Dataset, NHLnet, prep_for_dataloader, NHLnetWide
 from torch.utils.data import DataLoader
 from torchinfo import summary
 from tqdm import tqdm
-import sqlalchemy
 import mlflow
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from MySQLClass import MySQL
+import joblib
 
 ############# Set user/model parameters ################
 ########################################################
 # User parameters
-model_name ='NHLnet'
+preprocessing_dir = './04-modeling/deep_learning/preprocessing'
+model_name ='NHLnet' # 'NHLnetWide
 output_model_directory = f'./04-modeling/deep_learning/models'
 index_cols = ['player_id', 'team', 'date', 'season']
 target_col = 'G'
+model_name_dict = {
+    'NHLnet':NHLnet,
+    'NHLnetWide':NHLnetWide
+}
 
 # Model hyperparameters
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-epochs = 10
-batch_size = 32
-learning_rate = 0.015
+epochs = 30
+batch_size = 64
+learning_rate = 0.001
 momentum = 0.9
-#%%
+
 ############# Gather features into dataset #############
 ########################################################
-# MySQL connection
-engine = sqlalchemy.create_engine('mysql+mysqlconnector://root:rootdata@localhost/nhl')
+mysql = MySQL()
+mysql.connect()
+mysql.load_data()
+train_df = mysql.train_df
+val_df = mysql.val_df
 
-# Set up SQL queries to gather features
-print("Gathering data from MySQL...")
-skater = pd.read_sql("""
-    SELECT a.player_id,
-        a.team,
-        a.date,
-        a.game_num,
-        a.G,
-        b.season
-    FROM skater_game a
-    INNER JOIN schedule b
-        ON a.team = b.team
-        AND a.date = b.date
-    WHERE b.season IN (2021, 2022, 2023)
-""", con=engine)
-home_away = pd.read_sql("SELECT * FROM home_away_status;", con=engine)
-point_streak = pd.read_sql("SELECT * FROM point_streak;", con=engine)
-per60 = pd.read_sql("""
-    SELECT player_id,
-        date,
-        G60_last_season,
-        resid_G60_10,
-        P60_last_season,
-        resid_P60_10,
-        S60_last_season,
-        resid_S60_10,
-        BLK60_last_season,
-        resid_BLK60_10,
-        HIT60_last_season,
-        resid_HIT60_10,
-        avgTOI_last_season,
-        resid_avgTOI_10
-    FROM skater_per60_resid_rolling10
-""", con=engine)
-
-# Merge features to create pandas DF
-train_df = skater.loc[skater['season'].isin([2021, 2022]), :].merge(per60, how='inner', on=['player_id', 'date']
-    ).merge(home_away, how='inner', on=['player_id', 'date']
-    ).merge(point_streak, how='inner', on=['player_id', 'date'])
-
-val_df = skater.loc[skater['season'] == 2023, :].merge(per60, how='inner', on=['player_id', 'date']
-    ).merge(home_away, how='inner', on=['player_id', 'date']
-    ).merge(point_streak, how='inner', on=['player_id', 'date'])
-
-print(f'Per60 row count: {per60.shape[0]}')
+#print(f'Per60 row count: {per60.shape[0]}')
 print(f'Train row count: {train_df.shape[0]}')
 print(f'Val row count: {val_df.shape[0]}')
 #print(f'Training dataset information: {train_df.info()}\n')
@@ -97,6 +60,10 @@ minmax_scaler = MinMaxScaler()
 train_df_normalized['game_num'] = minmax_scaler.fit_transform(train_df_normalized[['game_num']])
 val_df_normalized['game_num'] = minmax_scaler.transform(val_df[['game_num']])
 
+# Save preprocessing objects to use in predict script
+joblib.dump(standard_scaler, f'{preprocessing_dir}/standard_scaler.pkl')
+joblib.dump(minmax_scaler, f'{preprocessing_dir}/minmax_scaler.pkl')
+
 #print(train_df_normalized.head())
 
 # Separate index info from features from targets (convert features and targets to tensors as well)
@@ -110,7 +77,7 @@ val_data = NHL_Dataset(features=val_features, targets=val_targets)
 # Set up the data loader
 train_dataloader = DataLoader(dataset=train_data, batch_size=batch_size, shuffle=True)
 test_dataloader = DataLoader(dataset=val_data, batch_size=batch_size, shuffle=False)
-#%%
+
 ############# Train the model #############
 ########################################################
 # Set ML Flow experiment
@@ -118,12 +85,17 @@ mlflow.set_tracking_uri("http://127.0.0.1:5000")
 mlflow.set_experiment("deep-learning")
 
 # Set up mode, optimizer, loss function
-model = NHLnet(n_features=train_data.n_features).to(device=device)
-optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum)
+model_class = model_name_dict[model_name]
+model = model_class(n_features=train_data.n_features).to(device=device)
+#optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum)
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 criterion = torch.nn.MSELoss()
 
 # Set up a train loop that occurs once per epoch
+global_train_step = 0
 def train_loop(dataloader, model, criterion, optimizer):
+    global global_train_step
+
     # Set to training mode
     model.train()
 
@@ -146,16 +118,20 @@ def train_loop(dataloader, model, criterion, optimizer):
         optimizer.step()
         optimizer.zero_grad()
 
-        # Every 50 batches, print the current loss as a message
+        # Every N batches, print the current loss as a message
         if batch % 100 == 0:
-            mlflow.log_metric("training_mse", f"{loss.item():3f}", step=int(batch))
+            mlflow.log_metric("training_mse", f"{loss.item():3f}", step=global_train_step)
             #print(f'Batch {batch} training loss: {loss.item()}')
 
         progress_bar.set_description(f"Batch {batch}, training loss: {loss.item():.3f}")
         progress_bar.update()
 
+        global_train_step += 1
+
 # Set up a test loop that occurs once per epoch
+global_test_step = 0
 def test_loop(dataloader, model, criterion):
+    global global_test_step
     # Set to eval mode
     model.eval()
     loss = 0
@@ -174,8 +150,9 @@ def test_loop(dataloader, model, criterion):
     
     # Print message about the test loss
     loss = loss / len(dataloader.dataset) # MSE across entire test set
-    mlflow.log_metric("validation_mse", f"{loss:3f}") # What happens if there is no step?
+    mlflow.log_metric("validation_mse", f"{loss:3f}", step=global_test_step) # What happens if there is no step?
     print(f'\nValidation loss: {loss}\n')
+    global_test_step += 1
     
 with mlflow.start_run() as run:
     params = {

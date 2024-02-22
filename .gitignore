@@ -9,3 +9,14 @@ __pycache__/
 
 # MLflow runs
 mlruns/
+mlartifacts/
+artifacts/
+
+# Data caches
+data_cache/
+
+# Preprocessing
+preprocessing/
+
+# Model predictions
+predictions/
