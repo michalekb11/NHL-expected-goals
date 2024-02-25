@@ -6,3 +6,17 @@ __pycache__/
 
 # ipynb_checkpoints
 .ipynb_checkpoints/
+
+# MLflow runs
+mlruns/
+mlartifacts/
+artifacts/
+
+# Data caches
+data_cache/
+
+# Preprocessing
+preprocessing/
+
+# Model predictions
+predictions/

@@ -15,7 +15,7 @@ class GoalscorerBetOptimizer:
 
     def fit(self, df_odds, df_preds, df_G):
         """Create the dataframe to use for optimization (requires our predictions, actual results, and odds)"""
-        # Combine all data frammes
+        # Combine all data frames
         df = pd.merge(left=df_odds, right=df_preds, how='inner', on=['player_id', 'date']).merge(right=df_G, how='inner', on=['player_id', 'date'])
         # Set columns that will be used later
         df['prob'] = df['pred_G'].apply(lambda x: poisson_goalscorer(x))
