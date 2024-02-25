@@ -1,5 +1,5 @@
 import torch
-from model import NHL_Dataset, NHLnet, prep_for_dataloader, NHLnetWide
+from model import NHL_Dataset, NHLnet, prep_for_dataloader, NHLnetWide, NHLnetBinary
 from torch.utils.data import DataLoader
 from torchinfo import summary
 from tqdm import tqdm
@@ -12,13 +12,14 @@ import joblib
 ########################################################
 # User parameters
 preprocessing_dir = './04-modeling/deep_learning/preprocessing'
-model_name ='NHLnet' # 'NHLnetWide
+model_name ='NHLnetBinary' # 'NHLnetWide
 output_model_directory = f'./04-modeling/deep_learning/models'
 index_cols = ['player_id', 'team', 'date', 'season']
-target_col = 'G'
+target_col = 'G_flag'
 model_name_dict = {
     'NHLnet':NHLnet,
-    'NHLnetWide':NHLnetWide
+    'NHLnetWide':NHLnetWide,
+    'NHLnetBinary':NHLnetBinary
 }
 
 # Model hyperparameters
@@ -89,7 +90,8 @@ model_class = model_name_dict[model_name]
 model = model_class(n_features=train_data.n_features).to(device=device)
 #optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum)
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-criterion = torch.nn.MSELoss()
+#criterion = torch.nn.MSELoss()
+criterion = torch.nn.BCELoss(reduction='mean')
 
 # Set up a train loop that occurs once per epoch
 global_train_step = 0
@@ -108,10 +110,10 @@ def train_loop(dataloader, model, criterion, optimizer):
 
         # Compute predictions
         preds = model(X)
-        preds = preds.flatten() # convert to size [batch_size] instead of [batch_size, 1] since this is the size of y
+        # preds = preds.flatten() # convert to size [batch_size] instead of [batch_size, 1] since this is the size of y
 
         # Compute loss
-        loss = criterion(preds, y)
+        loss = criterion(preds, y.unsqueeze(1)) # unsqueeze converts y to shape (batch size, 1)
 
         # Backpropagation
         loss.backward()
@@ -120,7 +122,7 @@ def train_loop(dataloader, model, criterion, optimizer):
 
         # Every N batches, print the current loss as a message
         if batch % 100 == 0:
-            mlflow.log_metric("training_mse", f"{loss.item():3f}", step=global_train_step)
+            mlflow.log_metric("training_BCE", f"{loss.item():3f}", step=global_train_step)
             #print(f'Batch {batch} training loss: {loss.item()}')
 
         progress_bar.set_description(f"Batch {batch}, training loss: {loss.item():.3f}")
@@ -145,12 +147,12 @@ def test_loop(dataloader, model, criterion):
 
             # Get predictions and loss
             preds = model(X)
-            preds = preds.flatten() # convert to size [batch_size] instead of [batch_size, 1] since this is the size of y
-            loss += criterion(preds, y).item() * len(X) # total SSE for the batch (since last batch might be less than batch size)
+            #preds = preds.flatten() # convert to size [batch_size] instead of [batch_size, 1] since this is the size of y
+            loss += criterion(preds, y.unsqueeze(1)).item() * len(X) # total SSE for the batch (since last batch might be less than batch size)
     
     # Print message about the test loss
     loss = loss / len(dataloader.dataset) # MSE across entire test set
-    mlflow.log_metric("validation_mse", f"{loss:3f}", step=global_test_step) # What happens if there is no step?
+    mlflow.log_metric("validation_BCE", f"{loss:3f}", step=global_test_step) # What happens if there is no step?
     print(f'\nValidation loss: {loss}\n')
     global_test_step += 1
     
@@ -181,7 +183,7 @@ with mlflow.start_run() as run:
         test_loop(dataloader=test_dataloader, model=model, criterion=criterion)
 
     # Save the trained model to MLflow.
-    mlflow.pytorch.log_model(pytorch_model=model, artifact_path="states", registered_model_name=model_name)
+    #mlflow.pytorch.log_model(pytorch_model=model, artifact_path="states", registered_model_name=model_name)
 
 print(f"Training complete\n")
 

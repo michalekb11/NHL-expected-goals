@@ -53,6 +53,32 @@ class NHLnetWide(nn.Module):
         x = self.relu(x) # self.softplus(x)
         return x
 
+# Define the NN model
+class NHLnetBinary(nn.Module):
+    def __init__(self, n_features):
+        super().__init__()
+        self.fc1 = nn.Linear(n_features, 100)
+        self.bn1 = nn.BatchNorm1d(100)
+        self.fc2 = nn.Linear(100, 50)
+        self.bn2 = nn.BatchNorm1d(50)
+        self.fc3 = nn.Linear(50, 1)
+        self.dropout = nn.Dropout(p=0.2)
+        self.relu = nn.ReLU()
+        self.sigmoid = nn.Sigmoid()
+        
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.bn1(x)
+        x = self.relu(x)
+        x = self.dropout(x)
+        x = self.fc2(x)
+        x = self.bn2(x)
+        x = self.relu(x)
+        x = self.dropout(x)
+        x = self.fc3(x)
+        x = self.sigmoid(x)
+        return x
+
 # Custom dataset class that takes in features as tensor and targets as any iterable?
 class NHL_Dataset(Dataset):
     def __init__(self, features, targets):
@@ -68,7 +94,7 @@ class NHL_Dataset(Dataset):
         target = self.targets[idx]
         return sample, target
     
-def prep_for_dataloader(df, index_cols, target_col='G'):
+def prep_for_dataloader(df, index_cols, target_col='G_flag'):
     # Separate all index related information (player name, date, team, etc.)
     index = pd.concat([df.pop(col) for col in index_cols], axis=1)
     # Separate target variable (goals scored in that game)

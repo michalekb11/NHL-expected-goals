@@ -20,3 +20,6 @@ preprocessing/
 
 # Model predictions
 predictions/
+
+# Model weights
+models/
