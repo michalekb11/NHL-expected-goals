@@ -1,0 +1,27 @@
+First atttempt (regression)
+- Learning plateaus quick
+- All bets negative EV (predicts very low ammount of goals scored --> poisson probabilities very low)
+- Searching best odds parameters is not stable. Validation performance doesn't imply testing performance at all.
+
+Second attempt (binary classification)
+- Learning plateaus quick
+- Predicts probability directly (removes Poisson constraint)
+- Some bets positive EV, but still not really any performance improvement
+- (I dont think probabilities within each player vary very much)
+
+Concerns
+- Current features are not good enough
+- Don't have very much data (only like 60,000 training rows) Is this really enough for deep learning?
+- Don't have a baseline for binary classification...
+
+Next steps
+- Does binary classifcation make more sense than the regression?
+- What do I do for a baseline for binary classifcation?
+- Should I be looking into what is happening with predictions, expected values, which bets are winning and losing, etc..
+- Should I be looking into model specific feature importance (permutation approach for NN). In other words, how important is it right now to be examining feature importance. Should I be doing this, or just going back to add in more features?
+- Should I go back and get the last season of data? Don't want to go too far back, but at the same time, need more.
+
+
+Deal with per60 when data has null values 
+add in new features
+further investigate distribution of odds, which sector of bets seem to win most often, which seem to make the most money?
