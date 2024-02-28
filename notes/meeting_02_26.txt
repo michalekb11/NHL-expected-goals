@@ -24,4 +24,4 @@ Next steps
 
 Deal with per60 when data has null values 
 add in new features
-further investigate distribution of odds, which sector of bets seem to win most often, which seem to make the most money?
+further investigate model predictions in terms of probability of scoring goal and EV of the bet. Does this match what you found in the odds eda?
