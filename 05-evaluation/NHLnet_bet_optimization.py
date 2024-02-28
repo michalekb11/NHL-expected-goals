@@ -7,7 +7,7 @@ import time
 import json
 
 # Set output path of best betting parameters
-model_name = 'NHLnet'
+model_name = 'NHLnetBinary'
 predictions_dir = './04-modeling/predictions'
 output_dir = '/Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_data/05-evaluation'
 embargo = 10
@@ -36,11 +36,11 @@ val = df_preds.loc[df_preds['n'] <= df_preds['val_thresh'], :]
 test = df_preds.loc[df_preds['n'] >= df_preds['test_thresh'], :]
 
 # Now create df_pred and df_G
-df_pred_val = val[['player_id', 'date', 'pred_G']].copy()
-df_G_val = val[['player_id', 'date', 'G']].copy()
+df_pred_val = val[['player_id', 'date', 'prob']].copy()
+df_G_val = val[['player_id', 'date', 'G_flag']].copy()
 
-df_pred_test = test[['player_id', 'date', 'pred_G']].copy()
-df_G_test = test[['player_id', 'date', 'G']].copy()
+df_pred_test = test[['player_id', 'date', 'prob']].copy()
+df_G_test = test[['player_id', 'date', 'G_flag']].copy()
 
 # df_odds
 mysql = MySQL()

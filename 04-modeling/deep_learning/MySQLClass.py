@@ -45,7 +45,7 @@ class MySQL:
                     a.team,
                     a.date,
                     a.game_num,
-                    a.G,
+                    CASE WHEN a.G >= 1 THEN 1 ELSE 0 END AS G_flag,
                     b.season
                 FROM skater_game a
                 INNER JOIN schedule b

@@ -18,9 +18,9 @@ class GoalscorerBetOptimizer:
         # Combine all data frames
         df = pd.merge(left=df_odds, right=df_preds, how='inner', on=['player_id', 'date']).merge(right=df_G, how='inner', on=['player_id', 'date'])
         # Set columns that will be used later
-        df['prob'] = df['pred_G'].apply(lambda x: poisson_goalscorer(x))
+        #df['prob'] = df['pred_G'].apply(lambda x: poisson_goalscorer(x))
         df['EV'] = df.apply(lambda row: bet_EV(odds=row['odds'], prob=row['prob']), axis=1)
-        df['win_flag'] = np.where(df['G'] >= 1, 1, 0)
+        df['G_flag'] = df['G_flag'].astype('int') # np.where(df['G'] >= 1, 1, 0)
 
         # Set class attributes
         self.df = df
@@ -39,7 +39,7 @@ class GoalscorerBetOptimizer:
         df_copy['place_bet_flag'] = np.where((df_copy['EV'] >= EV_lower) & (df_copy['odds'] >= odds_lower) & (df_copy['odds'] <= odds_upper), 1, 0)
 
         # Calculate bet-wise profit (if bet not placed, 0 money gained or lost)
-        df_copy['profit'] = df_copy.apply(lambda row: np.select(condlist=[row['place_bet_flag'] == 0, row['win_flag'] == 0], choicelist=[0, -1], default=odds_to_profit(row['odds'])), axis=1)
+        df_copy['profit'] = df_copy.apply(lambda row: np.select(condlist=[row['place_bet_flag'] == 0, row['G_flag'] == 0], choicelist=[0, -1], default=odds_to_profit(row['odds'])), axis=1)
 
         # Save some interesting information as part of summary
         n_bets_placed = len(df_copy[df_copy['place_bet_flag'] == 1])
