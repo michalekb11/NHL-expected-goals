@@ -1,4 +1,4 @@
-# "Bringing Down the House" - ML Solutions to Conquer a Sportsbook's NHL sector
+# "Bringing Down the House" - ML Solutions to Conquer a Sportsbook's NHL Sector
 
 ### What is in this repository?
 * **00-database-engineering:** Self-architected MySQL database containing ~ 35 tables / views (player statistics, game schedules, model features, odds, etc.).
