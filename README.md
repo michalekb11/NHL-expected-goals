@@ -1,5 +1,7 @@
 # "Bringing Down the House" - ML Solutions to Conquer a Sportsbook's NHL Sector
 
+### Author: Bryan Michalek
+
 ### What is in this repository?
 * **00-database-engineering:** Self-architected MySQL database containing ~ 35 tables / views (player statistics, game schedules, model features, odds, etc.).
 * **01-data-collection:** Space to workshop new web scraping python scripts to fill the tables listed above. Scripts in their final form are transferred to 06-production.
