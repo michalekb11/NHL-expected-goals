@@ -26,7 +26,31 @@
 DROP VIEW IF EXISTS skater_per60_resid_rolling03;
 
 CREATE VIEW skater_per60_resid_rolling03 AS (
-    WITH all_players_average AS (
+
+    WITH rows_not_null AS (
+		SELECT *
+		FROM skater_game
+		WHERE G IS NOT NULL
+			AND A IS NOT NULL
+			AND P IS NOT NULL
+			AND rating IS NOT NULL
+			AND PIM IS NOT NULL
+			AND EVG IS NOT NULL
+			AND PPG IS NOT NULL
+			AND SHG IS NOT NULL
+			AND GWG IS NOT NULL
+			AND EVA IS NOT NULL
+			AND PPA IS NOT NULL
+			AND SHA IS NOT NULL
+			AND S IS NOT NULL
+			AND TOI IS NOT NULL
+			AND HIT IS NOT NULL
+			AND BLK IS NOT NULL
+			AND FOW IS NOT NULL
+			AND FOL IS NOT NULL
+	),
+
+    all_players_average AS (
         SELECT sch.season + 1 AS season_plus_one, 
             60 * (SUM(sk.G) / SUM(sk.TOI)) AS G60,
             60 * (SUM(sk.A) / SUM(sk.TOI)) AS A60,
@@ -47,12 +71,11 @@ CREATE VIEW skater_per60_resid_rolling03 AS (
             60 * (SUM(sk.BLK) / SUM(sk.TOI)) AS BLK60,
             60 * (SUM(sk.FOW) / SUM(sk.TOI)) AS FOW60,
             60 * (SUM(sk.FOL) / SUM(sk.TOI)) AS FOL60
-        FROM skater_game sk
+        FROM rows_not_null sk
         LEFT JOIN schedule sch
             ON sk.date = sch.date
             AND sk.team = sch.team
-        GROUP BY sch.season 
-
+        GROUP BY sch.season
     ),
 
     player_totals_per_season AS (
@@ -78,7 +101,7 @@ CREATE VIEW skater_per60_resid_rolling03 AS (
 			SUM(sk.BLK) AS BLK_tot,
 			SUM(sk.FOW) AS FOW_tot,
 			SUM(sk.FOL) AS FOL_tot
-        FROM skater_game sk
+        FROM rows_not_null sk
         LEFT JOIN schedule sch
             ON sk.date = sch.date
             AND sk.team = sch.team
@@ -212,7 +235,7 @@ CREATE VIEW skater_per60_resid_rolling03 AS (
         LEFT JOIN skater_game sk
             ON sk_roll.player_id = sk.player_id
             AND sk_roll.date = sk.date
-        LEFT JOIN SCHEDULE sch
+        LEFT JOIN schedule sch
             ON sk_roll.date = sch.date
             AND sk.team = sch.team
         INNER JOIN player_totals_per_season player_tot
@@ -271,7 +294,31 @@ CREATE VIEW skater_per60_resid_rolling03 AS (
 DROP VIEW IF EXISTS skater_per60_resid_rolling05;
 
 CREATE VIEW skater_per60_resid_rolling05 AS (
-    WITH all_players_average AS (
+
+    WITH rows_not_null AS (
+		SELECT *
+		FROM skater_game
+		WHERE G IS NOT NULL
+			AND A IS NOT NULL
+			AND P IS NOT NULL
+			AND rating IS NOT NULL
+			AND PIM IS NOT NULL
+			AND EVG IS NOT NULL
+			AND PPG IS NOT NULL
+			AND SHG IS NOT NULL
+			AND GWG IS NOT NULL
+			AND EVA IS NOT NULL
+			AND PPA IS NOT NULL
+			AND SHA IS NOT NULL
+			AND S IS NOT NULL
+			AND TOI IS NOT NULL
+			AND HIT IS NOT NULL
+			AND BLK IS NOT NULL
+			AND FOW IS NOT NULL
+			AND FOL IS NOT NULL
+	),
+
+    all_players_average AS (
         SELECT sch.season + 1 AS season_plus_one, 
             60 * (SUM(sk.G) / SUM(sk.TOI)) AS G60,
             60 * (SUM(sk.A) / SUM(sk.TOI)) AS A60,
@@ -292,7 +339,7 @@ CREATE VIEW skater_per60_resid_rolling05 AS (
             60 * (SUM(sk.BLK) / SUM(sk.TOI)) AS BLK60,
             60 * (SUM(sk.FOW) / SUM(sk.TOI)) AS FOW60,
             60 * (SUM(sk.FOL) / SUM(sk.TOI)) AS FOL60
-        FROM skater_game sk
+        FROM rows_not_null sk
         LEFT JOIN schedule sch
             ON sk.date = sch.date
             AND sk.team = sch.team
@@ -323,7 +370,7 @@ CREATE VIEW skater_per60_resid_rolling05 AS (
 			SUM(sk.BLK) AS BLK_tot,
 			SUM(sk.FOW) AS FOW_tot,
 			SUM(sk.FOL) AS FOL_tot
-        FROM skater_game sk
+        FROM rows_not_null sk
         LEFT JOIN schedule sch
             ON sk.date = sch.date
             AND sk.team = sch.team
@@ -516,7 +563,31 @@ CREATE VIEW skater_per60_resid_rolling05 AS (
 DROP VIEW IF EXISTS skater_per60_resid_rolling10;
 
 CREATE VIEW skater_per60_resid_rolling10 AS (
-    WITH all_players_average AS (
+
+    WITH rows_not_null AS (
+		SELECT *
+		FROM skater_game
+		WHERE G IS NOT NULL
+			AND A IS NOT NULL
+			AND P IS NOT NULL
+			AND rating IS NOT NULL
+			AND PIM IS NOT NULL
+			AND EVG IS NOT NULL
+			AND PPG IS NOT NULL
+			AND SHG IS NOT NULL
+			AND GWG IS NOT NULL
+			AND EVA IS NOT NULL
+			AND PPA IS NOT NULL
+			AND SHA IS NOT NULL
+			AND S IS NOT NULL
+			AND TOI IS NOT NULL
+			AND HIT IS NOT NULL
+			AND BLK IS NOT NULL
+			AND FOW IS NOT NULL
+			AND FOL IS NOT NULL
+	),
+
+    all_players_average AS (
         SELECT sch.season + 1 AS season_plus_one, 
             60 * (SUM(sk.G) / SUM(sk.TOI)) AS G60,
             60 * (SUM(sk.A) / SUM(sk.TOI)) AS A60,
@@ -537,7 +608,7 @@ CREATE VIEW skater_per60_resid_rolling10 AS (
             60 * (SUM(sk.BLK) / SUM(sk.TOI)) AS BLK60,
             60 * (SUM(sk.FOW) / SUM(sk.TOI)) AS FOW60,
             60 * (SUM(sk.FOL) / SUM(sk.TOI)) AS FOL60
-        FROM skater_game sk
+        FROM rows_not_null sk
         LEFT JOIN schedule sch
             ON sk.date = sch.date
             AND sk.team = sch.team
@@ -568,7 +639,7 @@ CREATE VIEW skater_per60_resid_rolling10 AS (
 			SUM(sk.BLK) AS BLK_tot,
 			SUM(sk.FOW) AS FOW_tot,
 			SUM(sk.FOL) AS FOL_tot
-        FROM skater_game sk
+        FROM rows_not_null sk
         LEFT JOIN schedule sch
             ON sk.date = sch.date
             AND sk.team = sch.team
@@ -761,7 +832,31 @@ CREATE VIEW skater_per60_resid_rolling10 AS (
 DROP VIEW IF EXISTS skater_per60_resid_rolling15;
 
 CREATE VIEW skater_per60_resid_rolling15 AS (
-    WITH all_players_average AS (
+
+    WITH rows_not_null AS (
+		SELECT *
+		FROM skater_game
+		WHERE G IS NOT NULL
+			AND A IS NOT NULL
+			AND P IS NOT NULL
+			AND rating IS NOT NULL
+			AND PIM IS NOT NULL
+			AND EVG IS NOT NULL
+			AND PPG IS NOT NULL
+			AND SHG IS NOT NULL
+			AND GWG IS NOT NULL
+			AND EVA IS NOT NULL
+			AND PPA IS NOT NULL
+			AND SHA IS NOT NULL
+			AND S IS NOT NULL
+			AND TOI IS NOT NULL
+			AND HIT IS NOT NULL
+			AND BLK IS NOT NULL
+			AND FOW IS NOT NULL
+			AND FOL IS NOT NULL
+	),
+
+    all_players_average AS (
         SELECT sch.season + 1 AS season_plus_one, 
             60 * (SUM(sk.G) / SUM(sk.TOI)) AS G60,
             60 * (SUM(sk.A) / SUM(sk.TOI)) AS A60,
@@ -782,7 +877,7 @@ CREATE VIEW skater_per60_resid_rolling15 AS (
             60 * (SUM(sk.BLK) / SUM(sk.TOI)) AS BLK60,
             60 * (SUM(sk.FOW) / SUM(sk.TOI)) AS FOW60,
             60 * (SUM(sk.FOL) / SUM(sk.TOI)) AS FOL60
-        FROM skater_game sk
+        FROM rows_not_null sk
         LEFT JOIN schedule sch
             ON sk.date = sch.date
             AND sk.team = sch.team
@@ -813,7 +908,7 @@ CREATE VIEW skater_per60_resid_rolling15 AS (
 			SUM(sk.BLK) AS BLK_tot,
 			SUM(sk.FOW) AS FOW_tot,
 			SUM(sk.FOL) AS FOL_tot
-        FROM skater_game sk
+        FROM rows_not_null sk
         LEFT JOIN schedule sch
             ON sk.date = sch.date
             AND sk.team = sch.team
@@ -1006,7 +1101,31 @@ CREATE VIEW skater_per60_resid_rolling15 AS (
 DROP VIEW IF EXISTS skater_per60_resid_rolling20;
 
 CREATE VIEW skater_per60_resid_rolling20 AS (
-    WITH all_players_average AS (
+
+    WITH rows_not_null AS (
+		SELECT *
+		FROM skater_game
+		WHERE G IS NOT NULL
+			AND A IS NOT NULL
+			AND P IS NOT NULL
+			AND rating IS NOT NULL
+			AND PIM IS NOT NULL
+			AND EVG IS NOT NULL
+			AND PPG IS NOT NULL
+			AND SHG IS NOT NULL
+			AND GWG IS NOT NULL
+			AND EVA IS NOT NULL
+			AND PPA IS NOT NULL
+			AND SHA IS NOT NULL
+			AND S IS NOT NULL
+			AND TOI IS NOT NULL
+			AND HIT IS NOT NULL
+			AND BLK IS NOT NULL
+			AND FOW IS NOT NULL
+			AND FOL IS NOT NULL
+	),
+
+    all_players_average AS (
         SELECT sch.season + 1 AS season_plus_one, 
             60 * (SUM(sk.G) / SUM(sk.TOI)) AS G60,
             60 * (SUM(sk.A) / SUM(sk.TOI)) AS A60,
@@ -1027,7 +1146,7 @@ CREATE VIEW skater_per60_resid_rolling20 AS (
             60 * (SUM(sk.BLK) / SUM(sk.TOI)) AS BLK60,
             60 * (SUM(sk.FOW) / SUM(sk.TOI)) AS FOW60,
             60 * (SUM(sk.FOL) / SUM(sk.TOI)) AS FOL60
-        FROM skater_game sk
+        FROM rows_not_null sk
         LEFT JOIN schedule sch
             ON sk.date = sch.date
             AND sk.team = sch.team
@@ -1058,7 +1177,7 @@ CREATE VIEW skater_per60_resid_rolling20 AS (
 			SUM(sk.BLK) AS BLK_tot,
 			SUM(sk.FOW) AS FOW_tot,
 			SUM(sk.FOL) AS FOL_tot
-        FROM skater_game sk
+        FROM rows_not_null sk
         LEFT JOIN schedule sch
             ON sk.date = sch.date
             AND sk.team = sch.team
