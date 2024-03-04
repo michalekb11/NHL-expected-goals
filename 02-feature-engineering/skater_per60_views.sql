@@ -16,11 +16,35 @@
 DROP VIEW IF EXISTS skater_per60_rolling03;
 
 CREATE VIEW skater_per60_rolling03 AS (
-	WITH stat_totals AS (
+	WITH rows_not_null AS (
+		SELECT *
+		FROM skater_game
+		WHERE G IS NOT NULL
+			AND A IS NOT NULL
+			AND P IS NOT NULL
+			AND rating IS NOT NULL
+			AND PIM IS NOT NULL
+			AND EVG IS NOT NULL
+			AND PPG IS NOT NULL
+			AND SHG IS NOT NULL
+			AND GWG IS NOT NULL
+			AND EVA IS NOT NULL
+			AND PPA IS NOT NULL
+			AND SHA IS NOT NULL
+			AND S IS NOT NULL
+			AND TOI IS NOT NULL
+			AND HIT IS NOT NULL
+			AND BLK IS NOT NULL
+			AND FOW IS NOT NULL
+			AND FOL IS NOT NULL
+	),
+	
+	stat_totals AS (
 		SELECT sk.player_id,
 			sk.team,
 			sk.date,
             sk.game_num,
+			COUNT(*) OVER (PARTITION BY sk.player_id, sched.season ORDER BY sk.date) AS n_not_null,
 			-- COUNT(*) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 3 PRECEDING AND 1 PRECEDING) AS n,
 			SUM(sk.TOI) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 3 PRECEDING AND 1 PRECEDING) AS TOI_tot,
 			SUM(sk.G) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 3 PRECEDING AND 1 PRECEDING) AS G_tot,
@@ -41,7 +65,7 @@ CREATE VIEW skater_per60_rolling03 AS (
 			SUM(sk.BLK) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 3 PRECEDING AND 1 PRECEDING) AS BLK_tot,
 			SUM(sk.FOW) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 3 PRECEDING AND 1 PRECEDING) AS FOW_tot,
 			SUM(sk.FOL) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 3 PRECEDING AND 1 PRECEDING) AS FOL_tot
-		FROM skater_game sk
+		FROM rows_not_null sk
         LEFT JOIN SCHEDULE sched
 			ON sk.team = sched.team
             AND sk.date = sched.date
@@ -69,7 +93,7 @@ CREATE VIEW skater_per60_rolling03 AS (
 		60 * (FOL_tot / TOI_tot) AS FOL60_03,
 		TOI_tot / 3 AS avgTOI_03
 	FROM stat_totals
-	WHERE game_num > 3
+	WHERE n_not_null > 3
 );
 
 -- Check results
@@ -82,11 +106,35 @@ CREATE VIEW skater_per60_rolling03 AS (
 DROP VIEW IF EXISTS skater_per60_rolling05;
 
 CREATE VIEW skater_per60_rolling05 AS (
-	WITH stat_totals AS (
+	WITH rows_not_null AS (
+		SELECT *
+		FROM skater_game
+		WHERE G IS NOT NULL
+			AND A IS NOT NULL
+			AND P IS NOT NULL
+			AND rating IS NOT NULL
+			AND PIM IS NOT NULL
+			AND EVG IS NOT NULL
+			AND PPG IS NOT NULL
+			AND SHG IS NOT NULL
+			AND GWG IS NOT NULL
+			AND EVA IS NOT NULL
+			AND PPA IS NOT NULL
+			AND SHA IS NOT NULL
+			AND S IS NOT NULL
+			AND TOI IS NOT NULL
+			AND HIT IS NOT NULL
+			AND BLK IS NOT NULL
+			AND FOW IS NOT NULL
+			AND FOL IS NOT NULL
+	),
+	
+	stat_totals AS (
 		SELECT sk.player_id,
 			sk.team,
 			sk.date,
             sk.game_num,
+			COUNT(*) OVER (PARTITION BY sk.player_id, sched.season ORDER BY sk.date) AS n_not_null,
 			-- COUNT(*) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 5 PRECEDING AND 1 PRECEDING) AS n,
 			SUM(sk.TOI) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 5 PRECEDING AND 1 PRECEDING) AS TOI_tot,
 			SUM(sk.G) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 5 PRECEDING AND 1 PRECEDING) AS G_tot,
@@ -107,7 +155,7 @@ CREATE VIEW skater_per60_rolling05 AS (
 			SUM(sk.BLK) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 5 PRECEDING AND 1 PRECEDING) AS BLK_tot,
 			SUM(sk.FOW) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 5 PRECEDING AND 1 PRECEDING) AS FOW_tot,
 			SUM(sk.FOL) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 5 PRECEDING AND 1 PRECEDING) AS FOL_tot
-		FROM skater_game sk
+		FROM rows_not_null sk
         LEFT JOIN SCHEDULE sched
 			ON sk.team = sched.team
             AND sk.date = sched.date
@@ -135,7 +183,7 @@ CREATE VIEW skater_per60_rolling05 AS (
 		60 * (FOL_tot / TOI_tot) AS FOL60_05,
 		TOI_tot / 5 AS avgTOI_05
 	FROM stat_totals
-	WHERE game_num > 5
+	WHERE n_not_null > 5
 );
 
 -- Check results
@@ -147,12 +195,36 @@ CREATE VIEW skater_per60_rolling05 AS (
 -- View for last 10 games
 DROP VIEW IF EXISTS skater_per60_rolling10;
 
-CREATE VIEW skater_per60_rolling10 AS (
-	WITH stat_totals AS (
+CREATE VIEW skater_per60_rolling05 AS (
+	WITH rows_not_null AS (
+		SELECT *
+		FROM skater_game
+		WHERE G IS NOT NULL
+			AND A IS NOT NULL
+			AND P IS NOT NULL
+			AND rating IS NOT NULL
+			AND PIM IS NOT NULL
+			AND EVG IS NOT NULL
+			AND PPG IS NOT NULL
+			AND SHG IS NOT NULL
+			AND GWG IS NOT NULL
+			AND EVA IS NOT NULL
+			AND PPA IS NOT NULL
+			AND SHA IS NOT NULL
+			AND S IS NOT NULL
+			AND TOI IS NOT NULL
+			AND HIT IS NOT NULL
+			AND BLK IS NOT NULL
+			AND FOW IS NOT NULL
+			AND FOL IS NOT NULL
+	),
+	
+	stat_totals AS (
 		SELECT sk.player_id,
 			sk.team,
 			sk.date,
             sk.game_num,
+			COUNT(*) OVER (PARTITION BY sk.player_id, sched.season ORDER BY sk.date) AS n_not_null,
 			-- COUNT(*) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 10 PRECEDING AND 1 PRECEDING) AS n,
 			SUM(sk.TOI) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 10 PRECEDING AND 1 PRECEDING) AS TOI_tot,
 			SUM(sk.G) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 10 PRECEDING AND 1 PRECEDING) AS G_tot,
@@ -173,7 +245,7 @@ CREATE VIEW skater_per60_rolling10 AS (
 			SUM(sk.BLK) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 10 PRECEDING AND 1 PRECEDING) AS BLK_tot,
 			SUM(sk.FOW) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 10 PRECEDING AND 1 PRECEDING) AS FOW_tot,
 			SUM(sk.FOL) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 10 PRECEDING AND 1 PRECEDING) AS FOL_tot
-		FROM skater_game sk
+		FROM rows_not_null sk
         LEFT JOIN SCHEDULE sched
 			ON sk.team = sched.team
             AND sk.date = sched.date
@@ -201,7 +273,7 @@ CREATE VIEW skater_per60_rolling10 AS (
 		60 * (FOL_tot / TOI_tot) AS FOL60_10,
 		TOI_tot / 10 AS avgTOI_10
 	FROM stat_totals
-	WHERE game_num > 10
+	WHERE n_not_null > 10
 );
 
 -- Check results
@@ -214,11 +286,35 @@ CREATE VIEW skater_per60_rolling10 AS (
 DROP VIEW IF EXISTS skater_per60_rolling15;
 
 CREATE VIEW skater_per60_rolling15 AS (
-	WITH stat_totals AS (
+	WITH rows_not_null AS (
+		SELECT *
+		FROM skater_game
+		WHERE G IS NOT NULL
+			AND A IS NOT NULL
+			AND P IS NOT NULL
+			AND rating IS NOT NULL
+			AND PIM IS NOT NULL
+			AND EVG IS NOT NULL
+			AND PPG IS NOT NULL
+			AND SHG IS NOT NULL
+			AND GWG IS NOT NULL
+			AND EVA IS NOT NULL
+			AND PPA IS NOT NULL
+			AND SHA IS NOT NULL
+			AND S IS NOT NULL
+			AND TOI IS NOT NULL
+			AND HIT IS NOT NULL
+			AND BLK IS NOT NULL
+			AND FOW IS NOT NULL
+			AND FOL IS NOT NULL
+	),
+	
+	stat_totals AS (
 		SELECT sk.player_id,
 			sk.team,
 			sk.date,
             sk.game_num,
+			COUNT(*) OVER (PARTITION BY sk.player_id, sched.season ORDER BY sk.date) AS n_not_null,
 			-- COUNT(*) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 15 PRECEDING AND 1 PRECEDING) AS n,
 			SUM(sk.TOI) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 15 PRECEDING AND 1 PRECEDING) AS TOI_tot,
 			SUM(sk.G) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 15 PRECEDING AND 1 PRECEDING) AS G_tot,
@@ -239,7 +335,7 @@ CREATE VIEW skater_per60_rolling15 AS (
 			SUM(sk.BLK) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 15 PRECEDING AND 1 PRECEDING) AS BLK_tot,
 			SUM(sk.FOW) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 15 PRECEDING AND 1 PRECEDING) AS FOW_tot,
 			SUM(sk.FOL) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 15 PRECEDING AND 1 PRECEDING) AS FOL_tot
-		FROM skater_game sk
+		FROM rows_not_null sk
         LEFT JOIN SCHEDULE sched
 			ON sk.team = sched.team
             AND sk.date = sched.date
@@ -267,7 +363,7 @@ CREATE VIEW skater_per60_rolling15 AS (
 		60 * (FOL_tot / TOI_tot) AS FOL60_15,
 		TOI_tot / 15 AS avgTOI_15
 	FROM stat_totals
-	WHERE game_num > 15
+	WHERE n_not_null > 15
 );
 
 -- Check results
@@ -280,11 +376,35 @@ CREATE VIEW skater_per60_rolling15 AS (
 DROP VIEW IF EXISTS skater_per60_rolling20;
 
 CREATE VIEW skater_per60_rolling20 AS (
-	WITH stat_totals AS (
+	WITH rows_not_null AS (
+		SELECT *
+		FROM skater_game
+		WHERE G IS NOT NULL
+			AND A IS NOT NULL
+			AND P IS NOT NULL
+			AND rating IS NOT NULL
+			AND PIM IS NOT NULL
+			AND EVG IS NOT NULL
+			AND PPG IS NOT NULL
+			AND SHG IS NOT NULL
+			AND GWG IS NOT NULL
+			AND EVA IS NOT NULL
+			AND PPA IS NOT NULL
+			AND SHA IS NOT NULL
+			AND S IS NOT NULL
+			AND TOI IS NOT NULL
+			AND HIT IS NOT NULL
+			AND BLK IS NOT NULL
+			AND FOW IS NOT NULL
+			AND FOL IS NOT NULL
+	),
+	
+	stat_totals AS (
 		SELECT sk.player_id,
 			sk.team,
 			sk.date,
             sk.game_num,
+			COUNT(*) OVER (PARTITION BY sk.player_id, sched.season ORDER BY sk.date) AS n_not_null,
 			-- COUNT(*) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 20 PRECEDING AND 1 PRECEDING) AS n,
 			SUM(sk.TOI) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 20 PRECEDING AND 1 PRECEDING) AS TOI_tot,
 			SUM(sk.G) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 20 PRECEDING AND 1 PRECEDING) AS G_tot,
@@ -305,7 +425,7 @@ CREATE VIEW skater_per60_rolling20 AS (
 			SUM(sk.BLK) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 20 PRECEDING AND 1 PRECEDING) AS BLK_tot,
 			SUM(sk.FOW) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 20 PRECEDING AND 1 PRECEDING) AS FOW_tot,
 			SUM(sk.FOL) OVER(PARTITION BY sk.player_id, sched.season ORDER BY sk.date ROWS BETWEEN 20 PRECEDING AND 1 PRECEDING) AS FOL_tot
-		FROM skater_game sk
+		FROM rows_not_null sk
         LEFT JOIN SCHEDULE sched
 			ON sk.team = sched.team
             AND sk.date = sched.date
@@ -333,7 +453,7 @@ CREATE VIEW skater_per60_rolling20 AS (
 		60 * (FOL_tot / TOI_tot) AS FOL60_20,
 		TOI_tot / 20 AS avgTOI_20
 	FROM stat_totals
-	WHERE game_num > 20
+	WHERE n_not_null > 20
 );
 
 -- Check results
