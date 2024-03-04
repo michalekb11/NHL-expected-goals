@@ -50,6 +50,7 @@ df = pd.read_sql(query, con=engine)
 for feature in args.Features:
     # Grab only that column
     df_feature = df.loc[:, ['season', feature]]
+    df_feature.dropna(inplace=True)
 
     # Separate the seasons
     min_season = df_feature['season'].min()

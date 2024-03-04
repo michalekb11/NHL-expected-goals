@@ -10,7 +10,7 @@
     -- (but hopfully we've noted that they've been injured)
 
     -- A player that comes up and down from the minors will have high
-    -- number of rest days. This is technicall innaccurate (but is there
+    -- number of rest days. This is technically innaccurate (but is there
     -- a way to know this information and reset the value to the median/mean?)
 
 -- The idea is that players may have a sweet spot of 2-4 rest days for peak 
@@ -22,7 +22,7 @@ DROP VIEW IF EXISTS rest_days;
 
 CREATE VIEW rest_days AS (
     SELECT sk.player_id,
-        sk.DATE,
+        sk.date,
         DATEDIFF(sk.DATE, LAG(sk.DATE) OVER (PARTITION BY sched.season, sk.player_id ORDER BY sk.DATE)) - 1 AS rest_days
     FROM skater_game sk
     LEFT JOIN SCHEDULE sched
