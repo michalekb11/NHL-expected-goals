@@ -58,8 +58,8 @@ print("All data gathered. Beginning betting parameter optimization...")
 
 # Start optimization
 optim = GoalscorerBetOptimizer(
-    EV_min_lower=-1.0, 
-    EV_max_lower=-0.4, 
+    EV_min_lower=-0.70, 
+    EV_max_lower=0.20, 
     odds_min_lower=-200, 
     odds_max_lower=450, 
     odds_min_upper=500, 

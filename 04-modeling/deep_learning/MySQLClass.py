@@ -20,9 +20,11 @@ class MySQL:
         with self.engine.begin() as conn: 
             conn.execute(query)
 
-    def load_data(self):
+    def load_data(self, reset=False):
         cache_dir = '/Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_repo/04-modeling/data_cache'
         try:
+            if reset:
+                raise FileNotFoundError
             # Try loading the DataFrame from the cache file
             with open(f'{cache_dir}/train.pkl', 'rb') as f:
                 train_df = pickle.load(f)
@@ -51,10 +53,12 @@ class MySQL:
                 INNER JOIN schedule b
                     ON a.team = b.team
                     AND a.date = b.date
-                WHERE b.season IN (2021, 2022, 2023, 2024)
+                WHERE b.season >= 2019 ;
             """, con=self.engine)
             home_away = pd.read_sql("SELECT * FROM home_away_status;", con=self.engine)
             point_streak = pd.read_sql("SELECT * FROM point_streak;", con=self.engine)
+            rest_days = pd.read_sql('SELECT * FROM rest_days;', con=self.engine)
+            games_missed = pd.read_sql("SELECT * FROM games_missed", con=self.engine)
             per60 = pd.read_sql("""
                 SELECT player_id,
                     date,
@@ -70,21 +74,27 @@ class MySQL:
                     resid_HIT60_10,
                     avgTOI_last_season,
                     resid_avgTOI_10
-                FROM skater_per60_resid_rolling10
+                FROM skater_per60_resid_rolling10;
             """, con=self.engine)
 
             # Merge features to create pandas DF
-            train_df = skater.loc[skater['season'].isin([2021, 2022]), :].merge(per60, how='inner', on=['player_id', 'date']
+            train_df = skater.loc[skater['season'].isin([2019, 2020, 2021, 2022]), :].merge(per60, how='inner', on=['player_id', 'date']
                 ).merge(home_away, how='inner', on=['player_id', 'date']
-                ).merge(point_streak, how='inner', on=['player_id', 'date'])
+                ).merge(point_streak, how='inner', on=['player_id', 'date']
+                ).merge(rest_days, how='inner', on=['player_id', 'date']
+                ).merge(games_missed, how='inner', on=['player_id', 'date'])
 
             val_df = skater.loc[skater['season'] == 2023, :].merge(per60, how='inner', on=['player_id', 'date']
                 ).merge(home_away, how='inner', on=['player_id', 'date']
-                ).merge(point_streak, how='inner', on=['player_id', 'date'])
+                ).merge(point_streak, how='inner', on=['player_id', 'date']
+                ).merge(rest_days, how='inner', on=['player_id', 'date']
+                ).merge(games_missed, how='inner', on=['player_id', 'date'])
             
             test_df = skater.loc[skater['season'] == 2024, :].merge(per60, how='inner', on=['player_id', 'date']
                 ).merge(home_away, how='inner', on=['player_id', 'date']
-                ).merge(point_streak, how='inner', on=['player_id', 'date'])
+                ).merge(point_streak, how='inner', on=['player_id', 'date']
+                ).merge(rest_days, how='inner', on=['player_id', 'date']
+                ).merge(games_missed, how='inner', on=['player_id', 'date'])
             
             # Save the DataFrames to the cache file
             with open(f'{cache_dir}/train.pkl', 'wb') as f:

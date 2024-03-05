@@ -39,11 +39,13 @@ test_df_normalized = test_df.copy()
 
 # Load scalers from training
 standard_scaler = joblib.load(f'{preprocessing_dir}/standard_scaler.pkl')
+robust_scaler = joblib.load(f'{preprocessing_dir}/robust_scaler.pkl')
 minmax_scaler = joblib.load(f'{preprocessing_dir}/minmax_scaler.pkl')
 
 # Scale features
-cols_to_normalize = [col for col in feature_cols if col not in ['home_game_flag', 'game_num']]
+cols_to_normalize = [col for col in feature_cols if col not in ['home_game_flag', 'game_num', 'rest_days', 'games_missed']]
 test_df_normalized[cols_to_normalize] = standard_scaler.transform(test_df_normalized[cols_to_normalize])
+test_df_normalized[['rest_days', 'games_missed']] = robust_scaler.transform(test_df_normalized[['rest_days', 'games_missed']])
 test_df_normalized['game_num'] = minmax_scaler.transform(test_df[['game_num']])
 
 # Separate index info from features from targets (convert features and targets to tensors as well)
