@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 from torchinfo import summary
 from tqdm import tqdm
 import mlflow
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 from MySQLClass import MySQL
 import joblib
 
@@ -16,6 +16,7 @@ model_name ='NHLnetBinary' # 'NHLnetWide
 output_model_directory = f'./04-modeling/deep_learning/models'
 index_cols = ['player_id', 'team', 'date', 'season']
 target_col = 'G_flag'
+data_reset = False
 model_name_dict = {
     'NHLnet':NHLnet,
     'NHLnetWide':NHLnetWide,
@@ -33,7 +34,7 @@ momentum = 0.9
 ########################################################
 mysql = MySQL()
 mysql.connect()
-mysql.load_data()
+mysql.load_data(reset=data_reset)
 train_df = mysql.train_df
 val_df = mysql.val_df
 
@@ -52,9 +53,14 @@ val_df_normalized = val_df.copy()
 
 # For most columns, use standardization
 standard_scaler = StandardScaler()
-cols_to_normalize = [col for col in feature_cols if col not in ['home_game_flag', 'game_num']]
+cols_to_normalize = [col for col in feature_cols if col not in ['home_game_flag', 'game_num', 'rest_days', 'games_missed']]
 train_df_normalized[cols_to_normalize] = standard_scaler.fit_transform(train_df_normalized[cols_to_normalize])
 val_df_normalized[cols_to_normalize] = standard_scaler.transform(val_df[cols_to_normalize])
+
+# For rest_days, games_missed, use robust scaler due to large outliers
+robust_scaler = RobustScaler()
+train_df_normalized[['rest_days', 'games_missed']] = robust_scaler.fit_transform(train_df_normalized[['rest_days', 'games_missed']])
+val_df_normalized[['rest_days', 'games_missed']] = robust_scaler.transform(val_df[['rest_days', 'games_missed']])
 
 # For game_num, use min_max scaler
 minmax_scaler = MinMaxScaler()
@@ -63,6 +69,7 @@ val_df_normalized['game_num'] = minmax_scaler.transform(val_df[['game_num']])
 
 # Save preprocessing objects to use in predict script
 joblib.dump(standard_scaler, f'{preprocessing_dir}/standard_scaler.pkl')
+joblib.dump(robust_scaler, f'{preprocessing_dir}/robust_scaler.pkl')
 joblib.dump(minmax_scaler, f'{preprocessing_dir}/minmax_scaler.pkl')
 
 #print(train_df_normalized.head())
@@ -183,7 +190,7 @@ with mlflow.start_run() as run:
         test_loop(dataloader=test_dataloader, model=model, criterion=criterion)
 
     # Save the trained model to MLflow.
-    #mlflow.pytorch.log_model(pytorch_model=model, artifact_path="states", registered_model_name=model_name)
+    mlflow.pytorch.log_model(pytorch_model=model, artifact_path="states", registered_model_name=model_name)
 
 print(f"Training complete\n")
 
