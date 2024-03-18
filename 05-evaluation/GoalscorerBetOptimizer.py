@@ -1,4 +1,4 @@
-from functions import bet_EV, poisson_goalscorer, odds_to_profit
+from functions import bet_EV, odds_to_profit
 import pandas as pd
 import numpy as np
 
@@ -73,9 +73,19 @@ class GoalscorerBetOptimizer:
             raise ValueError("Object's .fit() method must be called before optimizing bet parameters")
         
         # Create the search space
+        # Assume EV lower parameters are required
         search_EV_lower = np.linspace(self.EV_min_lower, self.EV_max_lower, num=self.step_size, dtype=float)
-        search_min_odds = np.linspace(self.odds_min_lower, self.odds_max_lower, num=self.step_size, dtype=int)
-        search_max_odds = np.linspace(self.odds_min_upper, self.odds_max_upper, num=self.step_size, dtype=int)
+
+        # Assume odds lower and odds upper is optional to prevent overfitting 
+        if self.odds_min_lower and self.odds_max_lower:
+            search_min_odds = np.linspace(self.odds_min_lower, self.odds_max_lower, num=self.step_size, dtype=int)
+        else:
+            search_min_odds = np.array([self.df['odds'].min() - 5000], dtype=int) # Just ensuring all bets are included by subtracting another 5k
+        
+        if self.odds_min_upper and self.odds_max_upper:
+            search_max_odds = np.linspace(self.odds_min_upper, self.odds_max_upper, num=self.step_size, dtype=int)
+        else:
+            search_max_odds = np.array([self.df['odds'].max() + 5000], dtype=int)
 
         # Convert arrays to DataFrames aand cross join for every combination
         search_EV_lower = pd.DataFrame({'EV_lower': search_EV_lower})
