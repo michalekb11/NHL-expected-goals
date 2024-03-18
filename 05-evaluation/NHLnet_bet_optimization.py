@@ -25,15 +25,31 @@ df_preds = pd.merge(df_preds,
 df_preds['n'] = df_preds.sort_values('date').groupby('player_id').cumcount() + 1
 
 # Thresholds
-df_preds['val_thresh'] = ((df_preds['n_games_played'] - embargo + 0.01) / 2).round().astype('int') # 0.01 to help with rounding purposes (0.5 was rounding down to 0)
-df_preds['test_thresh'] = df_preds['val_thresh'] + embargo + 1
+df_preds['first_half_thresh'] = ((df_preds['n_games_played'] - embargo + 0.01) / 2).round().astype('int') # 0.01 to help with rounding purposes (0.5 was rounding down to 0)
+df_preds['second_half_thresh'] = df_preds['first_half_thresh'] + embargo + 1
 
-# Filter out thos eligible to be in validation or test set
+# Filter out those ineligible to be in validation or test set
 df_preds = df_preds.loc[df_preds['n_games_played'] >= embargo + 2, :]
 
-# Create validation and testing
-val = df_preds.loc[df_preds['n'] <= df_preds['val_thresh'], :]
-test = df_preds.loc[df_preds['n'] >= df_preds['test_thresh'], :]
+# Create unique groups, some will go to val set, some to test set (randomly)
+#df_preds['group'] = np.where(df_preds['n'] <= df_preds['first_half_thresh'], df_preds['player_id'] + '-early',
+                    #np.where(df_preds['n'] >= df_preds['second_half_thresh'], df_preds['player_id'] + '-late', None))
+
+# Gather unique groups of data
+unique_players = df_preds['player_id'].unique()
+
+# Get 0's or 1's that decide whether the players first half of the season should be in validation or test set. 0 will be validation
+np.random.seed(12)
+val_test_splitter = np.random.choice(a=[0,1], size=round(len(unique_players) / 2), replace=True)
+early_val_late_test = unique_players[np.where(val_test_splitter == 0)]
+early_test_late_val = unique_players[np.where(val_test_splitter == 1)]
+
+# Split the data
+val = df_preds.loc[((df_preds['player_id'].isin(early_val_late_test)) & (df_preds['n'] <= df_preds['first_half_thresh'])) | 
+                   ((df_preds['player_id'].isin(early_test_late_val)) & (df_preds['n'] >= df_preds['second_half_thresh']))]
+
+test = df_preds.loc[((df_preds['player_id'].isin(early_val_late_test)) & (df_preds['n'] >= df_preds['second_half_thresh'])) | 
+                   ((df_preds['player_id'].isin(early_test_late_val)) & (df_preds['n'] <= df_preds['first_half_thresh']))]
 
 # Now create df_pred and df_G
 df_pred_val = val[['player_id', 'date', 'prob']].copy()
@@ -76,7 +92,14 @@ end_time = time.time()
 print(f"Time to optimize: {(end_time - start_time) / 60} minutes.")
 
 # Find best row
-best_index = param_grid['profit'].idxmax()
+# For now, I am defining this as the row within 10% of the highest total profit that has the widest betting bin size
+# The goal here is to prevent overfitting of the betting parameters
+highest_profit = param_grid['profit'].max()
+filtered_param_grid = param_grid.loc[param_grid['profit'] >= highest_profit - 0.10 * abs(highest_profit), :]
+
+filtered_param_grid.loc[:, ['odds_bin_size']] = filtered_param_grid['odds_upper'] - filtered_param_grid['odds_lower']
+
+best_index = filtered_param_grid['odds_bin_size'].idxmax() # THIS ASSUMMES THE INDICES ARE NOT ALTERED WHEN FILTERING
 best_params = param_grid.iloc[best_index,:].to_dict()
 
 # Save best params to file

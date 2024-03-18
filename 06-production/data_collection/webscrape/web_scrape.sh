@@ -2,7 +2,7 @@
 cd /Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_repo/
 
 # Activate virtual environment
-source ./.venv/bin/activate 
+#source ./.venv/bin/activate 
 
 # Run each web scrape script
 python 06-production/data_collection/webscrape/web_scrape_schedule.py -v -N 2 2024

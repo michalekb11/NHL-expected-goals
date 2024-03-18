@@ -25,7 +25,7 @@ model_name_dict = {
 
 # Model hyperparameters
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-epochs = 30
+epochs = 25
 batch_size = 64
 learning_rate = 0.001
 momentum = 0.9
@@ -177,9 +177,10 @@ with mlflow.start_run() as run:
     # Log model summary and feature list
     with open("./04-modeling/deep_learning/artifacts/model_summary.txt", "w") as f:
         f.write(str(summary(model)))
+    mlflow.log_artifact("./04-modeling/deep_learning/artifacts/model_summary.txt")
     with open("./04-modeling/deep_learning/artifacts/features.txt", "w") as f:
         f.write(', '.join(feature_cols))
-    mlflow.log_artifacts("./artifacts", artifact_path="states")
+    mlflow.log_artifact("./04-modeling/deep_learning/artifacts/features.txt")
 
     # For each epoch
     for i in range(epochs):
