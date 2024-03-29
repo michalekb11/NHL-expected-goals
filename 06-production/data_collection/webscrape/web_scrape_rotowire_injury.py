@@ -36,7 +36,10 @@ def main():
 
     # Create a new instance of the Chrome driver
     options = webdriver.ChromeOptions()
-    options.add_argument('headless=new')
+    options.add_argument('--headless') # 'headless=new'
+    download_dir = os.path.join(os.path.expanduser('~'), 'Downloads')
+    prefs = {'download.default_directory': download_dir}
+    options.add_experimental_option('prefs', prefs)
     driver = webdriver.Chrome(options=options)
 
     # Navigate to the url

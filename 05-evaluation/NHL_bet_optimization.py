@@ -7,7 +7,7 @@ import time
 import json
 
 # Set output path of best betting parameters
-model_name = 'NHLnetBinary'
+model_name = 'NHLForest'
 predictions_dir = './04-modeling/predictions'
 output_dir = '/Users/bryanmichalek/Documents/GitHub_Personal/sports_betting_data/05-evaluation'
 embargo = 10
@@ -74,12 +74,12 @@ print("All data gathered. Beginning betting parameter optimization...")
 
 # Start optimization
 optim = GoalscorerBetOptimizer(
-    EV_min_lower=-0.70, 
-    EV_max_lower=0.20, 
-    odds_min_lower=-200, 
-    odds_max_lower=450, 
-    odds_min_upper=500, 
-    odds_max_upper=1500,
+    EV_min_lower=-0.3, 
+    EV_max_lower=0.3, 
+    # odds_min_lower=-200, 
+    # odds_max_lower=450, 
+    # odds_min_upper=500, 
+    # odds_max_upper=1500,
     step_size=7)
 
 # Send in our data

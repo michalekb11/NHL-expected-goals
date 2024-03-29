@@ -14,7 +14,7 @@ import joblib
 preprocessing_dir = './04-modeling/deep_learning/preprocessing'
 model_name ='NHLnetBinary' # 'NHLnetWide
 output_model_directory = f'./04-modeling/deep_learning/models'
-index_cols = ['player_id', 'team', 'date', 'season']
+index_cols = ['player_id', 'team', 'opponent', 'date', 'season']
 target_col = 'G_flag'
 data_reset = False
 model_name_dict = {
@@ -25,7 +25,7 @@ model_name_dict = {
 
 # Model hyperparameters
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-epochs = 25
+epochs = 20
 batch_size = 64
 learning_rate = 0.001
 momentum = 0.9

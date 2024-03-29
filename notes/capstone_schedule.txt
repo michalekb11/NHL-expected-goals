@@ -13,7 +13,9 @@ EDA: February 7th (1.5 weeks)
 
 Modeling: April 3rd (8 weeks)
     * First attempt with basic features: February 23rd (2 weeks)
-    * x
+    * ...
+    * Investigation of betting parameter overfitting (are we overfitting, or is the method just identifying players that went on hot streaks?): March 28th (1 week)
+    * Random Forest and XGBoost: April 3rd (1 week)
 
 Presentation and Blog: April 21st (2.5 weeks)
 
