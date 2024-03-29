@@ -1,0 +1,24 @@
+Only scheduled around 2 weeks left of work then turning to blog and presentation.
+
+What should I focus on next:
+
+1. Why don't better model predictions translate to better profit?
+    - How is the model deciding on best betting parameters? Is the model identifying best betting parameters because there was 1 player that went on a hot streak?
+    - If I only use EV constraints and nothing else, I likely am not overfitting betting parameters. Does this mean that the predicted EV's are not accurate (in other words, the predictions themselves are not accurate)?
+        ... What if its just saying to bet on the same player every game (all 19 bets were for 1 player) because the predictions and the odds don't vary very much, so the EV is always positive.
+
+
+Distribution of bets chosen is not statistically different from the distribution not chosen (not enough power). Analogous to rare event problem.
+
+2. Try other models
+    - Random Forest
+    - XGBoost
+
+3. Try creating other features/model structures?
+
+
+
+
+
+
+

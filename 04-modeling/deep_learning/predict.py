@@ -17,7 +17,7 @@ model_path = f'./04-modeling/deep_learning/models/{model_name}.pth'
 preprocessing_dir = './04-modeling/deep_learning/preprocessing'
 output_dir = './04-modeling/predictions'
 # Column information
-index_cols = ['player_id', 'team', 'date', 'season']
+index_cols = ['player_id', 'team', 'opponent', 'date', 'season']
 target_col = 'G_flag'
 # For dataloader
 batch_size = 64
