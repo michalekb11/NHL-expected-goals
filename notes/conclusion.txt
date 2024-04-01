@@ -1,0 +1,13 @@
+1. Consider additional betting parameters:
+    - Max # times allowed to bet on particular player?
+
+2. Major improvement steps:
+    - Injuries
+    - Line combinations and teamwork features (aggregation of linemates, think of GNNs)
+    - Scores for opposing teams defense
+    - Transformer sports articles
+
+4. Do these new features correlate with goals?
+
+5. How close am I to DKs model?
+    - "If i increase all of the odds by ~10%, do I break even?"
