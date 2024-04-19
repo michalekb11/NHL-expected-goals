@@ -1,4 +1,0 @@
-Considering per60 statistics, we would want to know which rolling window is best to use (3, 20, or somewhere in between). To do this, we may consider how important each rolling window is to not just the whole dataset, but the specific clusters of players within the data. We could train models on each cluster independently, and evaluate feature importance in each one.
-
-Is there overlap between the models? Do they all prefer the rolling 20 stats?
-Is there a difference? Do skilled players get more predictive power from rolling 3 stats instead of rolling 20? This would indicate that they explode for short term hot streaks and we need to notice those quickly in order to take advantage and exploit the sportsbooks.
