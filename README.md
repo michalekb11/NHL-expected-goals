@@ -10,7 +10,7 @@
   - Dashboards for tracking feature stability across seasons and examining individual player performance
   - Analysis of feature utility with respect to target variables
   - Investigation of odds data, etc.
-* **04-modeling:** Training of ML models (currently contains deep learning attempts).
+* **04-modeling:** Training of ML models (Random Forests, XGBoost, Neural Networks).
 * **05-evaluation:** Evaluation of ML models. Optimization of parameters regarding which bets to place and which to pass on.
 * **06-production:** All scripts in their "final" form (improvements can always be made...).
   - Automated daily web scraping of data from numerous sources
